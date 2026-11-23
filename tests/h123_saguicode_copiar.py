@@ -52,11 +52,11 @@ def main():
             m.esperar_serial("[REDE] DHCP: endereco", 30)
             time.sleep(2)
             term = janela(m.serial(), "Terminal")
-            # Abre o Sagui Code pelo menu Iniciar (célula 16, como no H89).
+            # Abre o Sagui Code pelo menu Iniciar (célula 17, como no H89).
             antes = len(m.serial())
             m.clique(40, 12)
             time.sleep(0.5)
-            m.clique(44 + 1 * 108 + 54, 134 + 3 * 92 + 30)
+            m.clique(44 + 2 * 108 + 54, 134 + 3 * 92 + 30)
             h69.esperar(m, "saguicode-janela: pronta", 30, antes)
             time.sleep(1)
             jan = janela(m.serial(), "Sagui Code")

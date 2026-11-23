@@ -129,15 +129,15 @@ def main():
         out = m.comando("data")
         verificar(re.search(r"\d\d/\d\d/20\d\d \d\d:\d\d:\d\d", out), "data")
         out = m.comando("sobre")
-        verificar(("SaguiOS " + versao_esperada()) in out and "processos" in out, "sobre")
+        verificar(("Zogue OS " + versao_esperada()) in out and "processos" in out, "sobre")
 
         # Histórico (seta para cima) e completar com Tab.
         out = m.comando("", teclas_finais=("up", "ret"))
-        verificar(("SaguiOS " + versao_esperada()) in out, "seta para cima repete o último comando (sobre)")
+        verificar(("Zogue OS " + versao_esperada()) in out, "seta para cima repete o último comando (sobre)")
         out = m.comando("cat /his", teclas_finais=("tab", "l", "i", "tab", "ret"))
         verificar("cat /historia/linux.txt" in out and "Minix" in out, "Tab completa /his -> /historia/ e li -> linux.txt")
         out = m.comando("sob", teclas_finais=("tab", "ret"))
-        verificar("executar /bin/sobre" in out and ("SaguiOS " + versao_esperada()) in out, "Tab completa nomes de comandos (sob -> sobre)")
+        verificar("executar /bin/sobre" in out and ("Zogue OS " + versao_esperada()) in out, "Tab completa nomes de comandos (sob -> sobre)")
         out = m.comando("regis", teclas_finais=("tab", "ret"))
         verificar("executar /bin/registro" in out, "Tab completa programas de /bin fora da tabela do shell (regis -> registro)")
         out = m.comando("conta", teclas_finais=("d", "tab", "1", "ret"))

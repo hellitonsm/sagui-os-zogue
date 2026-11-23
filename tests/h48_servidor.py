@@ -64,11 +64,15 @@ def servidor_http(porta, pasta):
 def conteudo_imagem(caminho):
     """O que o mksgfs põe na imagem: .txt/.md/.cfg vêm em UTF-8 no rootfs/ e
     são convertidos para Latin-1 (o idioma do SaguiOS); o resto é igual."""
-    with open(os.path.join(RAIZ, "userland", "exemplos", caminho), "rb") as f:
-        dados = f.read()
-    if os.path.splitext(caminho)[1].lower() in {".txt", ".md", ".cfg"}:
-        return dados.decode("utf-8").encode("latin-1")
-    return dados
+    for base in (os.path.join(RAIZ, "userland", "exemplos", caminho),
+                 os.path.join(RAIZ, "rootfs", caminho)):
+        if os.path.exists(base):
+            with open(base, "rb") as f:
+                dados = f.read()
+            if os.path.splitext(caminho)[1].lower() in {".txt", ".md", ".cfg"}:
+                return dados.decode("utf-8").encode("latin-1")
+            return dados
+    raise FileNotFoundError(caminho)
 
 
 class Cliente:
