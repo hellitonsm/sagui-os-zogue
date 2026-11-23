@@ -155,7 +155,7 @@ def main():
         verificar(re.search(r"^/$", out, re.M), "sair fecha o shell e o sistema abre outro")
 
         m.digitar("reiniciar\n", 0.04)
-        m.esperar_serial("[SAGUI] reiniciando", 20)
+        m.esperar_serial("[ZOGUE] reiniciando", 20)
         try:
             m.proc.wait(timeout=30)
             reiniciou = True

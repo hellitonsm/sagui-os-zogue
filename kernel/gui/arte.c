@@ -5,13 +5,14 @@
  * quadradinhos do tamanho da escala. */
 #include "arte.h"
 
-/* O sagui-de-tufos-brancos: cabeça escura com a mancha branca na testa, os
- * tufos brancos nas orelhas, corpo cinza e a cauda listrada. 32x32. */
+/* O Zogue: a subespécie de sagui que batiza o sistema — corpo cinza-rosado,
+ * dorso avermelhado, cauda longa toda preta e rosto claro com tufos brancos.
+ * 32x32. */
 static const char *const sagui[] = {
     "................................",
-    "...........EEEEEEEEEE...........",
-    ".........EEEEEEEEEEEEEE.........",
-    "..BBB...EEEEEBBBBBEEEEEE..BBB...",
+    "...........rrrrrrrrrr...........",
+    ".........rrrrrrrrrrrrrr.........",
+    "..BBB...rrrrrBBBBBrrrrrr..BBB...",
     ".BBBBB.EEEEEEEBBBEEEEEEEEBBBBB..",
     "BBBBBBBEEEEEEEEBEEEEEEEEEBBBBBB.",
     "BBBBBBEEERRRRRRRRRRRRRREEEBBBBB.",
@@ -24,20 +25,20 @@ static const char *const sagui[] = {
     ".......EEERRRRPPPPRRRREEE.......",
     "........EEEERRRRRRRREEEE........",
     ".........EEEEEEEEEEEEEE.........",
-    "........MMMMMMMMMMMMMMMM........",
-    ".......MMMCCCCCCCCCCCCMMM.......",
-    "......MMMCCCCCCCCCCCCCCMMM......",
-    ".....MMMCCCCCccccccCCCCCMMM.....",
-    ".....MMCCCCCccccccccCCCCCMM.....",
-    "....MMMCCCCccccccccccCCCCMMM....",
-    "....MMCCCCCccccccccccCCCCCMM....",
-    "....MMCCCCCCccccccccCCCCCCMM...E",
-    "....MMMCCCCCCCCCCCCCCCCCCMMM..EC",
-    ".....MMMCCCCCCCCCCCCCCCCMMM..EC.",
-    "......MMMMCCCCCCCCCCCCMMMM..CE..",
-    ".....EEMMMMMMMMMMMMMMMMMMEE.EC..",
-    "....EEEE.MMMM......MMMM.EEECE...",
-    "...EEEE..EEE........EEE..CECE...",
+    "........rrrrrrrrrrrrrrrr........",
+    ".......rrrrrrrrrrrrrrrrrr.......",
+    "......pppppppppppppppppppp......",
+    ".....ppppppppccccccpppppppp.....",
+    ".....pppppppccccccccppppppp.....",
+    "....pppppppccccccccccppppppp....",
+    "....pppppppccccccccccppppppp.PPP",
+    "....ppppppppccccccccpppppppp.PPP",
+    "....pppppppppppppppppppppppp.PPP",
+    ".....pppppppppppppppppppppp..PPP",
+    "......MMMMCCCCCCCCCCCCMMMM..CPPP",
+    ".....EEMMMMMMMMMMMMMMMMMMEE.EPPP",
+    "....EEEE.MMMM......MMMM.EEECEPPP",
+    "...EEEE..EEE........EEE..CEPPPPP",
     "...........................EC...",
     "................................",
 };
@@ -498,6 +499,8 @@ bool arte_cor(char letra, uint32_t *cor)
     case 'c': *cor = 0xBEB4A5; return true;   /* cinza-claro (peito) */
     case 'B': *cor = 0xF5F5F0; return true;   /* branco (tufos, testa) */
     case 'R': *cor = 0xAA7864; return true;   /* rosado (rosto) */
+    case 'r': *cor = 0x9E4426; return true;   /* avermelhado (dorso do Zogue) */
+    case 'p': *cor = 0xC9A08B; return true;   /* cinza-rosado (corpo do Zogue) */
     case 'b': *cor = 0xFFFFFF; return true;   /* brilho no olho */
     case 'Y': *cor = 0xFFD52E; return true;   /* amarelo */
     case 'A': *cor = 0xD9A400; return true;   /* amarelo-escuro */

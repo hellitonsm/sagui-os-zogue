@@ -2,7 +2,7 @@
 """H03 - estágio 2 e entrada no modo protegido.
 
 Critério: o kernel em C escreve na tela, em modo texto VGA,
-`Ola! Eu sou o SaguiOS.` e a quantidade de memória detectada.
+`Ola! Eu sou o Sagui-OS Zogue Version.` e a quantidade de memória detectada.
 Roda nos dois modos de boot e com duas quantidades de RAM, para provar que a
 memória vem mesmo do mapa E820 e não de um número fixo.
 """
@@ -46,10 +46,10 @@ def main():
     for modo in ("ide", "usb"):
         for mem_mb in (512, 128):
             with Maquina("h03", modo, imagem=imagem_console(), memoria=f"{mem_mb}M") as m:
-                m.esperar_serial("[SAGUI] boot ok", 120)
+                m.esperar_serial("[ZOGUE] boot ok", 120)
                 tela = m.tela_texto()
                 texto = "\n".join(tela)
-                verificar("Ola! Eu sou o SaguiOS." in tela[1], f"[{modo} {mem_mb}M] saudação na tela VGA, no topo (erro 1)")
+                verificar("Ola! Eu sou o Sagui-OS Zogue Version." in tela[1], f"[{modo} {mem_mb}M] saudação na tela VGA, no topo (erro 1)")
                 achou = re.search(r"Memoria detectada: (\d+) MB", texto)
                 verificar(achou is not None, f"[{modo} {mem_mb}M] memória detectada na tela")
                 mb = int(achou.group(1))
@@ -57,16 +57,16 @@ def main():
                 verificar(mem_mb - 2 <= mb <= mem_mb, f"[{modo} {mem_mb}M] {mb} MB livres, coerente com {mem_mb} MB")
                 # Desde a fase 2 o detalhe do ramdisk vai só para a serial.
                 verificar("Ramdisk SGFS" in m.serial(), f"[{modo} {mem_mb}M] ramdisk encontrado depois do kernel")
-                verificar("[SAGUI] boot ok" in m.serial(), f"[{modo} {mem_mb}M] kernel chegou ao fim da inicialização")
+                verificar("[ZOGUE] boot ok" in m.serial(), f"[{modo} {mem_mb}M] kernel chegou ao fim da inicialização")
                 if mem_mb == 512:
                     m.captura(f"H03-kernel-{modo}")
     # H04-fix: com memória acima de 4 GB, a tela separa o total do que um
     # kernel de 32 bits consegue usar, e a saudação continua no topo.
     with Maquina("h03-6g", "ide", imagem=imagem_console(), memoria="6G") as m:
-        m.esperar_serial("[SAGUI] boot ok", 120)
+        m.esperar_serial("[ZOGUE] boot ok", 120)
         tela = m.tela_texto()
         texto = "\n".join(tela)
-        verificar("Ola! Eu sou o SaguiOS." in tela[1], "[6G] saudação continua no topo")
+        verificar("Ola! Eu sou o Sagui-OS Zogue Version." in tela[1], "[6G] saudação continua no topo")
         total = int(re.search(r"Memoria detectada: (\d+) MB", texto).group(1))
         usavel = int(re.search(r"abaixo de 4 GB\): (\d+) MB", texto).group(1))
         verificar(total > 6000 and 2900 < usavel < 4096, f"[6G] total {total} MB, utilizável abaixo de 4 GB {usavel} MB")

@@ -26,7 +26,7 @@ def main():
             m.esperar_serial("sagui:/$", 120)
             tela = m.tela_texto()
             verificar("sagui:/$" in "\n".join(tela), f"[{modo}] prompt sagui:/$ na tela")
-            verificar("Ola! Eu sou o SaguiOS." in tela[1], f"[{modo}] saudação continua no topo com o shell aberto")
+            verificar("Ola! Eu sou o Sagui-OS Zogue Version." in tela[1], f"[{modo}] saudação continua no topo com o shell aberto")
             verificar(sum(1 for l in tela if "[ ok ]" in l) >= 4, f"[{modo}] as etapas de inicialização aparecem com [ ok ]")
             m.captura(f"H09-tela-inicial-{modo}")
             if modo == "usb":
@@ -80,7 +80,7 @@ def main():
             verificar("ação" in out, "acentos digitados chegam ao shell (cat ação)")
 
             m.digitar("reiniciar\n", 0.05)
-            m.esperar_serial("[SAGUI] reiniciando", 30)
+            m.esperar_serial("[ZOGUE] reiniciando", 30)
             try:
                 m.proc.wait(timeout=30)
                 reiniciou = True

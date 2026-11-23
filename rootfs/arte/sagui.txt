@@ -1,7 +1,7 @@
             .-"""-.
-          .'  ___  '.        S A G U I O S
+          .'  ___  '.        Z O G U E   O S
          /  .'   '.  \
-   ___  |  /  o o  \  |  ___      o sagui que roda
+   ___  |  /  o o  \  |  ___      o zogue que roda
   (   ) | |    ^    | | (   )     um sistema inteiro
    \  \ |  \  \_/  /  |/  /       na memoria
     '._\'.  '-----'  .'/_.'
@@ -10,5 +10,5 @@
           (_|  | |_)
              \_/ \_
               \    \~~~~~~~~~~~~
-               \_   \~~~~~~~~~~~~  (a cauda listrada)
+               \_   \~~~~~~~~~~~~  (a cauda preta)
                  '--'

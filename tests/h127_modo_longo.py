@@ -57,16 +57,16 @@ def main():
         texto = "\n".join(m.tela_texto())
         verificar("ERRO: este processador nao tem 64 bits (x86-64)." in texto, "CPU sem 64 bits: mensagem de erro clara")
         verificar("make ARQ=32" in texto, "a mensagem diz como obter a imagem de 32 bits")
-        verificar("[SAGUI] kernel iniciado" not in m.serial(), "o kernel de 64 bits não foi chamado")
+        verificar("[ZOGUE] kernel iniciado" not in m.serial(), "o kernel de 64 bits não foi chamado")
         m.captura("H127-cpu-sem-64-bits", guardar=False)
 
     # O kernel de 64 bits completo, nos dois modos de boot, e um programa de
     # 32 bits rodando nele (modo de compatibilidade).
     for modo in ("ide", "usb"):
         with Maquina("h127", modo, imagem=imagem_console()) as m:
-            m.esperar_serial("[SAGUI] boot ok", 120)
+            m.esperar_serial("[ZOGUE] boot ok", 120)
             s = m.serial()
-            verificar("[SAGUI] modo longo (64 bits)" in s, f"[{modo}] o kernel registrou o modo longo na serial")
+            verificar("[ZOGUE] modo longo (64 bits)" in s, f"[{modo}] o kernel registrou o modo longo na serial")
             verificar("paginacao de 4 niveis" in s, f"[{modo}] paginação de 4 níveis")
             m.esperar_tela("Modo longo (64 bits)", 30)
             verificar(True, f"[{modo}] a tela mostra o modo longo")

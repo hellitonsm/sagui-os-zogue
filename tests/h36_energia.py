@@ -55,11 +55,11 @@ def main():
         m.digitar("reiniciar")
         m.tecla("ret")
         for _ in range(600):
-            if m.serial().count("sagui:/$") >= 2 and m.serial().count("[SAGUI] reiniciando") >= 1:
+            if m.serial().count("sagui:/$") >= 2 and m.serial().count("[ZOGUE] reiniciando") >= 1:
                 break
             time.sleep(0.2)
         s = m.serial()
-        verificar("[SAGUI] reiniciando" in s and s.count("sagui:/$") >= 2, "reiniciar volta ao boot e ao shell")
+        verificar("[ZOGUE] reiniciando" in s and s.count("sagui:/$") >= 2, "reiniciar volta ao boot e ao shell")
     return 0
 
 

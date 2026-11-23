@@ -239,7 +239,7 @@ def main():
         while time.time() < fim and m.serial()[n:].count("sagui:/$") < 2:
             time.sleep(0.3)
         n2 = len(m.serial())
-        verificar("[SAGUI] reiniciando" in m.serial()[n:], "o sistema reiniciou")
+        verificar("[ZOGUE] reiniciando" in m.serial()[n:], "o sistema reiniciou")
         m.digitar("cat /usb/nota.txt\n", 0.03)
         time.sleep(2)
         m.captura("H110-7-ligado-pelo-disco")

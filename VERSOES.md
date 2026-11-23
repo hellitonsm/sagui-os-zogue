@@ -23,6 +23,12 @@ versão é lançada, o que estava lá vira a seção dessa versão.
 
 ## Em desenvolvimento
 
+- **Visual do Zogue:** o tema novo **Zogue** em Configurações > Aparência
+  traz a identidade da subespécie de sagui que batiza o sistema: fundo
+  `zogue.sgi` (cena da mata desenhada por `tools/mkzogue.py`, com o mascote
+  de corpo cinza-rosado, dorso avermelhado e cauda preta) com reserva em
+  degradê avermelhado/cinza-rosado/preto, e o mascote da área de trabalho
+  redesenhado à imagem do Zogue.
 - **Exemplos reorganizados:** programas de exemplo (C, asm, Go, Lua, tinycc e
   jogos) movidos para `userland/exemplos/` no fonte e instalados em `/exemplos/`
   na imagem, com referências e caminhos atualizados para o SaguiOS 3.0.

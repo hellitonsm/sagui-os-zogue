@@ -43,10 +43,10 @@ def main():
 
     for modo in ("ide", "usb"):
         with Maquina("h04", modo) as m:
-            m.esperar_serial("[SAGUI] boot ok", 120)
+            m.esperar_serial("[ZOGUE] boot ok", 120)
             verificar(True, f"[{modo}] boot da imagem .img até o kernel")
     with Maquina("h04-vdi", "ide", imagem=vdi, formato="vdi") as m:
-        m.esperar_serial("[SAGUI] boot ok", 120)
+        m.esperar_serial("[ZOGUE] boot ok", 120)
         verificar(True, "[vdi] boot do arquivo .vdi até o kernel")
         m.captura("H04-boot-vdi")
     return 0

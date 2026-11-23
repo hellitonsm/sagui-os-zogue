@@ -151,15 +151,18 @@ static void relogio_tratar(const evento_t *e)
 
 /* ------------------------------------------------------------ Aparência */
 
-#define QTD_FUNDOS 7
+#define QTD_FUNDOS 8
 /* "sol" e "mata-atlantica" vieram do pull request #1 (Robson): o Brasil com
- * sol é desenhado pelo kernel; a Mata Atlântica é uma imagem feita por IA. */
-static const char *const fundos[QTD_FUNDOS] = { "brasil", "sol", "mata-atlantica", "mata", "ceu", "noite", "terra" };
-static const char *const nomes_fundos[QTD_FUNDOS] = { "Brasil", "Com sol", "M. Atlântica", "Mata", "Céu", "Noite", "Terra" };
+ * sol é desenhado pelo kernel; a Mata Atlântica é uma imagem feita por IA.
+ * "zogue" é o fundo do Zogue, a subespécie de sagui que batiza o sistema:
+ * cena da mata desenhada por script (tools/mkzogue.py) com o mascote. */
+static const char *const fundos[QTD_FUNDOS] = { "brasil", "sol", "mata-atlantica", "mata", "ceu", "noite", "terra", "zogue" };
+static const char *const nomes_fundos[QTD_FUNDOS] = { "Brasil", "Com sol", "M. Atlântica", "Mata", "Céu", "Noite", "Terra", "Zogue" };
 static const uint32_t amostras[QTD_FUNDOS][3] = {
     { 0x0B7A3E, 0xE0B92A, 0x14337E }, { 0x2E8A4A, 0xFFE89A, 0x1C5AA8 }, { 0xE8D49A, 0x5E8A4A, 0x3A7AB8 },
     { 0x0E3B22, 0x2E7D32, 0x0A2416 }, { 0x1E5AA8, 0x6FB3E8, 0xD8EEF8 },
     { 0x0B1026, 0x2B1E5A, 0x060814 }, { 0x7A3E14, 0xD98A3A, 0x3A1E0C },
+    { 0x7A3B2A, 0xC9A08B, 0x141210 },
 };
 #define QTD_TEMAS 4
 static const char *const temas[QTD_TEMAS] = { "escuro", "claro", "mata", "azul" };
