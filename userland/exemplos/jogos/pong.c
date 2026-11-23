@@ -1,99 +1,178 @@
-/* pong.c - Pong contra o CPU no terminal do SaguiOS.
+/* pong.c - Pong gráfico, exemplo de jogo em C no Zogue OS.
  *
+ * Compila dentro do Zogue OS:
  *   cc /exemplos/jogos/pong.c -o /tmp/pong
  *   /tmp/pong
  *
- * W/S movem a raquete da esquerda; Q sai. Primeiro a 5 pontos vence. */
-#include <sagui.h>
+ * W/S ou setas movem a raquete. Primeiro a 5 pontos vence.
+ * R recomeça, Q/Esc fecha.
+ */
+#include "sagui.h"
+#include "gui.h"
 
-static int py_jog, py_cpu, bx, by, bvx, bvy, pontos_jog, pontos_cpu, tick, cpucont;
+/* Códigos de tecla no mapa de teclas_seguradas (scancodes do conjunto 1). */
+#ifndef CV_W
+#define CV_W 0x11
+#endif
+#ifndef CV_S
+#define CV_S 0x1F
+#endif
+#ifndef CV_R
+#define CV_R 0x13
+#endif
 
-static int aleatorio(int n)
+#define LARG 480
+#define ALT  320
+#define TOPO 40       /* faixa do placar */
+#define RAQ_L 8
+#define RAQ_A 56
+#define BOLA 8
+#define RAQ_X_JOG 20
+#define RAQ_X_CPU (LARG - 20 - RAQ_L)
+
+static jan_t *j;
+static int py_jog, py_cpu;
+static int bx, by, bvx, bvy;
+static int pontos_jog, pontos_cpu;
+static uint32_t semente;
+
+static uint32_t aleat(void)
 {
-    return n > 0 ? (int)(tempo_ms() % (unsigned)n) : 0;
+    semente = semente * 1103515245u + 12345u;
+    return semente >> 16;
 }
 
-static void reiniciar_bola(void)
+static void reiniciar_bola(int dir)
 {
-    bx = 20;
-    by = 3 + aleatorio(8);
-    bvx = (aleatorio(2) == 0) ? -1 : 1;
-    bvy = (aleatorio(2) == 0) ? -1 : 1;
+    bx = LARG / 2 - BOLA / 2;
+    by = TOPO + (int)(aleat() % (ALT - TOPO - BOLA - 20)) + 10;
+    bvx = dir;
+    bvy = (aleat() & 1) ? 2 : -2;
+}
+
+static void recomecar(void)
+{
+    py_jog = TOPO + (ALT - TOPO - RAQ_A) / 2;
+    py_cpu = py_jog;
+    pontos_jog = 0;
+    pontos_cpu = 0;
+    reiniciar_bola((aleat() & 1) ? 3 : -3);
 }
 
 static void desenhar(void)
 {
-    int row, col;
-    limpar_tela();
-    imprimir("  PONG   jogador %d x %d cpu\n", pontos_jog, pontos_cpu);
-    for (row = 0; row < 14; row++) {
-        for (col = 0; col < 40; col++) {
-            if (row == 0 || row == 13) { imprimir("#"); continue; }
-            if (col == 1 && row >= py_jog && row <= py_jog + 2) { imprimir("|"); continue; }
-            if (col == 38 && row >= py_cpu && row <= py_cpu + 2) { imprimir("|"); continue; }
-            if (col == bx && row == by) { imprimir("o"); continue; }
-            imprimir(" ");
-        }
-        imprimir("\n");
+    char t[48];
+
+    /* fundo */
+    g_retangulo(j, 0, 0, LARG, ALT, 0x101820);
+    /* faixa do placar */
+    g_retangulo(j, 0, 0, LARG, TOPO, 0x182838);
+    formatar_texto(t, sizeof t, "Jogador %d  x  %d CPU", pontos_jog, pontos_cpu);
+    g_texto(j, (LARG - g_largura_texto(t)) / 2, 12, t, COR_BRANCO);
+
+    /* linha central tracejada */
+    for (int y = TOPO + 8; y < ALT - 8; y += 16)
+        g_retangulo(j, LARG / 2 - 1, y, 2, 8, 0x305060);
+
+    /* raquetes e bola */
+    g_retangulo(j, RAQ_X_JOG, py_jog, RAQ_L, RAQ_A, 0x50D060);
+    g_retangulo(j, RAQ_X_CPU, py_cpu, RAQ_L, RAQ_A, 0xE05050);
+    g_retangulo(j, bx, by, BOLA, BOLA, COR_BRANCO);
+
+    /* instrucoes / fim */
+    if (pontos_jog >= 5 || pontos_cpu >= 5) {
+        const char *msg = pontos_jog >= 5 ? "Voce venceu!  R recomeca  Q sai"
+                                           : "O CPU venceu!  R recomeca  Q sai";
+        g_texto(j, (LARG - g_largura_texto(msg)) / 2, ALT - 24, msg, 0xFFD040);
+    } else {
+        g_texto(j, 10, ALT - 20, "W/S ou setas movem  Q sai", 0x8090A0);
     }
-    imprimir("W/S movem a raquete, Q sai\n");
+    jan_mostrar(j);
 }
 
 int principal(int argc, char **argv)
 {
-    int c;
+    evento_t e;
+    unsigned char teclas[32];
+    int antes_r = 0;
+
     (void)argc;
     (void)argv;
-    pontos_jog = 0;
-    pontos_cpu = 0;
-    tick = 0;
-    cpucont = 0;
-    py_jog = 5;
-    py_cpu = 5;
-    reiniciar_bola();
-    modo_terminal(TERM_BRUTO);
+    semente = tempo_ms() | 1;
+    recomecar();
+
+    j = jan_abrir("Pong", LARG, ALT);
+    if (!j) return 1;
+    desenhar();
+
     for (;;) {
-        dormir(60);
-        c = tecla_tentada();
-        while (c >= 0) {
-            if (c == 'q' || c == 'Q') {
-                modo_terminal(TERM_LINHA);
-                imprimir("Ate mais!\n");
-                return 0;
+        while (proximo_evento(j->id, &e, false) == 1) {
+            if (e.tipo == EV_FECHAR) { jan_fechar(j); return 0; }
+            if (e.tipo == EV_TECLA) {
+                if (e.tecla == 'q' || e.tecla == 'Q' || e.tecla == TECLA_ESC) {
+                    jan_fechar(j);
+                    return 0;
+                }
             }
-            if (c == 'w' || c == 'W') py_jog--;
-            if (c == 's' || c == 'S') py_jog++;
-            c = tecla_tentada();
         }
-        if (py_jog < 1) py_jog = 1;
-        if (py_jog > 10) py_jog = 10;
-        cpucont++;
-        if (cpucont >= 3) {
-            cpucont = 0;
-            if (by < py_cpu) py_cpu--;
-            if (by > py_cpu + 2) py_cpu++;
+
+        teclas_seguradas(teclas);
+        /* R recomeca (borda de subida para nao repetir) */
+        {
+            int r = SEGURADA(teclas, CV_R);
+            if (r && !antes_r) recomecar();
+            antes_r = r;
         }
-        if (py_cpu < 1) py_cpu = 1;
-        if (py_cpu > 10) py_cpu = 10;
-        tick++;
-        if (tick >= 2) {
-            tick = 0;
+
+        if (pontos_jog < 5 && pontos_cpu < 5) {
+            /* movimento do jogador */
+            if (SEGURADA(teclas, CV_CIMA) || SEGURADA(teclas, CV_W)) py_jog -= 4;
+            if (SEGURADA(teclas, CV_BAIXO) || SEGURADA(teclas, CV_S)) py_jog += 4;
+            if (py_jog < TOPO) py_jog = TOPO;
+            if (py_jog > ALT - RAQ_A) py_jog = ALT - RAQ_A;
+
+            /* CPU simples: segue a bola com um pouco de atraso */
+            {
+                int centro_cpu = py_cpu + RAQ_A / 2;
+                int centro_bola = by + BOLA / 2;
+                if (centro_cpu < centro_bola - 8) py_cpu += 3;
+                else if (centro_cpu > centro_bola + 8) py_cpu -= 3;
+                if (py_cpu < TOPO) py_cpu = TOPO;
+                if (py_cpu > ALT - RAQ_A) py_cpu = ALT - RAQ_A;
+            }
+
+            /* bola */
             bx += bvx;
             by += bvy;
-            if (by <= 1) { by = 1; bvy = -bvy; }
-            if (by >= 12) { by = 12; bvy = -bvy; }
-            if (bx == 2 && bvx < 0 && by >= py_jog && by <= py_jog + 2) { bvx = -bvx; bx = 3; }
-            if (bx == 37 && bvx > 0 && by >= py_cpu && by <= py_cpu + 2) { bvx = -bvx; bx = 36; }
-            if (bx <= 0) { pontos_cpu++; reiniciar_bola(); }
-            if (bx >= 39) { pontos_jog++; reiniciar_bola(); }
+            if (by <= TOPO) { by = TOPO; bvy = -bvy; }
+            if (by + BOLA >= ALT) { by = ALT - BOLA; bvy = -bvy; }
+
+            /* rebate na raquete do jogador */
+            if (bvx < 0 && bx <= RAQ_X_JOG + RAQ_L && bx + BOLA >= RAQ_X_JOG &&
+                by + BOLA >= py_jog && by <= py_jog + RAQ_A) {
+                bx = RAQ_X_JOG + RAQ_L;
+                bvx = -bvx;
+                if (bvx < 6) bvx++;
+                /* angulo conforme ponto de impacto */
+                bvy = ((by + BOLA / 2) - (py_jog + RAQ_A / 2)) / 6;
+                if (bvy == 0) bvy = (aleat() & 1) ? 1 : -1;
+            }
+            /* rebate na raquete do CPU */
+            if (bvx > 0 && bx + BOLA >= RAQ_X_CPU && bx <= RAQ_X_CPU + RAQ_L &&
+                by + BOLA >= py_cpu && by <= py_cpu + RAQ_A) {
+                bx = RAQ_X_CPU - BOLA;
+                bvx = -bvx;
+                if (bvx > -6) bvx--;
+                bvy = ((by + BOLA / 2) - (py_cpu + RAQ_A / 2)) / 6;
+                if (bvy == 0) bvy = (aleat() & 1) ? 1 : -1;
+            }
+
+            /* ponto */
+            if (bx + BOLA < 0) { pontos_cpu++; reiniciar_bola(3); }
+            else if (bx > LARG) { pontos_jog++; reiniciar_bola(-3); }
         }
+
         desenhar();
-        if (pontos_jog >= 5 || pontos_cpu >= 5) {
-            modo_terminal(TERM_LINHA);
-            limpar_tela();
-            if (pontos_jog >= 5) imprimir("Voce venceu!\n");
-            else imprimir("O CPU venceu!\n");
-            return 0;
-        }
+        dormir(16);
     }
 }

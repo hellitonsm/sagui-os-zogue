@@ -1,11 +1,20 @@
-/* sudoku.c - Sudoku 9x9 no terminal do SaguiOS.
+/* sudoku.c - Sudoku 9x9 gráfico, exemplo de jogo em C no Zogue OS.
  *
+ * Compila dentro do Zogue OS:
  *   cc /exemplos/jogos/sudoku.c -o /tmp/sudoku
  *   /tmp/sudoku
  *
- * Comando: "linha coluna valor" (ex.: "3 5 7"); valor 0 apaga uma casa;
- * "q" sai. Linha e coluna de 1 a 9. */
-#include <sagui.h>
+ * Setas movem a seleção, 1-9 colocam o número, 0/Backspace apaga,
+ * R recomeça e Q/Esc fecha. Clique numa casa também seleciona.
+ */
+#include "sagui.h"
+#include "gui.h"
+
+#define LARG 436
+#define ALT  512
+#define GX   20
+#define GY   76
+#define CEL  44
 
 static int tab[81] = {
     5,3,0,0,7,0,0,0,0,
@@ -18,124 +27,164 @@ static int tab[81] = {
     0,0,0,4,1,9,0,0,5,
     0,0,0,0,8,0,0,7,9
 };
+static int inicial[81];
 static int fixo[81];
-static char linha[16];
+static int sel;
+static int venceu;
+static jan_t *j;
 
-static void preparar_fixos(void)
+static void preparar(void)
 {
     int i;
-    for (i = 0; i < 81; i++)
+    for (i = 0; i < 81; i++) {
+        inicial[i] = tab[i];
         fixo[i] = tab[i] != 0;
+    }
+    sel = 0;
+    venceu = 0;
 }
 
+/* O valor v pode entrar na casa pos? Ignora a propria casa. */
 static int pode_por(int pos, int v)
 {
-    int i, j, l, c, bl, bc;
-    l = pos / 9;
-    c = pos % 9;
+    int l = pos / 9, c = pos % 9, i, y, x, p;
     for (i = 0; i < 9; i++) {
-        if (tab[l * 9 + i] == v) return 0;
-        if (tab[i * 9 + c] == v) return 0;
+        if (i != c && tab[l * 9 + i] == v) return 0;
+        if (i != l && tab[i * 9 + c] == v) return 0;
     }
-    bl = (l / 3) * 3;
-    bc = (c / 3) * 3;
-    for (i = 0; i < 3; i++)
-        for (j = 0; j < 3; j++)
-            if (tab[(bl + i) * 9 + bc + j] == v) return 0;
+    for (y = 0; y < 3; y++)
+        for (x = 0; x < 3; x++) {
+            p = ((l / 3) * 3 + y) * 9 + (c / 3) * 3 + x;
+            if (p != pos && tab[p] == v) return 0;
+        }
     return 1;
 }
 
-static int completo(void)
+static int conflito(int pos)
+{
+    if (tab[pos] == 0) return 0;
+    return !pode_por(pos, tab[pos]);
+}
+
+static int mesma_caixa(int a, int b)
+{
+    return (a / 9) / 3 == (b / 9) / 3 && (a % 9) / 3 == (b % 9) / 3;
+}
+
+static int terminou(void)
 {
     int i;
     for (i = 0; i < 81; i++)
-        if (tab[i] == 0) return 0;
+        if (tab[i] == 0 || conflito(i)) return 0;
     return 1;
 }
 
-static void mostrar_tabuleiro(void)
+static void desenhar(void)
 {
-    int i, j, v;
-    limpar_tela();
-    imprimir("    1 2 3   4 5 6   7 8 9\n");
-    imprimir("  -----------------------\n");
-    for (i = 0; i < 9; i++) {
-        imprimir("%d | ", i + 1);
-        for (j = 0; j < 9; j++) {
-            v = tab[i * 9 + j];
-            if (v == 0) imprimir(". ");
-            else imprimir("%d ", v);
-            if (j == 2 || j == 5) imprimir("| ");
-        }
-        imprimir("|\n");
-        if (i == 2 || i == 5) imprimir("  -----------------------\n");
+    int p, l, c, x, y, i;
+    uint32_t cor, fundo;
+    char t[2];
+
+    g_retangulo(j, 0, 0, LARG, ALT, COR_FUNDO);
+    g_texto(j, 20, 14, "SUDOKU", COR_TEXTO);
+    g_texto(j, 20, 40, "Setas movem  1-9 poe  0 apaga  R recomeca  Q sai",
+            COR_TEXTO_FRACO);
+
+    for (p = 0; p < 81; p++) {
+        l = p / 9;
+        c = p % 9;
+        x = GX + c * CEL;
+        y = GY + l * CEL;
+        fundo = COR_BRANCO;
+        if (l == sel / 9 || c == sel % 9 || mesma_caixa(p, sel))
+            fundo = 0xE8EFF8;
+        if (p == sel)
+            fundo = 0xC9DDF5;
+        g_retangulo(j, x, y, CEL, CEL, fundo);
     }
+
+    for (p = 0; p < 81; p++) {
+        if (tab[p] == 0) continue;
+        l = p / 9;
+        c = p % 9;
+        x = GX + c * CEL + (CEL - LETRA_L) / 2;
+        y = GY + l * CEL + (CEL - LETRA_A) / 2;
+        t[0] = (char)('0' + tab[p]);
+        t[1] = 0;
+        if (conflito(p))
+            cor = 0xC02020;
+        else if (fixo[p])
+            cor = COR_TEXTO;
+        else
+            cor = COR_SELECAO;
+        g_texto(j, x, y, t, cor);
+    }
+
+    for (i = 0; i <= 9; i++) {
+        x = GX + i * CEL;
+        y = GY + i * CEL;
+        cor = (i % 3 == 0) ? COR_TEXTO : COR_BORDA;
+        g_retangulo(j, x, GY, (i % 3 == 0) ? 2 : 1, 9 * CEL + 1, cor);
+        g_retangulo(j, GX, y, 9 * CEL + 1, (i % 3 == 0) ? 2 : 1, cor);
+    }
+
+    if (venceu)
+        g_texto(j, 20, GY + 9 * CEL + 18, "Voce venceu!  R recomeca  Q sai",
+                COR_DESTAQUE);
+    else
+        g_texto(j, 20, GY + 9 * CEL + 18, "Preencha todas as casas sem repetir",
+                COR_TEXTO_FRACO);
+
+    jan_mostrar(j);
 }
 
-static int ler_linha_cmd(void)
+static void colocar(int v)
 {
-    int i, n;
-    char c;
-    i = 0;
-    for (;;) {
-        n = ler(ENTRADA, &c, 1);
-        if (n <= 0) return -1;
-        if (c == '\n' || c == '\r') break;
-        if (i < 14) { linha[i] = c; i++; }
-    }
-    linha[i] = 0;
-    return i;
-}
-
-/* Devolve o proximo numero da linha, -1 se acabou ou -2 se pediu para sair. */
-static int proximo_int(int *pos)
-{
-    int n = -1;
-    while (linha[*pos] != 0 && (linha[*pos] < '0' || linha[*pos] > '9')) {
-        if (linha[*pos] == 'q' || linha[*pos] == 'Q') return -2;
-        (*pos)++;
-    }
-    if (linha[*pos] == 0) return -1;
-    while (linha[*pos] >= '0' && linha[*pos] <= '9') {
-        if (n < 0) n = 0;
-        n = n * 10 + (linha[*pos] - '0');
-        (*pos)++;
-    }
-    return n;
+    if (fixo[sel]) return;
+    tab[sel] = v;
+    venceu = terminou();
 }
 
 int principal(int argc, char **argv)
 {
-    int l, c, v, cmd, pos, idx;
+    evento_t e;
+    int p, l, c;
+
     (void)argc;
     (void)argv;
-    preparar_fixos();
+    preparar();
+    j = jan_abrir("Sudoku", LARG, ALT);
+    if (!j) return 1;
+    desenhar();
+
     for (;;) {
-        mostrar_tabuleiro();
-        if (completo()) {
-            imprimir("Parabens, voce completou o sudoku!\n");
-            return 0;
+        if (proximo_evento(j->id, &e, true) != 1) continue;
+        if (e.tipo == EV_FECHAR) break;
+
+        if (e.tipo == EV_CLIQUE && (e.botoes & 1)) {
+            c = (e.x - GX) / CEL;
+            l = (e.y - GY) / CEL;
+            if (e.x >= GX && e.y >= GY && c >= 0 && c < 9 && l >= 0 && l < 9)
+                sel = l * 9 + c;
+        } else if (e.tipo == EV_TECLA) {
+            if (e.tecla == TECLA_ESQUERDA && sel % 9 > 0) sel--;
+            else if (e.tecla == TECLA_DIREITA && sel % 9 < 8) sel++;
+            else if (e.tecla == TECLA_CIMA && sel / 9 > 0) sel -= 9;
+            else if (e.tecla == TECLA_BAIXO && sel / 9 < 8) sel += 9;
+            else if (e.tecla >= '1' && e.tecla <= '9') colocar((int)(e.tecla - '0'));
+            else if (e.tecla == '0' || e.tecla == '\b' || e.tecla == TECLA_DELETE)
+                colocar(0);
+            else if (e.tecla == 'r' || e.tecla == 'R') {
+                for (p = 0; p < 81; p++) tab[p] = inicial[p];
+                sel = 0;
+                venceu = 0;
+            } else if (e.tecla == 'q' || e.tecla == 'Q' || e.tecla == TECLA_ESC) {
+                break;
+            }
         }
-        imprimir("linha coluna valor (ex.: 3 5 7), 0 apaga, q sai\n");
-        if (ler_linha_cmd() < 0) { imprimir("Fim da entrada.\n"); return 0; }
-        idx = 0;
-        cmd = proximo_int(&idx);
-        if (cmd == -2) { imprimir("Ate mais!\n"); return 0; }
-        l = cmd;
-        c = proximo_int(&idx);
-        v = proximo_int(&idx);
-        if (l < 1 || l > 9 || c < 1 || c > 9 || v < 0 || v > 9) {
-            imprimir("Formato: linha coluna valor (ex.: 3 5 7)\n");
-            continue;
-        }
-        pos = (l - 1) * 9 + (c - 1);
-        if (fixo[pos]) { imprimir("Esse numero faz parte do puzzle.\n"); continue; }
-        if (v != 0 && !pode_por(pos, v)) {
-            imprimir("Jogada invalida: ja existe na linha, coluna ou bloco.\n");
-            continue;
-        }
-        tab[pos] = v;
-        if (v == 0) imprimir("Casa apagada.\n");
-        else imprimir("Jogada aceita.\n");
+        desenhar();
     }
+
+    jan_fechar(j);
+    return 0;
 }
