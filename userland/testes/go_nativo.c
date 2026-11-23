@@ -37,8 +37,8 @@ static int capturar(char *const args[], char *buf, unsigned max, int *codigo)
 int principal(int argc, char **argv)
 {
     (void)argc; (void)argv;
-    if (compilar("/go/ola.go", "/go/ola") != 0) return 1;
-    if (compilar("/go/biblioteca.go", "/go/biblioteca") != 0) return 2;
+    if (compilar("/exemplos/go/ola.go", "/go/ola") != 0) return 1;
+    if (compilar("/exemplos/go/biblioteca.go", "/go/biblioteca") != 0) return 2;
 
     char buf[256];
     int codigo = -1;

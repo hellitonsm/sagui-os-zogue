@@ -7,11 +7,11 @@ o compilador do subconjunto (`csagui`, ver `docs/asm-c.md`) nem o interpretador
 Go/Lua — é o compilador C de verdade.
 
 ```text
-tinycc /tcc/hello-tcc.c     # gera ./hello-tcc (sem -o)
+tinycc /exemplos/tcc/hello-tcc.c     # gera ./hello-tcc (sem -o)
 ./hello-tcc
 ```
 
-`/tcc/hello-tcc.c` é o exemplo empacotado na imagem. O teste `tests/h46_tinycc.py`
+`/exemplos/tcc/hello-tcc.c` é o exemplo empacotado na imagem. O teste `tests/h46_tinycc.py`
 (caminho `/testes/tinycc`) faz exatamente isso no convidado: roda `tinycc -v`,
 compila o exemplo, executa o resultado e confere a saída via pipe.
 
@@ -90,11 +90,11 @@ O tinycc compila a biblioteca no hospedeiro e a embute na imagem junto com o
 resto do sysroot:
 
 ```text
-tinycc /tcc/exemplo-gui.c -lsaguigui   # gera ./exemplo-gui (sem -o)
+tinycc /exemplos/tcc/exemplo-gui.c -lsaguigui   # gera ./exemplo-gui (sem -o)
 ./exemplo-gui
 ```
 
-O exemplo empacotado na imagem (`rootfs/tcc/exemplo-gui.c`) é uma **demonstração
+O exemplo empacotado na imagem (`userland/exemplos/exemplos/tcc/exemplo-gui.c`) é uma **demonstração
 que roda sozinha na tela** — sem precisar de humano: abre a janela, deixa um
 relógio de uptime correndo no canto, espera 1 s, digita `SaguiOS` na caixa de
 texto letra a letra, clica no próprio botão 3 vezes (o contador sobe na tela),
@@ -122,7 +122,7 @@ O `gui.h` expõe (veja `userland/inc/gui.h`):
 | Eventos | `proximo_evento` (`EV_CLIQUE`, `EV_SOLTOU`, `EV_MOVER`, `EV_TECLA`, `EV_FECHAR`) |
 
 Um programa de verdade começa criando a janela e reage a `proximo_evento`;
-veja o bloco `--interativo` de `rootfs/tcc/exemplo-gui.c` para o esqueleto
+veja o bloco `--interativo` de `userland/exemplos/exemplos/tcc/exemplo-gui.c` para o esqueleto
 mínimo (loop de eventos interativo com botão e caixa).
 
 O `gui.h` usa os tipos do `abi.h` (`evento_t`, `retangulo_t`, `EV_*`) e
@@ -135,7 +135,7 @@ make: cada `.mk` é uma receita simples de `CHAVE = valor` com tudo o que o
 tinycc precisa — fonte, saída, bibliotecas, opções e compilador.
 
 ```text
-make /jogos/grafico/sudoku.mk    # compila um programa
+make /exemplos/jogos/grafico/sudoku.mk    # compila um programa
 make -all /jogos/grafico         # compila todos os .mk da pasta
 make                             # lista os .mk da pasta atual
 ```
@@ -154,11 +154,11 @@ Campos aceitos (aliases entre parênteses):
 | `EXECUTAR` (`RUN`) | `sim` roda depois de compilar | `nao` |
 
 Os caminhos dos fontes são resolvidos a partir da pasta do `.mk`; a saída é
-criada na pasta atual, como no gcc (`make /jogos/grafico/sudoku.mk` a partir
+criada na pasta atual, como no gcc (`make /exemplos/jogos/grafico/sudoku.mk` a partir
 de `/` gera `/sudoku`). `make -all` só compila, sem executar, para não abrir
 várias janelas de uma vez.
 
-As receitas prontas dos jogos gráficos ficam em `/jogos/grafico/*.mk`
+As receitas prontas dos jogos gráficos ficam em `/exemplos/jogos/grafico/*.mk`
 (`sudoku.mk`, `tetris.mk`, `velha.mk`) e usam `BIBLIOTECAS = -lsaguigui` e
 `OPCOES = -static`. Veja [jogos.md](jogos.md#jogos-gráficos-tinycc--libsaguigui).
 
@@ -187,10 +187,10 @@ argumentos. (O `tools/tinycc-sagui/crt1-sagui.asm` já usava o layout correto.)
 
 ```text
 tinycc -v                    # versão
-tinycc -E -o - /tcc/hello-tcc.c   # só pré-processar
-tinycc -c /tcc/hello-tcc.c        # gera ./hello-tcc.o
-tinycc /tcc/hello-tcc.c           # gera ./hello-tcc (sem -o)
-tinycc -o /tmp/ola /tcc/hello-tcc.c   # nome/caminho escolhido com -o
+tinycc -E -o - /exemplos/tcc/hello-tcc.c   # só pré-processar
+tinycc -c /exemplos/tcc/hello-tcc.c        # gera ./hello-tcc.o
+tinycc /exemplos/tcc/hello-tcc.c           # gera ./hello-tcc (sem -o)
+tinycc -o /tmp/ola /exemplos/tcc/hello-tcc.c   # nome/caminho escolhido com -o
 ```
 
 ## Onde estão as peças
@@ -207,10 +207,10 @@ tinycc -o /tmp/ola /tcc/hello-tcc.c   # nome/caminho escolhido com -o
 | Funções novas da libc | `userland/mlibc/{error,stdio,stdlib,time,unistd}.c` (assert_fail, freopen, getenv, localtime, realpath, execvp, environ, __extendsfdf2) |
 | Regras de build/sysroot | `Makefile` (alvo `sysroot`, `build/userland/bin/tinycc`, `build/sysroot/lib/libc.a`, `build/sysroot/lib/libsaguigui.a`) |
 | Kit gráfico usado pelo tinycc | `userland/libsagui/gui.c` → `libsaguigui.a`; header `userland/inc/gui.h` → `/usr/include/gui.h` |
-| Exemplo gráfico | `rootfs/tcc/exemplo-gui.c` → `/tcc/exemplo-gui.c` |
+| Exemplo gráfico | `userland/exemplos/exemplos/tcc/exemplo-gui.c` → `/exemplos/tcc/exemplo-gui.c` |
 | Teste gráfico no convidado | `userland/testes/gui_tinycc.c` → `/testes/gui_tinycc` (via `tests/h47_gui_tinycc.py`, `--vesa`) |
 | `make` (compilador de `.mk`) | `userland/programas/make.c` → `/bin/make` |
-| Jogos gráficos e receitas `.mk` | `rootfs/jogos/grafico/` → `/jogos/grafico/` |
-| Exemplo | `rootfs/tcc/hello-tcc.c` |
+| Jogos gráficos e receitas `.mk` | `userland/exemplos/exemplos/jogos/grafico/` → `/exemplos/jogos/grafico/` |
+| Exemplo | `userland/exemplos/exemplos/tcc/hello-tcc.c` |
 | Teste no convidado | `userland/testes/tinycc.c` → `/testes/tinycc` |
 | Teste de ABI | `userland/testes/abiargv.c` → `/testes/abiargv` |

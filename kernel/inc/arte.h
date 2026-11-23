@@ -21,7 +21,7 @@ bool arte_cor(char letra, uint32_t *cor);
 #define ICONE_LADO   64
 #define ICONE_PEQUENO 40
 #define ARTE_PX(nome) extern const uint32_t arte_px_##nome[], arte_px_##nome##_40[], arte_px_##nome##_20[];
-ARTE_PX(arquivos) ARTE_PX(terminal) ARTE_PX(editor) ARTE_PX(calculadora) ARTE_PX(banana) ARTE_PX(sagui3d)
+ARTE_PX(arquivos) ARTE_PX(terminal) ARTE_PX(editor) ARTE_PX(ide) ARTE_PX(calculadora) ARTE_PX(banana) ARTE_PX(sagui3d)
 ARTE_PX(sobre) ARTE_PX(pendrive) ARTE_PX(configuracoes) ARTE_PX(cipo) ARTE_PX(instalado) ARTE_PX(tocador)
 ARTE_PX(saguicode) ARTE_PX(jogos) ARTE_PX(cacabananas) ARTE_PX(paciencia) ARTE_PX(chip8)
 ARTE_PX(jclic) ARTE_PX(chuva) ARTE_PX(triangulos) ARTE_PX(componentes) ARTE_PX(energia)

@@ -10,7 +10,7 @@ import sys
 import time
 
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
-from qemu import Maquina, verificar, janela, cor_do_pixel  # noqa: E402
+from qemu import Maquina, verificar, abrir_terminal, janela, cor_do_pixel  # noqa: E402
 
 REDE = ["-netdev", "user,id=n0", "-device", "e1000,netdev=n0,mac=52:54:00:12:34:56"]
 X0 = 190
@@ -19,7 +19,8 @@ ICONE = (1024 - 21 * 8 - 10 - 30 - 28 + 2, 2 + 2 + 1)   # pixel da borda de cima
 
 def main():
     with Maquina("h47", "ide", extras=REDE) as m:
-        m.esperar_serial("sagui:/$", 120)
+        m.esperar_serial("area de trabalho no ar", 120)
+        abrir_terminal(m)   # o Terminal agora abre pelo ícone (D039)
         m.esperar_serial("[REDE] DHCP: endereco", 20)
         time.sleep(1.5)
         png = m.captura("H47-1-barra-conectado")

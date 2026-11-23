@@ -24,9 +24,9 @@ No Terminal do SaguiOS:
 
 ```text
 gosagui version
-gosagui build -o /go/ola /go/ola.go
+gosagui build -o /go/ola /exemplos/go/ola.go
 /go/ola
-gosagui build -o /go/biblioteca /go/biblioteca.go
+gosagui build -o /go/biblioteca /exemplos/go/biblioteca.go
 /go/biblioteca
 ```
 
@@ -129,7 +129,7 @@ python3 tests/rodar_todos.py h13 h14 h15 h16
 
 O teste nativo executa `/testes/go_nativo` no QEMU, que:
 
-1. Compila `/go/ola.go` e `/go/biblioteca.go` dentro do convidado.
+1. Compila `/exemplos/go/ola.go` e `/exemplos/go/biblioteca.go` dentro do convidado.
 2. Executa os dois ELFs por pipe, conferindo codigo de saida e a ordem `init` -> `main`.
 3. Confere a saida de `fmt.Print`/`fmt.Println` com multiplos argumentos.
 4. Confere o registro de `sagui.Registrar` na serial.
@@ -158,4 +158,4 @@ O compilador minimo aqui nao e um bootstrap do compilador oficial: o subconjunto
 os argumentos por espacos e adiciona uma quebra de linha. So sao aceitos
 literais string. O apelido padrao e `log`. Este e um pacote proprio, sem
 data/hora e sem compatibilidade com o pacote `log` oficial. Veja
-`/go/importacoes.go`.
+`/exemplos/go/importacoes.go`.

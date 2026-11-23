@@ -1,7 +1,7 @@
-/* hello-tcc.c - programa C "de verdade" compilado dentro do SaguiOS pelo
- * tinycc. Usa stdio, string e funcoes com loop do libc nativo:
+/* hello-tcc.c - programa C compilado dentro do SaguiOS pelo tinycc.
+ * Usa stdio, string e funcoes com loop do libc nativo:
  *
- *   tinycc /tcc/hello-tcc.c     # gera ./hello-tcc (sem -o)
+ *   tinycc /exemplos/tcc/hello-tcc.c     # gera ./hello-tcc (sem -o)
  *   ./hello-tcc
  */
 #include <stdio.h>

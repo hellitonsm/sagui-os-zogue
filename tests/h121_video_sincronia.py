@@ -32,7 +32,7 @@ import sys
 import time
 
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
-from qemu import Maquina, verificar, criar_pendrive, pendrive_qemu, SAIDA  # noqa: E402
+from qemu import Maquina, verificar, abrir_terminal, criar_pendrive, pendrive_qemu, SAIDA  # noqa: E402
 from h40_som import ler_wav, som_qemu  # noqa: E402
 from h88_video_alto import achar_video  # noqa: E402
 
@@ -59,7 +59,8 @@ def main():
     wav = os.path.join(SAIDA, "h121-video.wav")
     pen = criar_pendrive("h121-pen", mb=64, rotulo="DADOS", arquivos={"v.mp4": open(mp4, "rb").read()})
     with Maquina("h121", "ide", memoria="768M", extras=["-device", "usb-ehci,id=ehci"] + pendrive_qemu(pen) + som_qemu(wav)) as m:
-        m.esperar_serial("sagui:/$", 120)
+        m.esperar_serial("area de trabalho no ar", 120)
+        abrir_terminal(m)   # o Terminal agora abre pelo ícone (D039)
         m.comando("montar")
         time.sleep(2)                         # o som de "pendrive montado" acaba
         inicio_wav = os.path.getsize(wav)     # o som do boot e do pendrive fica antes daqui

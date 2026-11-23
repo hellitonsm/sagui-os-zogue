@@ -9,7 +9,7 @@ def main():
     with Maquina('h39-ide', 'ide') as m:
         m.esperar_serial('area de trabalho no ar', 120)
         abrir_terminal(m)   # o Terminal agora abre pelo ícone (D039)
-        m.comando('ide /go/ola.go')
+        m.comando('ide /exemplos/go/ola.go')
         m.esperar_serial('ide: pronto', 30)
         match = re.findall(r'criada por \d+: "IDE - sem nome" (\d+)x(\d+) em \((\d+),(\d+)\)', m.serial())[-1]
         x, y = int(match[2]), int(match[3])
@@ -21,8 +21,8 @@ def main():
         m.clique(x + int(match[0]) + 4 - 2 - 20 + 8, y + 12)
         m.esperar_serial('ide: fechado', 20)
         time.sleep(1)
-        m.comando('ide /lua/ola.lua')
-        m.esperar_serial('ide: aberto /lua/ola.lua', 30)
+        m.comando('ide /exemplos/lua/ola.lua')
+        m.esperar_serial('ide: aberto /exemplos/lua/ola.lua', 30)
         match = re.findall(r'criada por \d+: "IDE - sem nome" (\d+)x(\d+) em \((\d+),(\d+)\)', m.serial())[-1]
         x, y = int(match[2]), int(match[3])
         m.clique(x + 2 + 290, y + 24 + 52)

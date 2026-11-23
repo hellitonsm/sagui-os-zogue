@@ -11,7 +11,7 @@ import sys
 import time
 
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
-from qemu import Maquina, verificar  # noqa: E402
+from qemu import Maquina, verificar, abrir_terminal  # noqa: E402
 
 TEXTO = "Olá, SaguiOS! Ação e coração."
 
@@ -31,7 +31,8 @@ def item(a, i):
 
 def main():
     with Maquina("h23", "ide") as m:
-        m.esperar_serial("sagui:/$", 120)
+        m.esperar_serial("area de trabalho no ar", 120)
+        abrir_terminal(m)   # o Terminal agora abre pelo ícone (D039)
         time.sleep(1)
         # Nota criada no Editor (H25), para reabrir pelo Arquivos.
         m.comando("editor")
@@ -51,10 +52,10 @@ def main():
         m.esperar_serial("arquivos: pronto", 20)
         time.sleep(0.5)
         a = janela(m.serial(), "Arquivos")
-        verificar("arquivos: pasta / (11 itens)" in m.serial(), "Arquivos abre na raiz: 9 pastas (com fontes/, H82) e 2 arquivos")
+        verificar("arquivos: pasta / (16 itens)" in m.serial(), "Arquivos abre na raiz: 14 pastas (com exemplos/, H87) e 2 arquivos")
         m.captura("H23-arquivos-raiz")
 
-        m.clique(*item(a, 3), duplo=True)                         # historia/ (depois de arte, bin e fontes)
+        m.clique(*item(a, 5), duplo=True)                         # historia/ (depois de arte, bin, config, exemplos e fontes)
         m.esperar_serial("arquivos: pasta /historia (2 itens)", 10)
         verificar(True, "duplo clique na pasta historia entra nela")
         m.clique(*item(a, 0), duplo=True)                         # linux.txt
@@ -67,8 +68,8 @@ def main():
         time.sleep(0.4)
 
         m.clique(a["x"] + 8 + 45, a["y"] + 7 + 13)               # Voltar
-        m.esperar_serial("arquivos: pasta / (11 itens)", 10)
-        m.clique(*item(a, 8), duplo=True)                         # tmp/ (depois de arte, bin, fontes, historia, jogos, sistema, sons e testes)
+        m.esperar_serial("arquivos: pasta / (16 itens)", 10)
+        m.clique(*item(a, 11), duplo=True)                        # tmp/ (depois de arte, bin, config, exemplos, fontes, historia, musicas, sistema, sons, store e testes)
         m.esperar_serial("arquivos: pasta /tmp (1 itens)", 10)
         m.clique(*item(a, 0), duplo=True)                         # nota.txt
         m.esperar_serial("editor: aberto /tmp/nota.txt (29 bytes)", 10)

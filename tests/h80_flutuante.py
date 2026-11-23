@@ -12,7 +12,7 @@ import sys
 import time
 
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
-from qemu import Maquina, verificar  # noqa: E402
+from qemu import Maquina, verificar, abrir_terminal  # noqa: E402
 
 
 def esperado(n):
@@ -30,7 +30,8 @@ def esperado(n):
 
 def main():
     with Maquina("h80", "ide", memoria="512M") as m:
-        m.esperar_serial("sagui:/$", 120)
+        m.esperar_serial("area de trabalho no ar", 120)
+        abrir_terminal(m)   # o Terminal agora abre pelo ícone (D039)
         time.sleep(1)
         verificar("[FPU] ponto flutuante ligado" in m.serial(), "o kernel ligou o ponto flutuante (FXSAVE por processo)")
         m.comando("/testes/flutuante 1 &", tempo=10)

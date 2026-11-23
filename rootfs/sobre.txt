@@ -1,12 +1,15 @@
-Sobre o SaguiOS
-===============
+Sobre o Zogue OS
+================
+
+O Zogue OS é um projeto separado baseado no SaguiOS. Todo o crédito da base
+do sistema pertence ao SaguiOS, ao Eli Rigobeli, ao Claude (Anthropic) e aos
+contribuidores da comunidade.
 
 O SaguiOS foi escrito do zero por uma IA (Claude, da Anthropic), seguindo um
-documento de requisitos preparado pelo Eli Rigobeli, para um vídeo. O objetivo era
-provar que uma IA consegue escrever as partes fundamentais de um sistema
-operacional: carregador de boot, interrupções, memória com paginação,
-processos, chamadas de sistema, sistema de arquivos, drivers e uma
-interface gráfica simples.
+documento de requisitos preparado pelo Eli Rigobeli. O objetivo era provar que
+uma IA consegue escrever as partes fundamentais de um sistema operacional:
+carregador de boot, interrupções, memória com paginação, processos, chamadas de
+sistema, sistema de arquivos, drivers e uma interface gráfica simples.
 
 O alvo é um notebook real, um Lenovo G470 de 2011, além de máquinas virtuais.
 

@@ -10,7 +10,7 @@ import sys
 import time
 
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
-from qemu import Maquina, verificar, criar_pendrive, pendrive_qemu, mtype  # noqa: E402
+from qemu import Maquina, verificar, abrir_terminal, criar_pendrive, pendrive_qemu, mtype  # noqa: E402
 
 V2 = ["-nic", "user,model=e1000", "-device", "intel-hda", "-device", "hda-duplex"]
 
@@ -18,7 +18,8 @@ V2 = ["-nic", "user,model=e1000", "-device", "intel-hda", "-device", "hda-duplex
 def main():
     pen = criar_pendrive("h35-pen", rotulo="DADOS")
     with Maquina("h35", "ide", extras=V2 + ["-device", "usb-ehci,id=ehci"] + pendrive_qemu(pen)) as m:
-        m.esperar_serial("sagui:/$", 120)
+        m.esperar_serial("area de trabalho no ar", 120)
+        abrir_terminal(m)   # o Terminal agora abre pelo ícone (D039)
         time.sleep(1)
         m.comando("montar")
         out = m.comando("pci")

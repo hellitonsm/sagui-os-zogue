@@ -352,6 +352,27 @@ def editor(t):
     t.poligono(m([(-16.4, -1.3), (-16.4, 1.3), (-19, 0)]), 0x2A2F35)
 
 
+def ide(t):
+    """IDE: um editor de código, com colchetes de código e linhas coloridas,
+    na caixa azul-acinzentada."""
+    estilo_app(t, 0x5B8DEF, 0x1E4FA8)
+    # janela do editor
+    t.ret(15, 16, 49, 46, 3.5, 0xF4F7FB)
+    t.ret(15, 16, 49, 22, 3.5, 0xD7E3F7)
+    t.disco(18.5, 19, 1.2, 0xFF6B6B)
+    t.disco(22.5, 19, 1.2, 0xFFD93D)
+    t.disco(26.5, 19, 1.2, 0x6BCB77)
+    # linhas de "código"
+    t.traco([(19, 27), (27, 27)], 2.0, 0x7A9CC6)
+    t.traco([(29, 27), (43, 27)], 2.0, 0x4A7BD8)
+    t.traco([(22, 32), (30, 32)], 2.0, 0xE07A5F)
+    t.traco([(32, 32), (40, 32)], 2.0, 0x7A9CC6)
+    t.traco([(22, 37), (35, 37)], 2.0, 0x4A7BD8)
+    t.traco([(19, 42), (25, 42)], 2.0, 0x7A9CC6)
+    # cursor
+    t.traco([(37, 35), (37, 39)], 1.8, 0x1E4FA8)
+
+
 def calculadora(t):
     """Calculadora: o corpo branco com o visor e as teclas (a de "=" em
     laranja), na caixa azul."""
@@ -781,7 +802,7 @@ def tabuada(t):
     t.traco([(40, 24), (24, 38)], 4.2, 0xFFFFFF, 0.95)
 
 
-ICONES = [("arquivos", arquivos), ("terminal", terminal), ("editor", editor), ("calculadora", calculadora),
+ICONES = [("arquivos", arquivos), ("terminal", terminal), ("editor", editor), ("ide", ide), ("calculadora", calculadora),
           ("banana", banana), ("sagui3d", sagui3d), ("sobre", sobre), ("pendrive", pendrive),
           ("configuracoes", configuracoes), ("cipo", cipo), ("instalado", instalado), ("tocador", tocador),
           ("saguicode", saguicode), ("jogos", jogos), ("cacabananas", cacabananas), ("paciencia", paciencia),

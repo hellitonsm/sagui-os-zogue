@@ -1,7 +1,7 @@
 /* tetris.c - Tetris ("tretis") na interface grafica do SaguiOS.
  *
  * Compilado dentro do proprio sistema pelo tinycc:
- *   make /jogos/grafico/tetris.mk
+ *   make /exemplos/jogos/grafico/tetris.mk
  *   ./tetris
  *
  * Setas esquerda/direita movem (segure para repetir), seta para baixo

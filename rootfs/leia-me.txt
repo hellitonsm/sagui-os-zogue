@@ -41,14 +41,14 @@ Arquivos para ler
 Exemplos para compilar e rodar dentro do sistema
 -------------------------------------------------
 
-  csagui build -o /tmp/tabuada /c/tabuada.c   compila C dentro do SaguiOS
+  csagui build -o /tmp/tabuada /exemplos/c/tabuada.c   compila C dentro do SaguiOS
   /tmp/tabuada                                 executa o programa gerado
-  gosagui build -o /go/sobre /go/sobre.go      compila Go dentro do SaguiOS
-  lua /lua/gui.lua                             janela com botão, caixa e lista
-  lua /lua/relogio.lua                         relógio de tempo ligado
-  csagui build -o /tmp/sudoku /jogos/sudoku.c  compila o Sudoku no sistema
-  /tmp/sudoku                                   joga (também /jogos/pong.c,
-                                                 /jogos/tetris.c)
+  gosagui build -o /go/sobre /exemplos/go/sobre.go      compila Go dentro do SaguiOS
+  lua /exemplos/lua/gui.lua                             janela com botão, caixa e lista
+  lua /exemplos/lua/relogio.lua                         relógio de tempo ligado
+  csagui build -o /tmp/sudoku /exemplos/jogos/sudoku.c  compila o Sudoku no sistema
+  /tmp/sudoku                                   joga (também /exemplos/jogos/pong.c,
+                                                 /exemplos/jogos/tetris.c)
 
 O Lua também tem a biblioteca "gui" (janela, botão, caixa de texto, lista,
 diálogos), usada pelos exemplos acima. Os programas em C usam o mesmo kit em

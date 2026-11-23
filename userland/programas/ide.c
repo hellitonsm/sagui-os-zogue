@@ -5,7 +5,7 @@
  * localizar (Ctrl+F), ir para linha (Ctrl+G), modelos prontos para cada
  * linguagem e um painel com a saida da compilacao/execucao.
  *
- * Go e compilado pelo gosagui; Lua e interpretado; C e compilado pelo tinycc;
+ * Go e compilado pelo gosagui; Lua e interpretado; C e compilado pelo cc;
  * .mk e compilado pelo make. "Executar" salva antes de compilar. O texto e
  * Latin-1, como em todo o sistema. */
 #include "sagui.h"
@@ -56,7 +56,7 @@ static const char *nome_lingua(void)
     switch (lingua) {
     case L_GO:       return "Go";
     case L_LUA:      return "Lua";
-    case L_C:        return "C (tinycc)";
+    case L_C:        return "C (cc)";
     case L_MAKEFILE: return "Makefile";
     default:         return "Texto";
     }
@@ -360,17 +360,28 @@ static void acompanhar(void)
     if (terminou && disponivel(pipe_saida) <= 0) {
         fechar(pipe_saida); pipe_saida = -1; filho = -1;
         if (etapa == 1 && codigo_filho == 0 && rodar_depois) {
-            etapa = 2;
-            acrescentar("\nCompilado. Executando...\n", (int)tam_texto("\nCompilado. Executando...\n"));
-            char *args[] = { executavel, NULL };
-            if (iniciar(executavel, args)) return;
-            acrescentar("Erro ao iniciar executavel.\n", (int)tam_texto("Erro ao iniciar executavel.\n"));
+            /* Abre num Terminal para o programa aparecer na tela. */
+            acrescentar("\nCompilado. Abrindo no Terminal...\n", (int)tam_texto("\nCompilado. Abrindo no Terminal...\n"));
+            char *targs[] = { "terminal", "-e", executavel, NULL };
+            int pid = executar("/bin/terminal", targs);
+            if (pid > 0) {
+                char m[160];
+                formatar_texto(m, sizeof m, "Executando em Terminal (pid %d).\nExecutavel: %s\n", pid, executavel);
+                acrescentar(m, (int)tam_texto(m));
+            } else {
+                acrescentar("Erro ao abrir Terminal.\n", (int)tam_texto("Erro ao abrir Terminal.\n"));
+            }
+            gerou_temp = false; etapa = 0; rodar_depois = true;
+            return;
         } else {
-            char m[80];
-            formatar_texto(m, sizeof m, "\nTerminado (codigo %d).\n", codigo_filho);
+            char m[160];
+            if (gerou_temp)
+                formatar_texto(m, sizeof m, "\nTerminado (codigo %d).\nExecutavel: %s\n", codigo_filho, executavel);
+            else
+                formatar_texto(m, sizeof m, "\nTerminado (codigo %d).\n", codigo_filho);
             acrescentar(m, (int)tam_texto(m));
         }
-        if (gerou_temp) apagar(executavel);
+        /* Mantem o executavel temporario em /tmp para o usuario poder rodar de novo. */
         gerou_temp = false; etapa = 0; rodar_depois = true;
     }
 }
@@ -481,21 +492,22 @@ static const modelo_t modelos[] = {
       "package main\n\nimport \"fmt\"\n\nfunc main() {\n    fmt.Println(\"Ola, SaguiOS!\")\n}\n" },
     { "Lua", L_LUA,
       "-- Exemplo Lua\nfor i = 1, 3 do\n    print(\"Ola, SaguiOS!\", i)\nend\n" },
-    { "C (tinycc)", L_C,
-      "/* Ola em C, compilado pelo tinycc dentro do SaguiOS. */\n"
-      "#include <stdio.h>\n\n"
-      "int main(void)\n{\n"
-      "    printf(\"Ola, SaguiOS!\\n\");\n"
+    { "C (cc)", L_C,
+      "/* Ola em C, compilado pelo cc oficial do SaguiOS. */\n"
+      "#include <sagui.h>\n\n"
+      "int principal(int argc, char **argv)\n{\n"
+      "    (void)argc;\n    (void)argv;\n"
+      "    imprimir(\"Ola, SaguiOS!\\n\");\n"
       "    return 0;\n"
       "}\n" },
     { "Makefile (.mk)", L_MAKEFILE,
       "# Receita do make. Compile com: make este-arquivo.mk\n"
       "NOME        = Ola em C\n"
-      "FONTE       = /tcc/hello-tcc.c\n"
-      "SAIDA       = ola-tcc\n"
+      "FONTE       = /exemplos/c/ola.c\n"
+      "SAIDA       = ola\n"
       "BIBLIOTECAS =\n"
-      "OPCOES      = -static\n"
-      "COMPILADOR  = /bin/tinycc\n"
+      "OPCOES      =\n"
+      "COMPILADOR  = /bin/cc\n"
       "EXECUTAR    = nao\n" },
     { NULL, L_NENHUMA, NULL }
 };
@@ -506,7 +518,7 @@ static int escolher_modelo(void)
     if (!d) return -1;
     botao_t bs[5] = {
         { 20, 14, 150, 34, "Go", false }, { 190, 14, 150, 34, "Lua", false },
-        { 20, 58, 150, 34, "C (tinycc)", false }, { 190, 58, 150, 34, "Makefile (.mk)", false },
+        { 20, 58, 150, 34, "C (cc)", false }, { 190, 58, 150, 34, "Makefile (.mk)", false },
         { 20, 110, 320, 34, "Cancelar", false },
     };
     rotulo(d, 20, 158, "O texto entra como arquivo novo (salve com a extensão).", COR_TEXTO_FRACO);
@@ -666,10 +678,17 @@ static void executar_codigo(void)
         char *args[] = { "gosagui", "build", "-o", executavel, caminho, NULL };
         if (iniciar("/bin/gosagui", args)) return;
     } else if (lg == L_LUA) {
-        etapa = 2;
-        const char *m = "Interpretando Lua...\n"; acrescentar(m, (int)tam_texto(m));
-        char *args[] = { "lua", caminho, NULL };
-        if (iniciar("/bin/lua", args)) return;
+        acrescentar("Abrindo Lua no Terminal...\n", (int)tam_texto("Abrindo Lua no Terminal...\n"));
+        char *args[] = { "terminal", "-e", "/bin/lua", caminho, NULL };
+        int pid = executar("/bin/terminal", args);
+        if (pid > 0) {
+            char m[80];
+            formatar_texto(m, sizeof m, "Executando em Terminal (pid %d).\n", pid);
+            acrescentar(m, (int)tam_texto(m));
+        } else {
+            acrescentar("Erro ao abrir Terminal.\n", (int)tam_texto("Erro ao abrir Terminal.\n"));
+        }
+        return;
     } else if (lg == L_C) {
         info_arquivo_t info;
         int tentativa;
@@ -680,9 +699,11 @@ static void executar_codigo(void)
         if (tentativa == 100) { mensagem("IDE", "Sem nome temporario disponivel em /tmp."); return; }
         gerou_temp = true;
         etapa = 1;
-        const char *m = "Compilando C com tinycc...\n"; acrescentar(m, (int)tam_texto(m));
-        char *args[] = { "tinycc", "-o", executavel, caminho, "-lsaguigui", NULL };
-        if (iniciar("/bin/tinycc", args)) return;
+        char m[192];
+        formatar_texto(m, sizeof m, "Compilando C com cc...\nSaida: %s\n", executavel);
+        acrescentar(m, (int)tam_texto(m));
+        char *args[] = { "cc", caminho, "-o", executavel, NULL };
+        if (iniciar("/bin/cc", args)) return;
     } else {   /* L_MAKEFILE */
         char mk[200], receita[256];
         bool mk_executa = false;

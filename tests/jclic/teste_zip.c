@@ -1,4 +1,4 @@
-/* teste_zip.c - roda o leitor de ZIP do JClic (userland/jogos/jclic/zip.c)
+/* teste_zip.c - roda o leitor de ZIP do JClic (userland/exemplos/jogos/jclic/zip.c)
  * no computador, com verificação de memória, sobre um arquivo dado.
  *
  * Uso: teste_zip arquivo.zip

@@ -16,7 +16,7 @@ import sys
 import time
 
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
-from qemu import Maquina, verificar, criar_pendrive, pendrive_qemu, mtools, SAIDA  # noqa: E402
+from qemu import Maquina, verificar, abrir_terminal, criar_pendrive, pendrive_qemu, mtools, SAIDA  # noqa: E402
 from PIL import Image  # noqa: E402
 
 
@@ -24,7 +24,8 @@ def main():
     pen = criar_pendrive("h102-pen", 64, "H102")
     extras = ["-device", "usb-ehci,id=ehci"] + pendrive_qemu(pen)
     with Maquina("h102", "ide", extras=extras, memoria="768M") as m:
-        m.esperar_serial("sagui:/$", 120)
+        m.esperar_serial("area de trabalho no ar", 120)
+        abrir_terminal(m)   # o Terminal agora abre pelo ícone (D039)
         time.sleep(1)
         out = m.comando("montar usb0")
         verificar("montado" in out, "pendrive montado em /usb")

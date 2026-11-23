@@ -1,26 +1,25 @@
 <div align="center">
 
-# 🐒 SaguiOS
+# Zogue OS
 
-[![CI](https://github.com/erigobeli/sagui-os/actions/workflows/ci.yml/badge.svg?branch=main)](https://github.com/erigobeli/sagui-os/actions/workflows/ci.yml)
-[![OpenSSF Best Practices](https://www.bestpractices.dev/projects/16936/badge)](https://www.bestpractices.dev/projects/16936)
+**Sistema operacional baseado no SaguiOS, desenvolvido como projeto separado.**
 
-**Um sistema operacional escrito do zero por IA, para PCs x86 de 64 bits.**
+`baseado no SaguiOS 3.0` · `64 bits` · `sem GRUB` · `sem libc` · `núcleo sem código de outros sistemas`
 
-`versão 3.0` · `64 bits` · `sem GRUB` · `sem libc` · `núcleo sem código de outros sistemas` · `mais de 120 testes automáticos`
-
-<img src="docs/v2/capturas/H81-7-menu-titulo.png" width="49%" alt="Área de trabalho do SaguiOS 2.1 com o fundo da Mata Atlântica e o menu da barra de título">
-<img src="docs/v2/capturas/H63-1-wikipedia.png" width="49%" alt="O navegador Cipó mostrando a Wikipédia">
-<img src="docs/v2/capturas/H87-2-tocador.png" width="49%" alt="O Tocador de músicas (WAV e MP3)">
-<img src="docs/v2/capturas/H83-3-fetch.png" width="49%" alt="O Terminal com o fetch, o grep e o uname">
+<img src="docs/v2/capturas/H81-7-menu-titulo.png" width="49%" alt="Área de trabalho herdada do SaguiOS, base do Zogue OS">
+<img src="docs/v2/capturas/H63-1-wikipedia.png" width="49%" alt="O navegador Cipó herdado do SaguiOS">
+<img src="docs/v2/capturas/H87-2-tocador.png" width="49%" alt="O Tocador de músicas herdado do SaguiOS">
+<img src="docs/v2/capturas/H83-3-fetch.png" width="49%" alt="O Terminal herdado do SaguiOS">
 
 </div>
 
+> **Créditos e origem:** o **Zogue OS** é um fork/projeto separado baseado no [**SaguiOS**](https://github.com/erigobeli/sagui-os), criado por **Eli Rigobeli** e pela comunidade SaguiOS. Todo o crédito da base do sistema — bootloader, kernel, drivers, libsagui, GUI, aplicativos, documentação e decisões técnicas originais — pertence ao projeto SaguiOS e seus contribuidores. O Zogue OS mantém esse reconhecimento e evolui a partir dessa base.
+
 ---
 
-## SaguiOS 3.0 e 2.2
+## Base do SaguiOS
 
-A **3.0** ([`prd3.md`](prd3.md)) leva o kernel para os **64 bits** (x86-64, modo longo): GDT,
+O Zogue OS herda a base técnica do SaguiOS 3.0/2.2. A **3.0** do SaguiOS ([`prd3.md`](prd3.md)) leva o kernel para os **64 bits** (x86-64, modo longo): GDT,
 IDT e paginação de 4 níveis novas, e os programas de antes rodando sem mudança no modo de
 compatibilidade do processador (D076 a D080). A **2.2** é a última versão de 32 bits, para
 quem tem um PC sem 64 bits, e junta tudo o que a comunidade trouxe depois da 2.1:
@@ -43,9 +42,9 @@ Acompanhe pelo painel [`dashboard/v3/`](dashboard/v3/index.html). Quer contribui
 [`CONTRIBUTING.md`](CONTRIBUTING.md); quem já contribuiu está em
 [`CONTRIBUIDORES.md`](CONTRIBUIDORES.md).
 
-## A história do SaguiOS
+## Origem e créditos
 
-O SaguiOS começou com uma pergunta do **Eli Rigobeli**: uma IA é capaz de escrever um sistema
+O **Zogue OS** é uma separação/fork baseado no **SaguiOS**. O SaguiOS começou com uma pergunta do **Eli Rigobeli**: uma IA é capaz de escrever um sistema
 operacional de verdade, a partir de um kernel zerado? Não uma distribuição montada com peças
 prontas, mas o carregador de boot, o kernel, os drivers e os programas, tudo do zero, dando
 boot num notebook comum. O Eli escreveu a especificação ([`prd.md`](prd.md)), o Claude
@@ -61,17 +60,14 @@ dele, um notebook de 2011. Daí em diante:
   (x86-64), com os programas de antes funcionando sem mudança, e o projeto passa a seguir o
   versionamento MAIOR.MENOR.CORREÇÃO, crescendo com a comunidade.
 
-O que entrou em cada versão, o que está em desenvolvimento e como os números das versões
-funcionam estão em [`VERSOES.md`](VERSOES.md). Dentro do sistema, o mesmo histórico aparece no
-botão "Histórico" da janela "Sobre o SaguiOS", e o botão "Créditos e licenças" mostra os
-textos de todas as licenças.
+**Zogue OS** reconhece e agradece explicitamente ao SaguiOS, Eli Rigobeli e todos os contribuidores pela base do projeto. O histórico do SaguiOS permanece em [`VERSOES.md`](VERSOES.md) e na documentação herdada; mudanças específicas do Zogue OS devem ser registradas à medida que o projeto evoluir.
 
 ## O que é
 
-O SaguiOS é um sistema operacional completo, do carregador de boot ao jogo em 3D, escrito
-inteiro neste projeto, seguindo a especificação em [`prd.md`](prd.md). Ele dá boot por um
-pendrive num **Lenovo G470** (2011), no VirtualBox e no QEMU. A versão 1.0 cabia em **575.488
-bytes** (39% de um disquete de 1,44 MB); a 3.0, com o navegador, as fontes de letra e o fundo
+O **Zogue OS** é um sistema operacional baseado no SaguiOS, separado como projeto próprio. Ele mantém a base completa do SaguiOS: carregador de boot ao jogo em 3D, escrito
+na especificação original em [`prd.md`](prd.md). Ele dá boot por um
+pendrive num **Lenovo G470** (2011), no VirtualBox e no QEMU. A versão 1.0 do SaguiOS cabia em **575.488
+bytes** (39% de um disquete de 1,44 MB); a base 3.0, com o navegador, as fontes de letra e o fundo
 da Mata Atlântica, tem cerca de **8 MB**.
 
 Tudo o que vai dentro da imagem foi escrito aqui: carregador de boot em dois estágios, kernel,

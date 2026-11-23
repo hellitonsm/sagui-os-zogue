@@ -6,7 +6,8 @@ from qemu import Maquina  # noqa: E402
 REDE = ["-netdev", "user,id=n0", "-device", "e1000,netdev=n0,mac=52:54:00:12:34:56"]
 url = sys.argv[1]; rot = sys.argv[2] if len(sys.argv) > 2 else "site"
 with Maquina("medir-" + rot, "ide", memoria="768M", extras=REDE) as m:
-    m.esperar_serial("sagui:/$", 120)
+    m.esperar_serial("area de trabalho no ar", 120)
+        abrir_terminal(m)   # o Terminal agora abre pelo ícone (D039)
     m.esperar_serial("[REDE] DHCP: endereco", 60)
     n = len(m.serial())
     t0 = time.time()

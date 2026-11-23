@@ -11,7 +11,7 @@ import sys
 import time
 
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
-from qemu import Maquina, verificar, SAIDA, janela  # noqa: E402
+from qemu import Maquina, verificar, abrir_terminal, SAIDA, janela  # noqa: E402
 from h40_som import som_qemu, ler_wav  # noqa: E402
 
 
@@ -28,7 +28,8 @@ def energia(trecho, taxa, f):
 def main():
     wav = os.path.join(SAIDA, "h41.wav")
     with Maquina("h41", "ide", extras=som_qemu(wav)) as m:
-        m.esperar_serial("sagui:/$", 120)
+        m.esperar_serial("area de trabalho no ar", 120)
+        abrir_terminal(m)   # o Terminal agora abre pelo ícone (D039)
         time.sleep(2)
         m.comando("som teste 440 2500 &")
         m.comando("som teste 880 1500", tempo=30)

@@ -13,10 +13,11 @@ import sys
 import time
 
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
-from qemu import Maquina, verificar, criar_pendrive, pendrive_qemu, RAIZ  # noqa: E402
+from qemu import Maquina, verificar, abrir_terminal, criar_pendrive, pendrive_qemu, RAIZ  # noqa: E402
 
-PROGRAMAS = sorted([f[:-2] for f in os.listdir(os.path.join(RAIZ, "userland", "programas")) if f.endswith(".c")]
-                   + ["sagui3d", "navegador", "cipo", "video", "saguicode", "saguicode-janela", "cc", "tocador", "mp3info"])
+PROGRAMAS = sorted(set([f[:-2] for f in os.listdir(os.path.join(RAIZ, "userland", "programas")) if f.endswith(".c")]
+                       + ["sagui3d", "navegador", "cipo", "video", "saguicode", "saguicode-janela", "cc", "visualizador", "tocador", "mp3info"] + os.listdir(os.path.join(RAIZ, "userland", "jogos")))
+                - {"apoio_libc", "servidor"})   # fora do build padrão (Makefile, FORK_ADIADOS)
 
 FRUTAS = "banana 3\nmaçã 10\nabacaxi 2\nBanana 7\nuva 10\nuva 10\nkiwi 1.5\n"
 NUMEROS = "".join(f"{i}\n" for i in range(1, 26))
@@ -82,7 +83,8 @@ def main():
     pen = criar_pendrive("h91-pen", rotulo="TEXTOS", arquivos=ARQUIVOS, pastas=PASTAS)
     extras = ["-device", "usb-ehci,id=ehci"] + pendrive_qemu(pen)
     with Maquina("h91", "ide", extras=extras) as m:
-        m.esperar_serial("sagui:/$", 120)
+        m.esperar_serial("area de trabalho no ar", 120)
+        abrir_terminal(m)   # o Terminal agora abre pelo ícone (D039)
         time.sleep(1)
         out = m.comando("ajuda")
         for nome in NOMES:

@@ -1,7 +1,7 @@
 package main
 
 // Compilado dentro do SaguiOS, sem ferramentas do hospedeiro.
-// Rode com:  gosagui build -o /go/sobre /go/sobre.go
+// Rode com:  gosagui build -o /go/sobre /exemplos/go/sobre.go
 //            /go/sobre
 import "fmt"
 import s "sagui"

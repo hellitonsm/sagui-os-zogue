@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""H94 - a janela "Sobre o SaguiOS", os créditos, as licenças e o histórico.
+"""H94 - a janela "Sobre o Zogue OS", os créditos, as licenças e o histórico.
 
 Critério:
   - no computador: cada pasta de terceiros/ tem arquivo de licença, e cada um
@@ -18,7 +18,7 @@ import sys
 import time
 
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
-from qemu import Maquina, verificar, janela, RAIZ, versao_esperada  # noqa: E402
+from qemu import Maquina, verificar, abrir_terminal, janela, RAIZ, versao_esperada  # noqa: E402
 
 ICONES = ["Arquivos", "Terminal", "Editor", "Calculadora", "Banana", "Sagui 3D", "Configurações", "Sobre"]
 POR_COLUNA = (768 - 40) // 92
@@ -75,7 +75,8 @@ def main():
     itens = conferir_no_computador()
     alvo = next(i for i, (arq, _n) in enumerate(itens) if arq == "font-rs.txt")
     with Maquina("h94", "ide") as m:
-        m.esperar_serial("sagui:/$", 120)
+        m.esperar_serial("area de trabalho no ar", 120)
+        abrir_terminal(m)   # o Terminal agora abre pelo ícone (D039)
         time.sleep(1)
         i = ICONES.index("Sobre")
         m.clique(20 + (i // POR_COLUNA) * 110 + 48, 40 + (i % POR_COLUNA) * 92 + 32, duplo=True)
@@ -96,7 +97,7 @@ def main():
         verificar("sobre: botoes: Créditos e licenças | Histórico | Fechar" in s, "botões Créditos e licenças, Histórico e Fechar")
         time.sleep(1)
         m.captura("H94-1-sobre")
-        sobre = janela(m.serial(), "Sobre o SaguiOS")
+        sobre = janela(m.serial(), "Sobre o Zogue OS")
 
         # Créditos e licenças: começa na GPL 3.
         m.clique(sobre["x"] + 20 + 85, sobre["y"] + 376 + 14)

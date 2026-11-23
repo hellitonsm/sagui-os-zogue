@@ -1,6 +1,6 @@
 /* chip8asm.c - o montador de CHIP-8 do SaguiOS rodando no computador de
  * desenvolvimento (H92). O build monta com ele as ROMs de exemplo de
- * rootfs/jogos/chip8 (os .asm); o montador é o mesmo arquivo do SaguiOS
+ * userland/exemplos/jogos/chip8 (os .asm); o montador é o mesmo arquivo do SaguiOS
  * (userland/jogos/chip8asm/montador.c), compilado com TESTE_HOSPEDEIRO.
  *
  *     chip8asm fonte.asm saida.ch8 */

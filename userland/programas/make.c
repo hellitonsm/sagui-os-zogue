@@ -4,7 +4,7 @@
  * programa: o fonte (ou os fontes), o nome do executavel, as bibliotecas,
  * as opcoes e o compilador. O make so le, monta a linha de comando e roda.
  *
- *   make /jogos/grafico/sudoku.mk   compila um programa
+ *   make /exemplos/jogos/grafico/sudoku.mk   compila um programa
  *   make -all /jogos/grafico        compila todos os .mk da pasta
  *   make                            lista os .mk da pasta atual
  *

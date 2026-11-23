@@ -11,13 +11,14 @@ import sys
 import time
 
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
-from qemu import Maquina, verificar  # noqa: E402
+from qemu import Maquina, verificar, abrir_terminal  # noqa: E402
 from h43_e1000 import REDE  # noqa: E402
 
 
 def main():
     with Maquina("h45", "ide", extras=REDE) as m:
-        m.esperar_serial("sagui:/$", 120)
+        m.esperar_serial("area de trabalho no ar", 120)
+        abrir_terminal(m)   # o Terminal agora abre pelo ícone (D039)
         m.esperar_serial("[REDE] DHCP: endereco 10.0.2.15, mascara 255.255.255.0, roteador 10.0.2.2, DNS 10.0.2.3", 20)
         verificar(True, "DHCP: 10.0.2.15, máscara, roteador e DNS")
         time.sleep(1)

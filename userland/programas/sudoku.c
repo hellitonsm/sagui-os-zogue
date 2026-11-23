@@ -4,7 +4,7 @@
  * R recomeca e Q (ou Esc) fecha. Tambem da para clicar numa casa.
  * As casas com numero repetido na linha, coluna ou bloco ficam vermelhas.
  *
- * Adaptado do jogo grafico do rootfs/jogos/grafico para rodar como programa
+ * Adaptado do jogo grafico do userland/exemplos/jogos/grafico para rodar como programa
  * de janela nativo da 3.0. */
 #include "sagui.h"
 #include "gui.h"

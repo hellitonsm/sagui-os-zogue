@@ -20,7 +20,7 @@ import sys
 import time
 
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
-from qemu import Maquina, verificar, criar_pendrive, pendrive_qemu  # noqa: E402
+from qemu import Maquina, verificar, abrir_terminal, criar_pendrive, pendrive_qemu  # noqa: E402
 
 
 def limpo(texto):
@@ -54,7 +54,8 @@ def main():
     pen = criar_pendrive("h83p-pen", rotulo="MEUPEN", arquivos={"grande.bin": b"x" * 3000000})
     extras = ["-device", "usb-ehci,id=ehci"] + pendrive_qemu(pen)
     with Maquina("h83p", "ide", extras=extras) as m:
-        m.esperar_serial("sagui:/$", 120)
+        m.esperar_serial("area de trabalho no ar", 120)
+        abrir_terminal(m)   # o Terminal agora abre pelo ícone (D039)
         time.sleep(1)
 
         out = m.comando("ajuda")

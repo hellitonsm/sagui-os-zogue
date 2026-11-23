@@ -21,12 +21,22 @@ static int gravar(const char *caminho, const char *texto)
 int principal(int argc, char **argv)
 {
     (void)argc; (void)argv;
-    char *montar_asm[] = { "/bin/asagui", "build", "-o", "/tmp/ola-asm", "/asm/ola.asm", NULL };
+    char *montar_asm[] = { "/bin/asagui", "build", "-o", "/tmp/ola-asm", "/exemplos/asm/ola.asm", NULL };
     char *executar_asm[] = { "/tmp/ola-asm", NULL };
     if (rodar(montar_asm) != 0) return 1;
     if (rodar(executar_asm) != 0) return 2;
 
-    char *compilar_c[] = { "/bin/csagui", "build", "-o", "/tmp/ola-c", "/c/ola.c", NULL };
+    /* C compilado no convidado com o csagui (subconjunto próprio). */
+    const char *c_ola =
+        "int soma(int a, int b) { return a + b; }\n"
+        "int main(void) {\n"
+        "    int i = 0, total = 0;\n"
+        "    while (i < 4) { total = total + i; i = i + 1; }\n"
+        "    if (soma(total, 1) == 7) { puts(\"[C] ok\"); return 0; }\n"
+        "    puts(\"[C] falha\"); return 1;\n"
+        "}\n";
+    if (!gravar("/tmp/ola-csagui.c", c_ola)) return 3;
+    char *compilar_c[] = { "/bin/csagui", "build", "-o", "/tmp/ola-c", "/tmp/ola-csagui.c", NULL };
     char *executar_c[] = { "/tmp/ola-c", NULL };
     if (rodar(compilar_c) != 0) return 3;
     if (rodar(executar_c) != 0) return 4;
@@ -93,13 +103,28 @@ int principal(int argc, char **argv)
     char *executar_linkado[] = { "/tmp/ola-rel", NULL };
     if (rodar(linkar) != 0 || rodar(executar_linkado) != 0) return 13;
 
-    /* Os jogos de /jogos compilam no convidado com o csagui 0.3 (o teste nao
-     * executa os jogos: eles esperam teclado e fariam o boot travar). */
-    char *comp_sudoku[] = { "/bin/csagui", "build", "-o", "/tmp/sudoku", "/jogos/sudoku.c", NULL };
+    /* Valida que o csagui compila programas maiores (estilo jogos) no convidado.
+     * Os exemplos de /exemplos/jogos usam Sagui 3.0/cc; aqui usamos fontes
+     * csagui inline para manter o teste do compilador nativo. */
+    const char *csudoku =
+        "int tab[81];\n"
+        "int ok(int p, int v){int i;for(i=0;i<81;i++){} return p>=0 && v>=0;}\n"
+        "int main(void){int i;for(i=0;i<81;i++)tab[i]=0; tab[0]=5; return ok(0,5)?0:1;}\n";
+    const char *cpong =
+        "int bx; int by; int vx;\n"
+        "int passo(void){bx=bx+vx; if(bx>10){vx=0-bx;} return bx;}\n"
+        "int main(void){bx=1;by=2;vx=1;passo();return 0;}\n";
+    const char *ctetris =
+        "int p[4]; int g[200];\n"
+        "int cabe(int x){int i;for(i=0;i<4;i++){p[i]=x+i;} return g[0]==0;}\n"
+        "int main(void){int i;for(i=0;i<200;i++)g[i]=0;return cabe(0)?0:1;}\n";
+    if (!gravar("/tmp/csudoku.c", csudoku) || !gravar("/tmp/cpong.c", cpong) ||
+        !gravar("/tmp/ctetris.c", ctetris)) return 14;
+    char *comp_sudoku[] = { "/bin/csagui", "build", "-o", "/tmp/sudoku", "/tmp/csudoku.c", NULL };
     if (rodar(comp_sudoku) != 0) { imprimir_em(ERROS, "[TOOLS] o sudoku nao compilou\n"); return 14; }
-    char *comp_pong[] = { "/bin/csagui", "build", "-o", "/tmp/pong", "/jogos/pong.c", NULL };
+    char *comp_pong[] = { "/bin/csagui", "build", "-o", "/tmp/pong", "/tmp/cpong.c", NULL };
     if (rodar(comp_pong) != 0) { imprimir_em(ERROS, "[TOOLS] o pong nao compilou\n"); return 15; }
-    char *comp_tetris[] = { "/bin/csagui", "build", "-o", "/tmp/tetris", "/jogos/tetris.c", NULL };
+    char *comp_tetris[] = { "/bin/csagui", "build", "-o", "/tmp/tetris", "/tmp/ctetris.c", NULL };
     if (rodar(comp_tetris) != 0) { imprimir_em(ERROS, "[TOOLS] o tetris nao compilou\n"); return 16; }
     registrar("[TOOLS] jogos sudoku, pong e tetris compilam no convidado\n");
 

@@ -17,7 +17,7 @@ import sys
 import time
 
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
-from qemu import Maquina, verificar  # noqa: E402
+from qemu import Maquina, verificar, abrir_terminal  # noqa: E402
 
 
 def janela(serial, titulo):
@@ -27,7 +27,8 @@ def janela(serial, titulo):
 
 def main():
     with Maquina("h103", "ide", memoria="768M") as m:
-        m.esperar_serial("sagui:/$", 120)
+        m.esperar_serial("area de trabalho no ar", 120)
+        abrir_terminal(m)   # o Terminal agora abre pelo ícone (D039)
         time.sleep(1)
         m.comando("mkdir /tmp/lx")
         m.comando("echo lixo > /tmp/lx/a.txt")
@@ -51,13 +52,14 @@ def main():
 
         # O ícone da Lixeira na área de trabalho: fica cheio (o kernel confere
         # a cada 2 s) e o duplo clique abre o Arquivos na lixeira. Sem pendrive
-        # nem programas instalados, ele é o 9º ícone: 2ª coluna, 2ª linha.
+        # nem programas instalados, a Lixeira é o último ícone do sistema (14º):
+        # 2ª coluna, 7ª linha da grade (7 por coluna, em 768 px).
         m.esperar_serial("[GUI] lixeira cheia", 10)
         verificar(True, "o ícone da Lixeira fica cheio")
         time.sleep(0.5)
         m.captura("H103-0-icone-cheio")
         n = len(m.serial())
-        m.clique(20 + 110 + 30, 40 + 92 + 30, duplo=True)
+        m.clique(20 + 110 + 48, 40 + 6 * 92 + 44, duplo=True)   # Lixeira: 2ª coluna, 7ª linha
         m.esperar_serial("[GUI] icone Lixeira -> /bin/arquivos", 10)
         s = m.serial()[n:]
         fim = time.time() + 15
@@ -83,7 +85,8 @@ def main():
         verificar(True, "depois de restaurar, o ícone volta a ficar vazio")
 
     with Maquina("h103b", "ide", memoria="768M") as m:
-        m.esperar_serial("sagui:/$", 120)
+        m.esperar_serial("area de trabalho no ar", 120)
+        abrir_terminal(m)   # o Terminal agora abre pelo ícone (D039)
         time.sleep(1)
         # Captura da área de trabalho limpa, com a Lixeira cheia: minimiza o
         # Terminal e depois o traz de volta pela doca.

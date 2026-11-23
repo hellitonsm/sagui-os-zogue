@@ -43,7 +43,7 @@ import sys
 import time
 
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
-from qemu import Maquina, verificar, janela, SAIDA, RAIZ, criar_pendrive, pendrive_qemu  # noqa: E402
+from qemu import Maquina, verificar, abrir_terminal, janela, SAIDA, RAIZ, criar_pendrive, pendrive_qemu  # noqa: E402
 
 AQUI = os.path.dirname(os.path.abspath(__file__))
 VIDEOS = {"sample-5s-360p.mp4": (640, 360), "sample-5s-720p.mp4": (1280, 720), "sample-5s.mp4": (1920, 1080)}
@@ -197,7 +197,8 @@ def main():
     prefixo = os.path.join(SAIDA, "h88-" + nome[:-4])
     pen = criar_pendrive("h88-pen", mb=64, rotulo="DADOS", arquivos={"v.mp4": open(mp4, "rb").read()})
     with Maquina("h88", "ide", memoria="768M", extras=["-device", "usb-ehci,id=ehci"] + pendrive_qemu(pen)) as m:
-        m.esperar_serial("sagui:/$", 120)
+        m.esperar_serial("area de trabalho no ar", 120)
+        abrir_terminal(m)   # o Terminal agora abre pelo ícone (D039)
         time.sleep(1)
         m.comando("montar")
         m.digitar("video --todos /usb/v.mp4\n", 0.04)   # --todos: sem descartar (D071)

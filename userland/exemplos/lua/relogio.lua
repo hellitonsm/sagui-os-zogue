@@ -1,5 +1,5 @@
 -- relogio.lua - relogio de uptime numa janela do SaguiOS.
--- Rode com:  lua /lua/relogio.lua
+-- Rode com:  lua /exemplos/lua/relogio.lua
 -- A cada meio segundo o texto e atualizado; feche pelo X para sair.
 local j = gui.janela("Relogio do SaguiOS", 280, 110)
 if not j then

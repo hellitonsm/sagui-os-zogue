@@ -12,7 +12,7 @@ import sys
 import time
 
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
-from qemu import Maquina, verificar, criar_pendrive, pendrive_qemu, mtype, janela  # noqa: E402
+from qemu import Maquina, verificar, abrir_terminal, criar_pendrive, pendrive_qemu, mtype, janela  # noqa: E402
 
 BOTAO_ENERGIA = (1024 - 21 * 8 - 10 - 30 + 10, 12)
 
@@ -20,7 +20,8 @@ BOTAO_ENERGIA = (1024 - 21 * 8 - 10 - 30 + 10, 12)
 def main():
     pen = criar_pendrive("h36-pen", rotulo="DADOS")
     with Maquina("h36", "ide", extras=["-device", "usb-ehci,id=ehci"] + pendrive_qemu(pen)) as m:
-        m.esperar_serial("sagui:/$", 120)
+        m.esperar_serial("area de trabalho no ar", 120)
+        abrir_terminal(m)   # o Terminal agora abre pelo ícone (D039)
         s = m.serial()
         verificar("[ACPI] PM1a" in s and "S5 ok" in s, "tabelas ACPI e o _S5_ encontrados")
         time.sleep(1)

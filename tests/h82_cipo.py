@@ -30,7 +30,7 @@ import threading
 import time
 
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
-from qemu import Maquina, FalhaTeste, verificar, janela, RAIZ, SAIDA  # noqa: E402
+from qemu import Maquina, FalhaTeste, verificar, abrir_terminal, janela, RAIZ, SAIDA  # noqa: E402
 from h62_navegador import compilar_referencia, BARRA, VISTA_L, VISTA_A  # noqa: E402
 from PIL import Image, ImageChops  # noqa: E402
 
@@ -259,7 +259,8 @@ def main():
     base = f"http://10.0.2.2:{porta}"
     try:
         with Maquina("h82", "ide", extras=REDE, memoria="768M") as m:
-            m.esperar_serial("sagui:/$", 120)
+            m.esperar_serial("area de trabalho no ar", 120)
+        abrir_terminal(m)   # o Terminal agora abre pelo ícone (D039)
             m.esperar_serial("[REDE] DHCP: endereco", 30)
             time.sleep(1)
             # CSS

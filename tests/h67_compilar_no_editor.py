@@ -12,7 +12,7 @@ import sys
 import time
 
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
-from qemu import Maquina, FalhaTeste, verificar, janela, criar_pendrive, pendrive_qemu, mtools  # noqa: E402
+from qemu import Maquina, FalhaTeste, verificar, abrir_terminal, janela, criar_pendrive, pendrive_qemu, mtools  # noqa: E402
 
 
 def esperar(m, texto, tempo=30, desde=0):
@@ -31,7 +31,8 @@ CERTO = '#include "sagui.h"\n\nint principal(int argc, char **argv)\n{\n    impr
 def main():
     pen = criar_pendrive("h67-pen", pastas=(".saguios",))
     with Maquina("h67", "ide", extras=["-device", "usb-ehci,id=ehci"] + pendrive_qemu(pen), memoria="768M") as m:
-        m.esperar_serial("sagui:/$", 120)
+        m.esperar_serial("area de trabalho no ar", 120)
+        abrir_terminal(m)   # o Terminal agora abre pelo ícone (D039)
         time.sleep(2)
         m.comando("echo > /tmp/ola.c", tempo=20)            # o arquivo existe (vazio) para o Editor abrir
         antes = len(m.serial())

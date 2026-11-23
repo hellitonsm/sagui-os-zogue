@@ -2,7 +2,7 @@
 """H47 - libsaguigui: a biblioteca grafica do tinycc no SaguiOS.
 
 O sysroot instala /usr/lib/libsaguigui.a (kit grafico + fonte 8x16) e o
-header /usr/include/gui.h. O exemplo /tcc/exemplo-gui.c e compilado dentro
+header /usr/include/gui.h. O exemplo /exemplos/tcc/exemplo-gui.c e compilado dentro
 do convidado com `tinycc -lsaguigui` e roda a demonstracao visivel (janela,
 relogio, caixa auto-digitada e botao clicado pelo proprio exemplo).
 """

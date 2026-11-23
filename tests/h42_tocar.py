@@ -13,7 +13,7 @@ import sys
 import time
 
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
-from qemu import Maquina, verificar, SAIDA, criar_pendrive, pendrive_qemu  # noqa: E402
+from qemu import Maquina, verificar, abrir_terminal, SAIDA, criar_pendrive, pendrive_qemu  # noqa: E402
 from h40_som import som_qemu  # noqa: E402
 from h41_mistura import energia  # noqa: E402
 from h40_som import ler_wav  # noqa: E402
@@ -32,7 +32,8 @@ def main():
     pen = criar_pendrive("h42-pen", rotulo="DADOS", arquivos={"teste300.wav": wav_teste(300),
                                                                      "longo500.wav": wav_teste(500, 44100, 2.5)})
     with Maquina("h42", "ide", extras=som_qemu(wav) + ["-device", "usb-ehci,id=ehci"] + pendrive_qemu(pen)) as m:
-        m.esperar_serial("sagui:/$", 120)
+        m.esperar_serial("area de trabalho no ar", 120)
+        abrir_terminal(m)   # o Terminal agora abre pelo ícone (D039)
         verificar("[SOM] som do sistema 0" in m.serial(), "som de início do sistema tocou")
         time.sleep(1)
         m.comando("montar")

@@ -19,7 +19,7 @@ import sys
 import time
 
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
-from qemu import Maquina, verificar, FalhaTeste  # noqa: E402
+from qemu import Maquina, verificar, abrir_terminal, FalhaTeste  # noqa: E402
 
 MENU_X, MENU_Y = 4, 24 + 4
 GRADE_X, GRADE_Y = MENU_X + (620 - 5 * 108) // 2, MENU_Y + 106
@@ -37,7 +37,8 @@ def esperar(m, texto, tempo=20, desde=0):
 def main():
     extras = ["-vga", "none", "-device", "VGA,vgamem_mb=1"]
     with Maquina("h107", "ide", extras=extras, memoria="768M") as m:
-        m.esperar_serial("sagui:/$", 120)
+        m.esperar_serial("area de trabalho no ar", 120)
+        abrir_terminal(m)   # o Terminal agora abre pelo ícone (D039)
         time.sleep(1)
         verificar("[VIDEO] 640x480" in m.serial(), "o sistema liga em 640x480")
         linhas = min(4, max(1, (480 - MENU_Y - 8 - 106 - 70) // 92))

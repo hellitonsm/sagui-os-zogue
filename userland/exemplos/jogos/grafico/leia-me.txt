@@ -22,7 +22,7 @@ Se estiver em outra pasta, rode ./sudoku, ./tetris e ./velha.
 
 Ou compile so um:
 
-    make /jogos/grafico/sudoku.mk
+    make /exemplos/jogos/grafico/sudoku.mk
 
 Os jogos abrem uma janela de verdade. Feche com Q (ou Esc) ou no X da janela.
 

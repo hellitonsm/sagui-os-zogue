@@ -19,7 +19,7 @@ import sys
 import time
 
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
-from qemu import Maquina, FalhaTeste, verificar, cor_do_pixel  # noqa: E402
+from qemu import Maquina, FalhaTeste, verificar, abrir_terminal, cor_do_pixel  # noqa: E402
 
 
 def marcados(m, desde):
@@ -40,7 +40,8 @@ def esperar(m, texto, tempo=10, desde=0):
 
 def main():
     with Maquina("h99", "ide", memoria="768M") as m:
-        m.esperar_serial("sagui:/$", 120)
+        m.esperar_serial("area de trabalho no ar", 120)
+        abrir_terminal(m)   # o Terminal agora abre pelo ícone (D039)
         time.sleep(1)
         # O Terminal abre por cima do meio da tela. Os ícones ficam em duas
         # colunas (x de 20 a 116 e de 130 a 226; cada linha desce 92 pixels a

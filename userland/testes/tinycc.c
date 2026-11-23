@@ -1,5 +1,5 @@
 /* tinycc.c - teste do tinycc no convidado: versão, compilação do exemplo
- * /tcc/hello-tcc.c, execução e conferência da saída. */
+ * /exemplos/tcc/hello-tcc.c, execução e conferência da saída. */
 #include "sagui.h"
 
 static int rodar(char *const args[])
@@ -62,9 +62,9 @@ int principal(int argc, char **argv)
     registrar("[TINYCC] tinycc executa no convidado\n");
 
     /* Compila o exemplo. */
-    char *tcc[] = { "/bin/tinycc", "-static", "-o", "/tmp/hello", "/tcc/hello-tcc.c", NULL };
+    char *tcc[] = { "/bin/tinycc", "-static", "-o", "/tmp/hello", "/exemplos/tcc/hello-tcc.c", NULL };
     if (rodar(tcc) != 0) {
-        imprimir_em(ERROS, "[TINYCC] nao compilou /tcc/hello-tcc.c\n");
+        imprimir_em(ERROS, "[TINYCC] nao compilou /exemplos/tcc/hello-tcc.c\n");
         return 2;
     }
     registrar("[TINYCC] hello-tcc.c compilado no convidado\n");

@@ -41,6 +41,7 @@ static const icone_t icones[] = {
     { "Arquivos",    "/bin/arquivos",    arte_px_arquivos, NULL, NULL },
     { "Terminal",    "/bin/terminal",    arte_px_terminal, NULL, NULL },
     { "Editor",      "/bin/editor",      arte_px_editor, NULL, NULL },
+    { "IDE",         "/bin/ide",         arte_px_ide, NULL, NULL },
     { "Calculadora", "/bin/calculadora", arte_px_calculadora, NULL, NULL },
     { "Banana",      "/bin/banana",      arte_px_banana, NULL, NULL },
     { "Sagui 3D",    "/bin/sagui3d",     arte_px_sagui3d, NULL, NULL },   /* bônus B4 */
@@ -117,7 +118,7 @@ static void ler_ocultos(void)
 
 static const char *nome_icone(int i)
 {
-    if (i == base_dir()) return "Instalar o SaguiOS";
+    if (i == base_dir()) return "Instalar o Zogue OS";
     if (i > base_dir()) return unid[i - base_dir() - 1].nome;
     if (i >= QTD_ICONES) return instalados[i - QTD_ICONES];
     /* Nome trocado pelo usuário (botão direito > Renomear): icone.<programa>. */
@@ -478,7 +479,7 @@ static void desenhar_fundo(void)
         int esc = larg >= 1000 ? 5 : 3;
         int mx = larg - 32 * esc - 30, my = alt - 32 * esc - 40;
         sup_desenho(&s, mx, my, &arte_sagui, esc);
-        texto_com_sombra(&s, mx + 16 * esc - texto_largura("SaguiOS") / 2, my + 32 * esc + 6, "SaguiOS", 0xFFFFFF);
+        texto_com_sombra(&s, mx + 16 * esc - texto_largura("Zogue OS") / 2, my + 32 * esc + 6, "Zogue OS", 0xFFFFFF);
     }
     /* Ícones na coluna da esquerda, com o nome embaixo. */
     ler_ocultos();
@@ -715,7 +716,7 @@ bool area_unidades(void)
     for (int i = 0; i < MAX_DISCOS && n < MAX_UNIDADES; i++) {
         disco_t *d = disco_indice(i);
         if (!d || !d->presente || d->de_boot) continue;
-        if (d->interno && txt_compara(d->rotulo, "SAGUIOS") != 0) continue;
+        if (d->interno && txt_compara(d->rotulo, "SAGUIOS") != 0 && txt_compara(d->rotulo, "ZOGUEOS") != 0) continue;
         txt_copia_n(novo[n].disco, d->nome, sizeof novo[n].disco);
         txt_copia_n(novo[n].nome, d->interno ? "Disco" : d->rotulo[0] ? d->rotulo : "Pendrive", sizeof novo[n].nome);
         novo[n].interno = d->interno;
@@ -755,7 +756,7 @@ void area_icone_abrir(int i)
     if (i == base_dir()) {
         char *argv[] = { "instalar", NULL };
         int pid = processo_executar("/bin/instalar", 1, argv, NULL);
-        klog("[GUI] icone Instalar o SaguiOS -> /bin/instalar (pid %d)\n", pid);
+        klog("[GUI] icone Instalar o Zogue OS -> /bin/instalar (pid %d)\n", pid);
         return;
     }
     if (i > base_dir()) {

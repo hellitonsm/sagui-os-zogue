@@ -34,7 +34,7 @@ import sys
 import time
 
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
-from qemu import Maquina, FalhaTeste, verificar, janela, SAIDA, IMAGEM  # noqa: E402
+from qemu import Maquina, FalhaTeste, verificar, abrir_terminal, janela, SAIDA, IMAGEM  # noqa: E402
 
 MB = 2048
 TAM = 256 * 1024 * 1024
@@ -112,7 +112,8 @@ def main():
 
     # 1. Os caminhos que não gravam.
     with Maquina("h110a", "ide", memoria="768M", extras=extras) as m:
-        m.esperar_serial("sagui:/$", 120)
+        m.esperar_serial("area de trabalho no ar", 120)
+        abrir_terminal(m)   # o Terminal agora abre pelo ícone (D039)
         time.sleep(1)
         inst, n = abrir(m)
         m.captura("H110-1-boas-vindas")

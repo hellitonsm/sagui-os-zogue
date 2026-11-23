@@ -20,7 +20,7 @@ import sys
 import time
 
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
-from qemu import (Maquina, FalhaTeste, verificar, criar_pendrive, pendrive_qemu, tamanho_png,  # noqa: E402
+from qemu import (Maquina, FalhaTeste, verificar, abrir_terminal, criar_pendrive, pendrive_qemu, tamanho_png,  # noqa: E402
                   cor_do_pixel, imagem_de_teste, janela)
 
 
@@ -46,7 +46,8 @@ def icones(png):
 def main():
     # 1. Sem a configuração: desligado.
     with Maquina("h84-desligado", "ide", extras=com_config("h84-pen1", "som.volume = 80\n")) as m:
-        m.esperar_serial("sagui:/$", 120)
+        m.esperar_serial("area de trabalho no ar", 120)
+        abrir_terminal(m)   # o Terminal agora abre pelo ícone (D039)
         time.sleep(2)
         s = m.serial()
         verificar("montado sozinho" in s, "[desligado] o pendrive com configurações foi montado no boot")

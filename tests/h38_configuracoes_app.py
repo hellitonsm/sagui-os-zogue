@@ -11,7 +11,7 @@ import sys
 import time
 
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
-from qemu import Maquina, verificar, janela, cor_do_pixel  # noqa: E402
+from qemu import Maquina, verificar, abrir_terminal, janela, cor_do_pixel  # noqa: E402
 
 POR_COLUNA = (768 - 40) // 92
 
@@ -30,7 +30,8 @@ def escrever_caixa(m, x, y, texto):
 
 def main():
     with Maquina("h38", "ide") as m:
-        m.esperar_serial("sagui:/$", 120)
+        m.esperar_serial("area de trabalho no ar", 120)
+        abrir_terminal(m)   # o Terminal agora abre pelo ícone (D039)
         time.sleep(1)
         m.clique(*icone(6), duplo=True)
         m.esperar_serial("configuracoes: aberto na aba Relógio", 15)

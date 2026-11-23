@@ -189,6 +189,17 @@ def imagem_console():
     return imagem_de_teste("", ["--vesa", "--console"])
 
 
+def abrir_terminal(m):
+    """Abre o Terminal pelo ícone da área de trabalho (2º ícone da coluna da
+    esquerda) e espera o prompt do sagsh. A área de trabalho não abre o
+    Terminal sozinho ao ligar (D039): quem quiser o shell, clica no ícone."""
+    # Mesma grade de ícones de tests/h28_acabamento.py: Terminal é índice 1.
+    por_coluna = (768 - 40) // 92
+    i = 1
+    m.clique(20 + (i // por_coluna) * 110 + 48, 40 + (i % por_coluna) * 92 + 32, duplo=True)
+    m.esperar_serial("sagui:/$", 30)
+
+
 def acelerador():
     """Escolhe o acelerador do QEMU: "kvm" ou "tcg" (D075).
 

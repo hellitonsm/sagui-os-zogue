@@ -13,7 +13,7 @@ import sys
 import time
 
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
-from qemu import Maquina, verificar, SAIDA, criar_pendrive, pendrive_qemu  # noqa: E402
+from qemu import Maquina, verificar, abrir_terminal, SAIDA, criar_pendrive, pendrive_qemu  # noqa: E402
 from h43_e1000 import REDE  # noqa: E402
 
 
@@ -62,7 +62,8 @@ def main():
 
 def rodar(pen):
     with Maquina("h53", "ide", extras=REDE + ["-device", "usb-ehci,id=ehci"] + pendrive_qemu(pen), memoria="768M") as m:
-        m.esperar_serial("sagui:/$", 120)
+        m.esperar_serial("area de trabalho no ar", 120)
+        abrir_terminal(m)   # o Terminal agora abre pelo ícone (D039)
         m.esperar_serial("[REDE] DHCP: endereco", 20)
         time.sleep(1)
         m.comando("cd /tmp")

@@ -23,7 +23,7 @@ import sys
 import time
 
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
-from qemu import Maquina, FalhaTeste, verificar, SAIDA, IMAGEM  # noqa: E402
+from qemu import Maquina, FalhaTeste, verificar, abrir_terminal, SAIDA, IMAGEM  # noqa: E402
 
 ERRO_ACESSO = -14
 SETOR_NEGADO = 7     # as tentativas sem confirmação apontam para cá
@@ -90,7 +90,8 @@ def main():
         g.truncate(32 * 1024 * 1024)
 
     with Maquina("h109", "ide", imagem=origem, memoria="768M", extras=["-drive", f"format=raw,file={hd},if=ide,index=1"]) as m:
-        m.esperar_serial("sagui:/$", 120)
+        m.esperar_serial("area de trabalho no ar", 120)
+        abrir_terminal(m)   # o Terminal agora abre pelo ícone (D039)
         time.sleep(1)
         s = m.serial()
         verificar("[DISCO] hd0:" in s and "[DISCO] hd1:" in s, "o driver ATA acha os dois discos")

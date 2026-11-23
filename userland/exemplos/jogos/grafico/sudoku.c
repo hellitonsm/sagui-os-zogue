@@ -1,7 +1,7 @@
 /* sudoku.c - Sudoku 9x9 na interface grafica do SaguiOS.
  *
  * Compilado dentro do proprio sistema pelo tinycc:
- *   make /jogos/grafico/sudoku.mk
+ *   make /exemplos/jogos/grafico/sudoku.mk
  *   ./sudoku
  *
  * Setas movem a selecao, 1-9 colocam o numero, 0 (ou Backspace) apaga,

@@ -27,12 +27,12 @@ int principal(int argc, char **argv)
 {
     (void)argc; (void)argv;
     char b[512];
-    char *build[] = {"/bin/gosagui", "build", "-o", "/tmp/teste-import-go", "/go/importacoes.go", NULL};
+    char *build[] = {"/bin/gosagui", "build", "-o", "/tmp/teste-import-go", "/exemplos/go/importacoes.go", NULL};
     if (rodar(build, b, sizeof b) != 0) return 1;
     char *go[] = {"/tmp/teste-import-go", NULL};
     if (rodar(go, b, sizeof b) != 0 || compara_texto(b, "Ola da biblioteca fmt!\naviso: biblioteca embutida\n")) return 2;
     apagar("/tmp/teste-import-go");
-    char *lua[] = {"/bin/lua", "/lua/importacoes.lua", NULL};
+    char *lua[] = {"/bin/lua", "/exemplos/lua/importacoes.lua", NULL};
     if (rodar(lua, b, sizeof b) != 0 || compara_texto(b, "SAGUI\t9\n")) return 3;
     char *identidade[] = {"/bin/lua", "-e", "local m = require('math'); math = nil; assert(require('math') == m); print(m.abs(-2))", NULL};
     if (rodar(identidade, b, sizeof b) != 0 || compara_texto(b, "2\n")) return 4;

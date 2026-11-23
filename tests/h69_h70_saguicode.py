@@ -30,7 +30,7 @@ import threading
 import time
 
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
-from qemu import Maquina, FalhaTeste, verificar, criar_pendrive, pendrive_qemu, mtools  # noqa: E402
+from qemu import Maquina, FalhaTeste, verificar, abrir_terminal, criar_pendrive, pendrive_qemu, mtools  # noqa: E402
 
 REDE = ["-netdev", "user,id=n0", "-device", "e1000,netdev=n0,mac=52:54:00:12:34:56"]
 CHAVE = "teste-chave-sagui-123"
@@ -168,7 +168,8 @@ def main():
     })
     try:
         with Maquina("h69", "ide", extras=REDE + ["-device", "usb-ehci,id=ehci"] + pendrive_qemu(pen), memoria="768M") as m:
-            m.esperar_serial("sagui:/$", 120)
+            m.esperar_serial("area de trabalho no ar", 120)
+        abrir_terminal(m)   # o Terminal agora abre pelo ícone (D039)
             m.esperar_serial("[REDE] DHCP: endereco", 30)
             time.sleep(2)
             antes = len(m.serial())

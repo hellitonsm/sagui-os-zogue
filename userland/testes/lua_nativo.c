@@ -56,7 +56,7 @@ int principal(int argc, char **argv)
     char buf[4096];
     int codigo = -1;
 
-    char *ola[] = {"/bin/lua", "/lua/ola.lua", NULL};
+    char *ola[] = {"/bin/lua", "/exemplos/lua/ola.lua", NULL};
     if (capturar(ola, buf, sizeof buf, &codigo) < 0) return 1;
     if (codigo != 0 || compara_texto(buf, "Ola, Lua no SaguiOS!\nsoma\t55\n")) {
         imprimir_em(ERROS, "[LUA] ola: codigo %d, saida %s\n", codigo, buf);
@@ -64,7 +64,7 @@ int principal(int argc, char **argv)
     }
     registrar("[LUA] script basico e laco numerico\n");
 
-    char *rec[] = {"/bin/lua", "/lua/recursos.lua", NULL};
+    char *rec[] = {"/bin/lua", "/exemplos/lua/recursos.lua", NULL};
     if (capturar(rec, buf, sizeof buf, &codigo) < 0) return 3;
     if (codigo != 0) return 4;
     const char *esperado[] = {
@@ -93,7 +93,7 @@ int principal(int argc, char **argv)
     }
     registrar("[LUA] funcoes, tabelas e bibliotecas\n");
 
-    char *arq[] = {"/bin/lua", "/lua/arquivos.lua", NULL};
+    char *arq[] = {"/bin/lua", "/exemplos/lua/arquivos.lua", NULL};
     if (capturar(arq, buf, sizeof buf, &codigo) < 0) return 6;
     if (codigo != 0 || !contem(buf, "arquivo:\tlinha 1\tlinha 2") ||
         !contem(buf, "linha:\tlinha 1") || !contem(buf, "linha:\tlinha 2") ||
@@ -104,7 +104,7 @@ int principal(int argc, char **argv)
     registrar("[LUA] arquivos e dofile\n");
 
     /* Erro de execucao: mensagem no erro e codigo 1. */
-    char *erro[] = {"/bin/lua", "/lua/erro.lua", NULL};
+    char *erro[] = {"/bin/lua", "/exemplos/lua/erro.lua", NULL};
     if (capturar(erro, buf, sizeof buf, &codigo) < 0) return 8;
     if (codigo != 1 || !contem(buf, "antes do erro") || !contem(buf, "falhou de proposito")) {
         imprimir_em(ERROS, "[LUA] erro: codigo %d, saida %s\n", codigo, buf);
@@ -113,7 +113,7 @@ int principal(int argc, char **argv)
     registrar("[LUA] erro de execucao\n");
 
     /* Erro de sintaxe: tambem codigo 1, com a linha. */
-    char *sint[] = {"/bin/lua", "/lua/sintaxe.lua", NULL};
+    char *sint[] = {"/bin/lua", "/exemplos/lua/sintaxe.lua", NULL};
     if (capturar(sint, buf, sizeof buf, &codigo) < 0) return 10;
     if (codigo != 1 || !contem(buf, "lua: linha")) {
         imprimir_em(ERROS, "[LUA] sintaxe: codigo %d, saida %s\n", codigo, buf);

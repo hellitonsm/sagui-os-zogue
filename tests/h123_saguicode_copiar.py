@@ -20,7 +20,7 @@ import time
 
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 sys.dont_write_bytecode = True
-from qemu import Maquina, verificar, criar_pendrive, pendrive_qemu, janela, cor_do_pixel, FalhaTeste  # noqa: E402
+from qemu import Maquina, verificar, abrir_terminal, criar_pendrive, pendrive_qemu, janela, cor_do_pixel, FalhaTeste  # noqa: E402
 import h69_h70_saguicode as h69  # noqa: E402
 
 RESPOSTA = "Resposta: copie-isto-456 e mais nada."
@@ -47,7 +47,8 @@ def main():
     })
     try:
         with Maquina("h123", "ide", extras=h69.REDE + ["-device", "usb-ehci,id=ehci"] + pendrive_qemu(pen), memoria="768M") as m:
-            m.esperar_serial("sagui:/$", 120)
+            m.esperar_serial("area de trabalho no ar", 120)
+        abrir_terminal(m)   # o Terminal agora abre pelo ícone (D039)
             m.esperar_serial("[REDE] DHCP: endereco", 30)
             time.sleep(2)
             term = janela(m.serial(), "Terminal")

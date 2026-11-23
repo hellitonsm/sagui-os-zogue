@@ -17,7 +17,7 @@ import sys
 import time
 
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
-from qemu import Maquina, verificar, janela, RAIZ, FalhaTeste  # noqa: E402
+from qemu import Maquina, verificar, abrir_terminal, janela, RAIZ, FalhaTeste  # noqa: E402
 
 PASTA = os.path.join(RAIZ, "build", "testes")
 EXEMPLO = os.path.join(RAIZ, "userland", "jogos", "jclic", "exemplo", "sagui.jclic")
@@ -57,13 +57,14 @@ def caixas(s):
 def main():
     teste_hospedeiro()
     with Maquina("h92-jc", "ide", memoria="768M") as m:
-        m.esperar_serial("sagui:/$", 120)
+        m.esperar_serial("area de trabalho no ar", 120)
+        abrir_terminal(m)   # o Terminal agora abre pelo ícone (D039)
         time.sleep(1)
         antes = len(m.serial())
         m.comando("jclic")
         s = esperar(m, r"jclic: lista pronta \(\d+ projetos\)", 20, antes)
         itens = dict((c, int(i)) for i, c in re.findall(r"jclic: item (\d+) (\S+)", s))
-        verificar("/jogos/jclic/sagui.jclic.zip" in itens, "a lista mostra o exemplo de /jogos/jclic")
+        verificar("/exemplos/jogos/jclic/sagui.jclic.zip" in itens, "a lista mostra o exemplo de /jogos/jclic")
         time.sleep(1)
         jan = janela(m.serial(), "Atividades JClic")
         X, Y = jan["x"], jan["y"]
@@ -72,7 +73,7 @@ def main():
             m.clique(X + x, Y + y, **k)
 
         antes = len(m.serial())
-        clicar(100, 76 + 2 + itens["/jogos/jclic/sagui.jclic.zip"] * 20 + 10, duplo=True)
+        clicar(100, 76 + 2 + itens["/exemplos/jogos/jclic/sagui.jclic.zip"] * 20 + 10, duplo=True)
         s = esperar(m, r"jclic: atividade 1 de 6: boas-vindas", 15, antes)
         verificar('jclic: projeto "O sagui e a banana" (6 atividades)' in s, "o ZIP abre e o projeto tem 6 atividades")
         time.sleep(1)

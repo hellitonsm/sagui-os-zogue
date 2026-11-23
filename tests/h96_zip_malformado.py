@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """H96 - o leitor de ZIP do JClic recusa arquivos malformados sem ler fora deles.
 
-Critério: o userland/jogos/jclic/zip.c, compilado no computador em 32 bits
+Critério: o userland/exemplos/jogos/jclic/zip.c, compilado no computador em 32 bits
 (como no SaguiOS) e com verificação de memória, (1) lê um ZIP de verdade,
 feito pelo zipfile do Python, e extrai todas as entradas; (2) recusa, sem
 nenhum erro de memória, ZIPs com deslocamentos que dão a volta nos 32 bits:

@@ -136,7 +136,7 @@ static void desenhar_lista(void)
     if (lista.qtd) lista_desenhar(j, &lista);
     else g_texto(j, 16, 80, "Nenhum programa em /jogos/chip8 nem no pendrive.", COR_TEXTO);
     g_texto(j, 16, ALT - 46, "Teclas: 1234 / QWER / ASDF / ZXCV (as setas valem W A S D).", COR_TEXTO_FRACO);
-    g_texto(j, 16, ALT - 26, "Os exemplos têm o código em /jogos/chip8/*.asm (chip8asm).", COR_TEXTO_FRACO);
+    g_texto(j, 16, ALT - 26, "Os exemplos têm o código em /exemplos/jogos/chip8/*.asm (chip8asm).", COR_TEXTO_FRACO);
     jan_mostrar(j);
 }
 

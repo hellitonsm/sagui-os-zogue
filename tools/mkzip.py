@@ -2,7 +2,7 @@
 """
 mkzip.py - junta arquivos num ZIP (com DEFLATE), para o projeto JClic de
 exemplo do SaguiOS (H92): o build põe userland/jogos/jclic/exemplo/ em
-/jogos/jclic/sagui.jclic.zip, que é como os projetos JClic são distribuídos.
+/exemplos/jogos/jclic/sagui.jclic.zip, que é como os projetos JClic são distribuídos.
 
 Uso: mkzip.py <saida.zip> <arquivo>...   (cada arquivo entra só com o nome)
 

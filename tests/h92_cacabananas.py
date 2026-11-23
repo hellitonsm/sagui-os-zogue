@@ -17,7 +17,7 @@ import sys
 import time
 
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
-from qemu import Maquina, verificar, janela, RAIZ, FalhaTeste  # noqa: E402
+from qemu import Maquina, verificar, abrir_terminal, janela, RAIZ, FalhaTeste  # noqa: E402
 
 PASTA = os.path.join(RAIZ, "build", "testes")
 
@@ -53,7 +53,8 @@ def bombas(s):
 def main():
     teste_hospedeiro()
     with Maquina("h92-cb", "ide") as m:
-        m.esperar_serial("sagui:/$", 120)
+        m.esperar_serial("area de trabalho no ar", 120)
+        abrir_terminal(m)   # o Terminal agora abre pelo ícone (D039)
         time.sleep(1)
         m.comando("cacabananas --semente 1234")
         s = esperar(m, r"cacabananas: pronto", 20)

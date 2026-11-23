@@ -113,7 +113,7 @@ static void desenhar_aviso(superficie_t *t)
     sup_retangulo(t, x, y, AVISO_L, AVISO_A, 0x18202A);
     sup_moldura(t, x, y, AVISO_L, AVISO_A, 0xFFDF4A);
     sup_retangulo(t, x, y, 6, AVISO_A, 0xFFDF4A);
-    sup_texto(t, x + 16, y + 6, "SaguiOS", 0xFFDF4A);
+    sup_texto(t, x + 16, y + 6, "Zogue OS", 0xFFDF4A);
     /* Até duas linhas, quebrando no último espaço que couber. */
     const char *p = aviso_texto;
     for (int l = 0; l < 2 && *p; l++) {
@@ -352,6 +352,7 @@ static const fixo_t fixos[] = {
     { "Terminal", "/bin/terminal", "terminal", arte_px_terminal_40 },
     { "Cipó", "/bin/navegador", "navegador", arte_px_cipo_40 },
     { "Editor", "/bin/editor", "editor", arte_px_editor_40 },
+    { "IDE", "/bin/ide", "ide", arte_px_ide_40 },
     { "Configurações", "/bin/configuracoes", "configuracoes", arte_px_configuracoes_40 },
 };
 #define QTD_FIXOS (int)(sizeof fixos / sizeof fixos[0])
@@ -483,6 +484,7 @@ static const programa_menu_t catalogo[] = {
     { "Cipó", "/bin/navegador", NULL, CAT_INTERNET, arte_px_cipo_40, "navegador internet web site pagina duckduckgo" },
     { "Arquivos", "/bin/arquivos", NULL, CAT_ESCRITORIO, arte_px_arquivos_40, "pastas documentos explorador" },
     { "Editor", "/bin/editor", NULL, CAT_ESCRITORIO, arte_px_editor_40, "texto bloco de notas escrever" },
+    { "IDE", "/bin/ide", NULL, CAT_ESCRITORIO, arte_px_ide_40, "codigo programar go lua c makefile mk" },
     { "Calculadora", "/bin/calculadora", NULL, CAT_ESCRITORIO, arte_px_calculadora_40, "contas numeros" },
     { "Tocador", "/bin/tocador", NULL, CAT_MIDIA, arte_px_tocador_40, "musica mp3 wav audio som" },
     /* Jogos: o lançador (H92) e cada jogo dele, como pediu a revisão da #25. */
@@ -500,7 +502,7 @@ static const programa_menu_t catalogo[] = {
     { "Sagui Code", "/bin/saguicode-janela", NULL, CAT_DESENVOLVIMENTO, arte_px_saguicode_40, "ia agente programar codigo" },
     { "Sagui Code (terminal)", "/bin/terminal", "/bin/saguicode", CAT_DESENVOLVIMENTO, arte_px_terminal_40, "ia agente programar codigo terminal" },
     { "Componentes", "/bin/componentes", NULL, CAT_DESENVOLVIMENTO, arte_px_componentes_40, "demonstracao botoes interface libsagui" },
-    { "Instalar o SaguiOS", "/bin/instalar", NULL, CAT_SISTEMA, arte_px_instalar_sistema_40, "instalar disco hd gravar instalacao particao" },
+    { "Instalar o Zogue OS", "/bin/instalar", NULL, CAT_SISTEMA, arte_px_instalar_sistema_40, "instalar disco hd gravar instalacao particao" },
 };
 #define QTD_CATALOGO (int)(sizeof catalogo / sizeof catalogo[0])
 #define MENU_X 4

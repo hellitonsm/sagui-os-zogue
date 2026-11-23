@@ -16,7 +16,7 @@ import sys
 import time
 
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
-from qemu import Maquina, FalhaTeste, verificar, criar_pendrive, pendrive_qemu, mtools  # noqa: E402
+from qemu import Maquina, FalhaTeste, verificar, abrir_terminal, criar_pendrive, pendrive_qemu, mtools  # noqa: E402
 
 PROGRAMA = '#include "sagui.h"\n\nint principal(int argc, char **argv)\n{\n    imprimir("oi do G470\\n");\n    return 0;\n}\n'
 
@@ -34,7 +34,8 @@ def main():
     pen = criar_pendrive("h79-pen", pastas=(".saguios", "programas"), arquivos={".saguios/configuracoes.txt": "som.volume = 80\n"})
     extras = ["-device", "usb-ehci,id=ehci"] + pendrive_qemu(pen) + ["-audiodev", "wav,id=som,path=" + os.path.join(os.path.dirname(pen), "h79.wav"), "-device", "intel-hda", "-device", "hda-duplex,audiodev=som"]
     with Maquina("h79", "ide", extras=extras, memoria="768M") as m:
-        m.esperar_serial("sagui:/$", 120)
+        m.esperar_serial("area de trabalho no ar", 120)
+        abrir_terminal(m)   # o Terminal agora abre pelo ícone (D039)
         time.sleep(4)                                      # o diagnóstico do som sai 3 s depois da partida
         out = m.comando("registro VIDEO", tempo=20)
         verificar("[VIDEO]" in out and "escrita combinada (PAT/WC)" in out, "registro mostra o diário, com filtro; vídeo com escrita combinada")
@@ -48,7 +49,8 @@ def main():
     mtools(pen, "mmd", "p:/fontes")
     mtools(pen, "mcopy", "-o", fonte, "p:/fontes/teste.c")
     with Maquina("h79b", "ide", extras=["-device", "usb-ehci,id=ehci"] + pendrive_qemu(pen), memoria="768M") as m:
-        m.esperar_serial("sagui:/$", 120)
+        m.esperar_serial("area de trabalho no ar", 120)
+        abrir_terminal(m)   # o Terminal agora abre pelo ícone (D039)
         time.sleep(2)
         m.comando("cd /tmp", tempo=10)
         out = m.comando("cc /usb/fontes/teste.c -o teste", tempo=90)
@@ -59,9 +61,9 @@ def main():
         antes = len(m.serial())
         esperar(m, "programas instalados no pendrive: 1", 30, 0)
         time.sleep(3)
-        # Ícones: 8 do sistema + o instalado (9º): coluna 2, linha 2. O
-        # pendrive fica na coluna da direita, com o instalador.
-        x, y = 20 + 110 + 48, 24 + 16 + 1 * 92 + 30
+        # Ícones: 14 do sistema + o instalado (15º): 2ª coluna, 7ª linha da
+        # grade. O pendrive fica na coluna da direita, com o instalador.
+        x, y = 20 + 110 + 48, 40 + 6 * 92 + 44
         m.captura("H79-1-icone-instalado")
         antes = len(m.serial())
         m.clique(x, y, duplo=True)

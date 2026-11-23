@@ -1,5 +1,5 @@
 /* gui_tinycc.c - teste da biblioteca grafica do tinycc no convidado:
- * compila o exemplo /tcc/exemplo-gui.c ligando contra libsaguigui.a
+ * compila o exemplo /exemplos/tcc/exemplo-gui.c ligando contra libsaguigui.a
  * (/usr/lib/libsaguigui.a no sysroot) e executa a DEMONSTRACAO VISIVEL
  * (janela real, relogio, auto-digitacao, auto-cliques), conferindo os
  * marcadores que o proprio exemplo imprime. */
@@ -58,7 +58,7 @@ int principal(int argc, char **argv)
 
     /* Compila o exemplo grafico ligando a biblioteca do tinycc. */
     char *tcc[] = { "/bin/tinycc", "-static", "-o", "/tmp/exemplo-gui",
-                    "/tcc/exemplo-gui.c", "-lsaguigui", NULL };
+                    "/exemplos/tcc/exemplo-gui.c", "-lsaguigui", NULL };
     codigo = rodar(tcc);
     if (codigo != 0) {
         imprimir_em(ERROS, "[GUI-TINYCC] tinycc -lsaguigui: codigo %d\n", codigo);

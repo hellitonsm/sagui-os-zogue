@@ -16,6 +16,7 @@
  */
 #include "sagui.h"
 #include "gui.h"
+#include "http.h"
 
 #define ARQ_CONFIG "/config/loja.conf"
 #define MAX_APPS 32
@@ -143,7 +144,7 @@ static void carregar_locais(void)
     info_arquivo_t inf;
     n_apps = 0;
     entrada_pasta_t e;
-    const char *pastas[2] = { "/go", "/lua" };
+    const char *pastas[2] = { "/exemplos/go", "/exemplos/lua" };
     for (int k = 0; k < 2 && n_apps < MAX_APPS; k++) {
         for (int i = 0; listar(pastas[k], i, &e) == 1 && n_apps < MAX_APPS; i++) {
             if (e.tipo == TIPO_PASTA) continue;
@@ -296,6 +297,20 @@ static int listar_cmd(void)
     return 0;
 }
 
+/* Junta a resposta HTTP num buffer para a lista remota (apenas mostra). */
+typedef struct {
+    char *buf;
+    int n;
+} coletor_t;
+
+static int coletar(void *ctx, const char *dados, unsigned n)
+{
+    coletor_t *c = ctx;
+    if (c->n + (int)n > 65535) return -1;
+    if (n) { copia_texto(c->buf + c->n, dados, (size_t)n + 1); c->n += (int)n; }
+    return 0;
+}
+
 static int atualizar_cmd(void)
 {
     ler_link();
@@ -307,11 +322,16 @@ static int atualizar_cmd(void)
     registrar("loja: atualizar %s\n", link_loja);
     char *buf = aloca(65536);
     if (!buf) { imprimir_em(ERROS, "loja: sem memoria\n"); return 1; }
-    int n = http_obter(link_loja, buf, 65536);
-    if (n < 0) { imprimir_em(ERROS, "loja: falha de rede/HTTP (%d).\n", n); libera(buf); return 1; }
+    coletor_t c = { buf, 0 };
+    http_resposta_t r;
+    int ok = http_obter(link_loja, coletar, &c, &r);
+    if (ok < 0 || r.situacao != 200) {
+        imprimir_em(ERROS, "loja: falha de rede/HTTP (%d, situacao %d).\n", ok, r.situacao);
+        libera(buf); return 1;
+    }
     /* lista cada linha "nome url" como app remoto (apenas mostra) */
-    buf[n < 65535 ? n : 65535] = 0;
-    char *p = buf;
+    c.buf[c.n < 65535 ? c.n : 65535] = 0;
+    char *p = c.buf;
     int remotos = 0;
     while (*p) {
         char *eol = acha_char(p, '\n');

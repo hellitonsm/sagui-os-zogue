@@ -71,7 +71,7 @@ KERNEL_ASM := $(shell find kernel -name '*.asm' -not -path 'kernel/arch/i386/*' 
 KERNEL_OBJ := $(patsubst %.c,$(B)/%.o,$(KERNEL_C)) $(patsubst %.asm,$(B)/%.asm.o,$(KERNEL_ASM)) \
               $(B)/gerado/fonte8x16.o $(B)/gerado/arte_icones.o
 KERNEL_HDR := $(shell find kernel -name '*.h')
-ROOTFS     := $(shell find rootfs -type f | sort)
+ROOTFS     := $(shell find rootfs -type f | sort) $(shell find userland/exemplos -type f | sort)
 
 # Programas de usuário: libsagui + shim POSIX local (userland/mlibc) + um .c
 # por programa em userland/programas/ (/bin) ou userland/testes/ (/testes).
@@ -161,10 +161,15 @@ PROG_TESTE := $(patsubst userland/testes/%.c,$(B)/userland/testes/%,$(wildcard u
 # Programas do fork que ainda dependem da API antiga (pré-3.0) ou do mlibc/
 # toolchain (FORK_TOOLCHAIN). Ficam no repositório, mas fora do build padrão
 # até serem portados para o kernel/ABI da 3.0 do upstream.
-FORK_ADIADOS := ide loja servidor tocador upstream-teste wget
+FORK_ADIADOS := servidor
 PROGRAMAS := $(filter-out $(addprefix $(B)/userland/bin/,$(FORK_ADIADOS)),$(PROGRAMAS))
 # apoio_libc.c é uma biblioteca (shim de libc das ferramentas), não um programa.
 PROGRAMAS := $(filter-out $(B)/userland/bin/apoio_libc,$(PROGRAMAS))
+# O tocador de músicas e o upstream-teste têm construção própria; o .c de
+# userland/programas/ com o mesmo nome é o tocador antigo (.mus/.vid) e não
+# deve disputar o alvo com a regra do userland/tocador/ (H87).
+PROGRAMAS := $(filter-out $(B)/userland/bin/tocador,$(PROGRAMAS))
+PROGRAMAS += $(B)/userland/bin/tocador
 PROG_TESTE := $(filter-out $(B)/userland/testes/mlibc_nativo,$(PROG_TESTE))
 
 # Cadeia do fork que exige ferramentas do Windows (PowerShell) e o mlibc:
@@ -232,7 +237,7 @@ endif
 # qualquer outro programa do SaguiOS (libsagui + shim POSIX local) e
 # instalado como /bin/tinycc no convidado, com o sysroot em /usr. Um programa
 # em C pode ser compilado DENTRO do SaguiOS e executado ali mesmo:
-#   tinycc -o /tmp/ola /tcc/hello-tcc.c && /tmp/ola
+#   tinycc -o /tmp/ola /exemplos/tcc/hello-tcc.c && /tmp/ola
 TINYCC_DIR    := .local/tinycc
 TINYCC_CFLAGS := $(UCFLAGS) -mlong-double-64 -Wno-unused-function \
                  -Wno-unused-variable -I$(TINYCC_DIR)
@@ -533,9 +538,11 @@ LICENCAS_FONTES := LICENSE CONTRIBUIDORES.md CREDITOS.md VERSOES.md $(shell find
 $(B)/ramdisk.sgfs: $(ROOTFS) $(PROGRAMAS) $(PROG_TESTE) $(B)/sysroot $(CC_LIB) $(CC_INC) docs/c-do-sagui.md tools/mksgfs.py $(B)/host/chip8asm $(JCLIC_EXEMPLO) tools/mkzip.py $(LICENCAS_FONTES)
 	rm -rf $(B)/rootfs
 	cp -r rootfs $(B)/rootfs
-	for f in rootfs/jogos/chip8/*.asm; do $(B)/host/chip8asm $$f $(B)/rootfs/jogos/chip8/$$(basename $$f .asm).ch8 || exit 1; done
-	mkdir -p $(B)/rootfs/jogos/jclic
-	$(PY) tools/mkzip.py $(B)/rootfs/jogos/jclic/sagui.jclic.zip $(JCLIC_EXEMPLO)
+	mkdir -p $(B)/rootfs/exemplos
+	cp -r userland/exemplos/. $(B)/rootfs/exemplos/
+	for f in userland/exemplos/jogos/chip8/*.asm; do $(B)/host/chip8asm $$f $(B)/rootfs/exemplos/jogos/chip8/$$(basename $$f .asm).ch8 || exit 1; done
+	mkdir -p $(B)/rootfs/exemplos/jogos/jclic
+	$(PY) tools/mkzip.py $(B)/rootfs/exemplos/jogos/jclic/sagui.jclic.zip $(JCLIC_EXEMPLO)
 	mkdir -p $(B)/rootfs/usr/lib
 	cp -r $(B)/sysroot/include $(B)/rootfs/usr/include
 	cp -r $(B)/sysroot/lib/. $(B)/rootfs/usr/lib/
@@ -550,8 +557,8 @@ $(B)/ramdisk.sgfs: $(ROOTFS) $(PROGRAMAS) $(PROG_TESTE) $(B)/sysroot $(CC_LIB) $
 	$(PY) tools/mksgfs.py $(B)/rootfs $@
 
 # O montador de CHIP-8 (H92) também roda aqui, no computador de
-# desenvolvimento: as ROMs de exemplo de /jogos/chip8 saem dos .asm de
-# rootfs/jogos/chip8 na hora do build (nenhum binário pronto no repositório).
+# desenvolvimento: as ROMs de exemplo de /exemplos/jogos/chip8 saem dos .asm de
+# userland/exemplos/jogos/chip8 na hora do build (nenhum binário pronto no repositório).
 $(B)/host/chip8asm: tools/chip8asm.c userland/jogos/chip8asm/montador.c userland/jogos/chip8asm/montador.h
 	@mkdir -p $(dir $@)
 	gcc -O2 -Wall -Wextra -DTESTE_HOSPEDEIRO -Iuserland/jogos/chip8asm -o $@ tools/chip8asm.c userland/jogos/chip8asm/montador.c

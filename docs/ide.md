@@ -2,18 +2,18 @@
 
 A IDE é o editor de código do sistema e o **programa padrão** para abrir
 arquivos `.go`, `.lua`, `.c`, `.h` e `.mk`: no Terminal, digitar `ola.go`
-(ou `/jogos/grafico/sudoku.mk`) já abre a IDE; no **Arquivos**, o duplo clique
+(ou `/exemplos/jogos/grafico/sudoku.mk`) já abre a IDE; no **Arquivos**, o duplo clique
 nesses arquivos faz o mesmo. Arquivos de texto comuns continuam abrindo no
 `editor`.
 
-No Terminal também dá para abrir direto: `ide` ou `ide /go/ola.go`. A janela
+No Terminal também dá para abrir direto: `ide` ou `ide /exemplos/go/ola.go`. A janela
 tem barra de ações, área de código com **números de linha** e **realce de
 sintaxe**, barra de status e painel de saída.
 
 ## Editar
 
 - **Novo**, **Abrir**, **Salvar**, **Salvar como**.
-- **Modelos** carrega um exemplo editável de Go, Lua, C (tinycc) ou Makefile
+- **Modelos** carrega um exemplo editável de Go, Lua, C (cc) ou Makefile
   (`.mk`). Salve com a extensão certa (por exemplo, `/tmp/meu.c`).
 - **Localizar** (Ctrl+F) procura o texto a partir do cursor e destaca o
   trecho; **Ir p/ linha** (Ctrl+G) salta para uma linha.
@@ -37,17 +37,16 @@ painel inferior e o código de saída é exibido ao final.
 | --- | --- |
 | `.go` | `gosagui` compila para um ELF temporário em `/tmp`, executado só se a compilação der certo e removido ao terminar. |
 | `.lua` | `/bin/lua` interpreta o script; não produz executável. |
-| `.c` / `.h` | `tinycc` compila para `/tmp` e o executável é rodado em seguida. |
+| `.c` / `.h` | `cc` (compilador oficial do SaguiOS) compila para `/tmp` e o executável é rodado em seguida. |
 | `.mk` | `/bin/make` compila a receita (a partir da pasta atual); com `EXECUTAR = sim` o próprio `make` roda o programa, senão a IDE executa a `SAIDA` gerada. |
 
 Go e Lua são implementações de subconjuntos, não as ferramentas oficiais:
-veja [Go](go.md) e [Lua](lua.md). O C usa o TinyCC completo descrito em
-[tcc.md](tcc.md); as receitas `.mk` estão em
-[tcc.md](tcc.md#make-e-arquivos-mk).
+veja [Go](go.md) e [Lua](lua.md). O C usa o compilador oficial `cc` do SaguiOS; as receitas `.mk` são
+compiladas pelo `make`.
 
 O painel mostra apenas as últimas linhas, não aceita entrada interativa e é
 indicado para programas não interativos. Arquivos no SGFS e em `/tmp` não
 persistem após reiniciar; use um volume FAT32 para persistência.
 
-Exemplos de importação embutida: abra `/go/importacoes.go` ou
-`/lua/importacoes.lua` e clique em **Executar**.
+Exemplos de importação embutida: abra `/exemplos/go/importacoes.go` ou
+`/exemplos/lua/importacoes.lua` e clique em **Executar**.

@@ -14,7 +14,7 @@ import time
 import zlib
 
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
-from qemu import Maquina, verificar  # noqa: E402
+from qemu import Maquina, verificar, abrir_terminal  # noqa: E402
 from h43_e1000 import REDE  # noqa: E402
 
 TAMANHO = 10 * 1024 * 1024
@@ -40,7 +40,8 @@ def main():
     porta = 40000 + os.getpid() % 10000
     threading.Thread(target=servidor, args=(porta, dados, 2), daemon=True).start()
     with Maquina("h48", "ide", extras=REDE) as m:
-        m.esperar_serial("sagui:/$", 120)
+        m.esperar_serial("area de trabalho no ar", 120)
+        abrir_terminal(m)   # o Terminal agora abre pelo ícone (D039)
         m.esperar_serial("[REDE] DHCP: endereco", 20)
         time.sleep(1)
         out = m.comando(f"/testes/tcpreceber 10.0.2.2 {porta}", tempo=300)

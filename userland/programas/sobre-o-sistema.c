@@ -284,14 +284,14 @@ int principal(int argc, char **argv)
     if (argc > 1 && compara_texto(argv[1], "historico") == 0) return janela_historico();
 
     enum { L = 480, A = 420 };
-    jan_t *j = jan_abrir("Sobre o SaguiOS", L, A);
+    jan_t *j = jan_abrir("Sobre o Zogue OS", L, A);
     if (!j) return 1;
     g_retangulo(j, 0, 110, L, A - 110, COR_FUNDO);
     g_retangulo(j, 0, 0, L, 110, 0x0B7A3E);
     g_desenho(j, 20, 14, cabeca, 32, 16, paleta, 5);
-    g_texto(j, 200, 30, "SaguiOS", 0xFFDF4A);
-    g_texto(j, 200, 52, "um sistema operacional", 0xFFFFFF);
-    g_texto(j, 200, 70, "escrito do zero", 0xFFFFFF);
+    g_texto(j, 200, 30, "Zogue OS", 0xFFDF4A);
+    g_texto(j, 200, 52, "baseado no SaguiOS,", 0xFFFFFF);
+    g_texto(j, 200, 70, "projeto separado", 0xFFFFFF);
     g_texto(j, 20, 256, "Créditos", COR_DESTAQUE);
     for (int i = 0; i < QTD_CREDITOS; i++) {
         g_texto(j, 20, 278 + i * 18, creditos[i], COR_TEXTO);

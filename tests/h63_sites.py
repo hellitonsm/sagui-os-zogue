@@ -16,7 +16,7 @@ import sys
 import time
 
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
-from qemu import Maquina, FalhaTeste, verificar, janela  # noqa: E402
+from qemu import Maquina, FalhaTeste, verificar, abrir_terminal, janela  # noqa: E402
 from h62_navegador import achar_campo, digitar_endereco, BARRA, VISTA_A  # noqa: E402
 
 REDE = ["-netdev", "user,id=n0", "-device", "e1000,netdev=n0,mac=52:54:00:12:34:56"]
@@ -53,7 +53,8 @@ def abrir(m, j, url, tempo=300):
 
 def main():
     with Maquina("h63", "ide", extras=REDE, memoria="768M") as m:
-        m.esperar_serial("sagui:/$", 120)
+        m.esperar_serial("area de trabalho no ar", 120)
+        abrir_terminal(m)   # o Terminal agora abre pelo ícone (D039)
         m.esperar_serial("[REDE] DHCP: endereco", 30)
         time.sleep(1)
         m.comando("relogio internet", tempo=60)       # o HTTPS confere a data dos certificados

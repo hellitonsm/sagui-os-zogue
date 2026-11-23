@@ -19,7 +19,7 @@ import sys
 import time
 
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
-from qemu import Maquina, FalhaTeste, verificar, janela, cor_do_pixel  # noqa: E402
+from qemu import Maquina, FalhaTeste, verificar, abrir_terminal, janela, cor_do_pixel  # noqa: E402
 
 
 def esperar(m, texto, tempo=30, desde=0):
@@ -33,7 +33,8 @@ def esperar(m, texto, tempo=30, desde=0):
 
 def main():
     with Maquina("h74", "ide", memoria="768M") as m:
-        m.esperar_serial("sagui:/$", 120)
+        m.esperar_serial("area de trabalho no ar", 120)
+        abrir_terminal(m)   # o Terminal agora abre pelo ícone (D039)
         time.sleep(2)
         medida = re.search(r"quadro inteiro com vidro: (\d+) ms; efeitos (\w+)", m.serial())
         verificar(medida is not None, f"tempo de um quadro inteiro com vidro medido: {medida.group(1) if medida else '?'} ms, efeitos {medida.group(2) if medida else '?'}")

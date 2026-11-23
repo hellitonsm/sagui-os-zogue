@@ -9,8 +9,8 @@ biblioteca externa nem do Lua oficial dentro do sistema, e não gera ELF (ao
 contrário do `gosagui`).
 
 ```text
-lua /lua/ola.lua
-lua /lua/recursos.lua
+lua /exemplos/lua/ola.lua
+lua /exemplos/lua/recursos.lua
 lua -e "print(2 + 3)"
 lua -v
 lua                 # modo interativo (REPL)
@@ -122,11 +122,11 @@ pode ser chamado por caminho: `/bin/lua script.lua`.
 
 `tests/h38_lua_nativo.py` roda `/testes/lua_nativo` no QEMU. Esse programa:
 
-- executa `/lua/ola.lua` e confere a saída exata;
-- executa `/lua/recursos.lua` e confere funções, recursão, fechamentos,
+- executa `/exemplos/lua/ola.lua` e confere a saída exata;
+- executa `/exemplos/lua/recursos.lua` e confere funções, recursão, fechamentos,
   tabelas, `pairs`/`ipairs`, `string`, `table`, `math` e os laços;
-- executa `/lua/arquivos.lua`, que grava e relê `/lua/saida.txt` e chama
-  `dofile("/lua/dofile.lua")`;
+- executa `/exemplos/lua/arquivos.lua`, que grava e relê `/exemplos/lua/saida.txt` e chama
+  `dofile("/exemplos/lua/dofile.lua")`;
 - confere que erro de execução e erro de sintaxe saem com código 1 e mensagem
   na saída de erro;
 - confere `lua -e "print(2 + 3)"` e `lua -v`.
@@ -142,4 +142,4 @@ Um nome desconhecido ou argumento que nao seja texto gera erro. O registro
 e privado e nao depende de alteracoes nas variaveis globais. Isso nao
 implementa `package`, busca de arquivos ou modulos externos do Lua oficial;
 para executar arquivos locais continua disponivel `dofile`. Veja
-`/lua/importacoes.lua`.
+`/exemplos/lua/importacoes.lua`.

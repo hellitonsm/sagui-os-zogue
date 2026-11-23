@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!-- O sagui e a banana: projeto de exemplo do SaguiOS (H92), escrito aqui
      no formato aberto do JClic. O build o põe num ZIP em
-     /jogos/jclic/sagui.jclic.zip. Licença: a do SaguiOS (GPL 3). -->
+     /exemplos/jogos/jclic/sagui.jclic.zip. Licença: a do SaguiOS (GPL 3). -->
 <JClicProject name="sagui" version="0.1.3">
   <settings>
     <title>O sagui e a banana</title>

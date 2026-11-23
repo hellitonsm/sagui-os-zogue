@@ -771,7 +771,7 @@ mapa, o que permite atirar com eles.
 
 Um jogo em primeira pessoa com visual 2,5D, escrito para este projeto em
 `userland/sagui3d/` (seis arquivos, ~2.400 linhas, binário de 57 KB). As
-fases são arquivos de texto em `/jogos/sagui3d/`. Abaixo, como cada parte
+fases são arquivos de texto em `/exemplos/jogos/sagui3d/`. Abaixo, como cada parte
 foi pensada.
 
 ### Projeção, ordem de desenho, recorte e o "olho de peixe"
@@ -1182,9 +1182,22 @@ meta não é obrigatória, mas a próxima fase vai passar dela; fica registrado.
 campos de bits, assembly dentro do C, avisos, mais de um erro por vez. A
 lista completa está no manual.
 
-## D040. Visual moderno: vidro só nas barras, desfoque por recorte e efeitos automáticos (H74 a H77)
+## D039. Área de trabalho nasce limpa: o Terminal abre pelo ícone (H24, H28)
 
-(D039 fica para o compilador, feito em paralelo.)
+**Decisão:** ao ligar no modo gráfico, o kernel sobe a área de trabalho e
+mais nada; o Terminal (e o `sagsh` dentro dele) deixa de ser aberto
+automaticamente no boot e passa a abrir pelo duplo clique no ícone, como
+qualquer outro programa. O caminho do `--console` (terminal de tela cheia,
+usado pelos testes das fases 2 a 4) continua subindo o `sagsh` direto.
+
+**Motivo:** a área de trabalho agora tem o alternador de janelas na barra
+(D038), então navegar entre programas não depende de uma janela de Terminal
+já aberta; e uma tela inicial limpa é o esperado em quem vem de outros
+sistemas. Os testes que usavam o Terminal do boot (H23 a H28, B3, B4, H34,
+H39) passam a abri-lo pelo ícone; os que só queriam o sinal de boot
+esperam o log "area de trabalho no ar".
+
+## D040. Visual moderno: vidro só nas barras, desfoque por recorte e efeitos automáticos (H74 a H77)
 
 - **Onde há vidro:** nas barras de título, na barra de cima, na doca, no menu
   e nos balões. O conteúdo das janelas continua opaco (é desenhado pelos

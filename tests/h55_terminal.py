@@ -11,7 +11,7 @@ import sys
 import time
 
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
-from qemu import Maquina, verificar, janela, cor_do_pixel  # noqa: E402
+from qemu import Maquina, verificar, abrir_terminal, janela, cor_do_pixel  # noqa: E402
 
 COLS = 94
 
@@ -23,7 +23,8 @@ def celula(j, l, c):
 
 def main():
     with Maquina("h55", "ide") as m:
-        m.esperar_serial("sagui:/$", 120)
+        m.esperar_serial("area de trabalho no ar", 120)
+        abrir_terminal(m)   # o Terminal agora abre pelo ícone (D039)
         time.sleep(1)
         out = m.comando("/testes/vt", tempo=30)
         verificar("resposta da posicao: [20;5R" in out, "o Terminal responde à pergunta da posição do cursor (ESC [ 6 n)")

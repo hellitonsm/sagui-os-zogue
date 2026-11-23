@@ -17,7 +17,7 @@ import sys
 import time
 
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
-from qemu import Maquina, FalhaTeste, verificar, janela, cor_do_pixel, criar_pendrive, pendrive_qemu  # noqa: E402
+from qemu import Maquina, FalhaTeste, verificar, abrir_terminal, janela, cor_do_pixel, criar_pendrive, pendrive_qemu  # noqa: E402
 
 # Uma chave falsa, do tamanho das de verdade (sk-or-v1- e 64 letras).
 CHAVE = "sk-or-v1-" + "a1b2c3d4e5f60718" * 4
@@ -36,7 +36,8 @@ def main():
     pen = criar_pendrive("h97-pen", rotulo="DADOS", pastas=(".saguios", "dados"),
                          arquivos={"dados/chave.txt": CHAVE + "\n"})
     with Maquina("h97", "ide", memoria="768M", extras=["-device", "usb-ehci,id=ehci"] + pendrive_qemu(pen)) as m:
-        m.esperar_serial("sagui:/$", 120)
+        m.esperar_serial("area de trabalho no ar", 120)
+        abrir_terminal(m)   # o Terminal agora abre pelo ícone (D039)
         time.sleep(1)
         m.comando("montar")
 

@@ -11,7 +11,7 @@ import sys
 import time
 
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
-from qemu import Maquina, verificar, SAIDA  # noqa: E402
+from qemu import Maquina, verificar, abrir_terminal, SAIDA  # noqa: E402
 
 
 def som_qemu(wav):
@@ -46,7 +46,8 @@ def frequencias(wav):
 def main():
     wav = os.path.join(SAIDA, "h40.wav")
     with Maquina("h40", "ide", extras=som_qemu(wav)) as m:
-        m.esperar_serial("sagui:/$", 120)
+        m.esperar_serial("area de trabalho no ar", 120)
+        abrir_terminal(m)   # o Terminal agora abre pelo ícone (D039)
         s = m.serial()
         verificar("[HDA] codec" in s and "saida(s)" in s and "tocando" in s, "codec encontrado e saída configurada")
         time.sleep(1)

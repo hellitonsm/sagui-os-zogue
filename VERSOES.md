@@ -23,12 +23,24 @@ versão é lançada, o que estava lá vira a seção dessa versão.
 
 ## Em desenvolvimento
 
+- **Exemplos reorganizados:** programas de exemplo (C, asm, Go, Lua, tinycc e
+  jogos) movidos para `userland/exemplos/` no fonte e instalados em `/exemplos/`
+  na imagem, com referências e caminhos atualizados para o SaguiOS 3.0.
+- **IDE de volta na 3.0:** o editor de código (`/bin/ide`) volta ao build padrão,
+  com realce de sintaxe, números de linha, auto-indentação, localizar/ir para
+  linha, modelos e execução de Go, Lua, C e `.mk`; arquivos de código abrem na
+  IDE pelo Terminal e pelo Arquivos. Ganhou ícone na área de trabalho, na doca
+  e no menu Iniciar.
+- **Área de trabalho nasce limpa:** ao ligar no modo gráfico, o sistema sobe a
+  área de trabalho sem abrir o Terminal automaticamente; o Terminal (com o sagsh
+  dentro) abre pelo duplo clique no ícone, como os outros programas. O modo
+  `--console` continua subindo o sagsh direto (D039).
 - **Jogos graficos (sudoku, pong, tetris e tabuada):** de volta na 3.0 como
   programas graficos nativos (janela propria, desenhados com a `libsagui`),
   com icones na area de trabalho e entrada no menu Iniciar. O `csagui` tambem
   foi portado para o kernel/ABI de 64 bits (syscall `SIS_TECLA_TENTEU` = 85,
   suporte a `int a, b, c;` global e correcao do `for(;;)` com incremento),
-  mantendo os fontes de terminal em `rootfs/jogos/` e `rootfs/c/tabuada.c`.
+  mantendo os fontes de terminal em `userland/exemplos/jogos/` e `userland/exemplos/exemplos/c/tabuada.c`.
 - **Segurança (Cipó):** uma fonte WOFF2 malformada, vinda de uma página, podia
   fazer o navegador ler memória fora da fonte (os tamanhos das partes somavam
   mais de 4 GB e a conta "dava a volta"). Agora a fonte é recusada.

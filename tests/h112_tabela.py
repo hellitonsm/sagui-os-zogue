@@ -25,7 +25,7 @@ import sys
 import time
 
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
-from qemu import Maquina, FalhaTeste, verificar, SAIDA  # noqa: E402
+from qemu import Maquina, FalhaTeste, verificar, abrir_terminal, SAIDA  # noqa: E402
 
 TOTAL = 131072          # setores: 64 MB
 S = 512
@@ -178,7 +178,8 @@ def main():
         for i, (_, caminho) in enumerate(grupo):
             extras += ["-drive", f"format=raw,file={caminho},if=ide,index={i}"]
         with Maquina(f"h112-{g // 3}", "usb", memoria="512M", extras=extras) as m:
-            m.esperar_serial("sagui:/$", 120)
+            m.esperar_serial("area de trabalho no ar", 120)
+        abrir_terminal(m)   # o Terminal agora abre pelo ícone (D039)
             time.sleep(1)
             for i, (caso, _) in enumerate(grupo):
                 nome, _, estado, conf, prob, fim, parts = caso

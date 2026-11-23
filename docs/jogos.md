@@ -21,7 +21,7 @@ Os jogos sao programas C normais em `userland/programas/` (`sudoku.c`,
 `g_retangulo`, `g_texto`, `proximo_evento` e `teclas_seguradas` da `gui.h`.
 
 Os fontes de terminal originais (compilados pelo `csagui` dentro do sistema)
-continuam em `rootfs/jogos/` e `rootfs/c/tabuada.c` como referencia.
+continuam em `userland/exemplos/jogos/` e `userland/exemplos/exemplos/c/tabuada.c` como referencia.
 
 ## Jogos graficos no rootfs
 
@@ -29,8 +29,8 @@ Ha tambem versoes graficas em `/jogos/grafico` (sudoku, tetris, velha),
 compiladas dentro do proprio sistema com o `tinycc` + `libsaguigui`:
 
 ```text
-make /jogos/grafico/sudoku.mk
+make /exemplos/jogos/grafico/sudoku.mk
 ./sudoku
 ```
 
-Veja `rootfs/jogos/grafico/leia-me.txt` para detalhes.
+Veja `userland/exemplos/exemplos/jogos/grafico/leia-me.txt` para detalhes.

@@ -1,5 +1,5 @@
 -- Ola, Lua no SaguiOS!
--- Rode com:  lua /lua/ola.lua
+-- Rode com:  lua /exemplos/lua/ola.lua
 
 print("Ola, Lua no SaguiOS!")
 

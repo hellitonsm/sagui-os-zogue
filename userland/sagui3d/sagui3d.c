@@ -20,7 +20,7 @@ extern const unsigned char fonte_sagui[256][16];
 
 #define QTD_FASES 3
 static const char *const arquivos_fases[QTD_FASES] = {
-    "/jogos/sagui3d/fase1.txt", "/jogos/sagui3d/fase2.txt", "/jogos/sagui3d/fase3.txt",
+    "/exemplos/jogos/sagui3d/fase1.txt", "/exemplos/jogos/sagui3d/fase2.txt", "/exemplos/jogos/sagui3d/fase3.txt",
 };
 
 static jan_t *j;

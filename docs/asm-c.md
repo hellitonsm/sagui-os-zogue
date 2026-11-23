@@ -12,21 +12,21 @@ O projeto inclui três ferramentas que rodam **dentro do anel 3**:
 
 ```text
 asagui version
-asagui build -o /tmp/ola-asm /asm/ola.asm
+asagui build -o /tmp/ola-asm /exemplos/asm/ola.asm
 /tmp/ola-asm
 
 csagui version
-csagui compile -c -o /tmp/ola.o /c/ola.c
+csagui compile -c -o /tmp/ola.o /exemplos/c/ola.c
 # Com o sysroot upstream instalado no rootfs:
 ldagui link -o /tmp/ola /usr/lib/crt0.o /tmp/ola.o /usr/lib/mlibc.o
 /tmp/ola
 
 # Modo legado de exemplo, sem libc:
-csagui build -o /tmp/ola-direto /c/ola.c
+csagui build -o /tmp/ola-direto /exemplos/c/ola.c
 /tmp/ola-direto
 ```
 
-Os exemplos `/asm/ola.asm` e `/c/ola.c` vêm no rootfs; `/c/tabuada.c` mostra
+Os exemplos `/exemplos/asm/ola.asm` e `/exemplos/c/ola.c` vêm no rootfs; `/exemplos/c/tabuada.c` mostra
 laço e desvio, e os exemplos de `/go` e `/lua` incluem programas gráficos (a
 biblioteca `gui` do Lua nativo, ver [gui-lua.md](gui-lua.md)). O Makefile já
 descobre automaticamente `userland/programas/*.c` e `userland/testes/*.c`,

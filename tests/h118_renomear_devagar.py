@@ -20,7 +20,7 @@ import sys
 import time
 
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
-from qemu import Maquina, FalhaTeste, verificar, janela  # noqa: E402
+from qemu import Maquina, FalhaTeste, verificar, abrir_terminal, janela  # noqa: E402
 
 LATERAL = 140
 LISTA_X, LISTA_Y = LATERAL + 6, 70
@@ -48,7 +48,8 @@ def devagar(m, x, y, limpar=VAZIO):
 
 def main():
     with Maquina("h118", "ide", memoria="768M") as m:
-        m.esperar_serial("sagui:/$", 120)
+        m.esperar_serial("area de trabalho no ar", 120)
+        abrir_terminal(m)   # o Terminal agora abre pelo ícone (D039)
         time.sleep(1)
 
         # Área de trabalho: renomear o Terminal devagar.

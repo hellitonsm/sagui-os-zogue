@@ -4,7 +4,7 @@
  * acelera a queda, W (ou seta para cima) gira, R recomeca e Q (ou Esc)
  * fecha. A peca cai sozinha e as linhas cheias somem.
  *
- * Adaptado do jogo grafico do rootfs/jogos/grafico para rodar como programa
+ * Adaptado do jogo grafico do userland/exemplos/jogos/grafico para rodar como programa
  * de janela nativo da 3.0. */
 #include "sagui.h"
 #include "gui.h"

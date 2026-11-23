@@ -1,5 +1,5 @@
 -- gui.lua - demonstracao do kit grafico do SaguiOS rodando no Lua nativo.
--- Abra o Terminal e rode com:  lua /lua/gui.lua
+-- Abra o Terminal e rode com:  lua /exemplos/lua/gui.lua
 -- Feche a janela pelo X para sair.
 local j = gui.janela("Kit grafico do SaguiOS", 420, 300)
 if not j then

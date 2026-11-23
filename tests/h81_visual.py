@@ -19,7 +19,7 @@ import sys
 import time
 
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
-from qemu import Maquina, FalhaTeste, verificar, janela, cor_do_pixel  # noqa: E402
+from qemu import Maquina, FalhaTeste, verificar, abrir_terminal, janela, cor_do_pixel  # noqa: E402
 
 
 def esperar(m, texto, tempo=30, desde=0):
@@ -38,7 +38,8 @@ def config(m, chave, valor):
 
 def main():
     with Maquina("h81", "ide", memoria="768M") as m:
-        m.esperar_serial("sagui:/$", 120)
+        m.esperar_serial("area de trabalho no ar", 120)
+        abrir_terminal(m)   # o Terminal agora abre pelo ícone (D039)
         time.sleep(2)
         t = janela(m.serial(), "Terminal")
 

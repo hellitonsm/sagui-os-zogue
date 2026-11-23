@@ -19,7 +19,7 @@ import threading
 import time
 
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
-from qemu import Maquina, verificar, SAIDA  # noqa: E402
+from qemu import Maquina, verificar, abrir_terminal, SAIDA  # noqa: E402
 from h40_som import ler_wav  # noqa: E402
 
 SEGUNDOS = 6
@@ -47,7 +47,8 @@ def main():
     som = ["-audiodev", f"wav,id=som,path={wav}", "-device", "intel-hda", "-device", "hda-duplex,audiodev=som"]
     try:
         with Maquina("h82v", "ide", extras=REDE + som, memoria="768M") as m:
-            m.esperar_serial("sagui:/$", 120)
+            m.esperar_serial("area de trabalho no ar", 120)
+        abrir_terminal(m)   # o Terminal agora abre pelo ícone (D039)
             m.digitar("video /nao/existe.mp4\n", 0.04)
             m.esperar_serial("video: nao abriu /nao/existe.mp4", 30)
             verificar(True, "o programa /bin/video existe, roda e recusa um arquivo que não existe")

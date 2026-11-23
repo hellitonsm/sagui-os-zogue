@@ -14,25 +14,25 @@ laços, funções, `break` — e é o lugar natural para escrever programas grá
 sem sair do sistema:
 
 ```text
-lua /lua/gui.lua
-lua /lua/relogio.lua
+lua /exemplos/lua/gui.lua
+lua /exemplos/lua/relogio.lua
 ```
 
 ## Exemplos que vêm no rootfs
 
 | Arquivo | O que mostra |
 | --- | --- |
-| `/lua/gui.lua` | Janela com rótulo, botão contador, caixa de texto e lista; diálogo ao ativar um item |
-| `/lua/relogio.lua` | Relógio de uptime atualizando numa janela, com laço de eventos sem bloqueio |
-| `/lua/ola.lua`, `/lua/recursos.lua`, ... | Os exemplos de console de sempre |
+| `/exemplos/lua/gui.lua` | Janela com rótulo, botão contador, caixa de texto e lista; diálogo ao ativar um item |
+| `/exemplos/lua/relogio.lua` | Relógio de uptime atualizando numa janela, com laço de eventos sem bloqueio |
+| `/exemplos/lua/ola.lua`, `/exemplos/lua/recursos.lua`, ... | Os exemplos de console de sempre |
 
 E para os outros compiladores nativos (sem gráficos, por enquanto):
 
 | Arquivo | Compilador | O que mostra |
 | --- | --- | --- |
-| `/c/ola.c`, `/c/tabuada.c` | `csagui` | Laços, desvios e chamadas dentro do sistema |
-| `/asm/ola.asm` | `asagui` | Syscalls `int 0x80` direto de assembly |
-| `/go/ola.go`, `/go/biblioteca.go`, `/go/sobre.go` | `gosagui` | `fmt`, `sagui`, `init` e bootstrap próprio |
+| `/exemplos/c/ola.c`, `/exemplos/c/tabuada.c` | `csagui` | Laços, desvios e chamadas dentro do sistema |
+| `/exemplos/asm/ola.asm` | `asagui` | Syscalls `int 0x80` direto de assembly |
+| `/exemplos/go/ola.go`, `/exemplos/go/biblioteca.go`, `/exemplos/go/sobre.go` | `gosagui` | `fmt`, `sagui`, `init` e bootstrap próprio |
 
 ## A biblioteca `gui`
 
@@ -156,7 +156,7 @@ constantes) e confere a saída pela serial. Rode, num ambiente com QEMU:
 python3 tests/h45_gui_lua.py
 ```
 
-Os programas interativos (`/lua/gui.lua`, `/lua/relogio.lua`) são feitos para
+Os programas interativos (`/exemplos/lua/gui.lua`, `/exemplos/lua/relogio.lua`) são feitos para
 o olho humano; o `h22_componentes.py` já cobre o mesmo kit em C, com cliques
 de mouse no QEMU.
 

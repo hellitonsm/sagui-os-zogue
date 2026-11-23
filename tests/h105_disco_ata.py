@@ -19,7 +19,7 @@ import sys
 import time
 
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
-from qemu import Maquina, verificar, criar_pendrive, pendrive_qemu  # noqa: E402
+from qemu import Maquina, verificar, abrir_terminal, criar_pendrive, pendrive_qemu  # noqa: E402
 
 
 def soma(caminho):
@@ -55,7 +55,8 @@ def main():
               "-drive", f"format=raw,file={falso},if=ide,index=3",
               "-device", "usb-ehci,id=ehci"] + pendrive_qemu(pen)
     with Maquina("h105", "ide", extras=extras, memoria="768M") as m:
-        m.esperar_serial("sagui:/$", 120)
+        m.esperar_serial("area de trabalho no ar", 120)
+        abrir_terminal(m)   # o Terminal agora abre pelo ícone (D039)
         s = m.serial()
         verificar("[DISCO] hd0:" in s and "[DISCO] hd1:" in s and "[DISCO] hd2:" in s,
                   "o driver ATA acha os três discos (hd0, hd1 e hd2)")

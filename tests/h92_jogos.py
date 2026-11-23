@@ -14,7 +14,7 @@ import sys
 import time
 
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
-from qemu import Maquina, verificar, janela, RAIZ, FalhaTeste  # noqa: E402
+from qemu import Maquina, verificar, abrir_terminal, janela, RAIZ, FalhaTeste  # noqa: E402
 
 # A ordem da tabela de userland/programas/jogos.c: programa e a linha que o
 # jogo escreve no log quando a janela fica pronta.
@@ -42,7 +42,8 @@ def esperar(m, texto, tempo, desde=0):
 def main():
     presentes = [j for j in JOGOS if os.path.exists(os.path.join(RAIZ, "build", "userland", "bin", j[0]))]
     with Maquina("h92", "ide", memoria="768M") as m:
-        m.esperar_serial("sagui:/$", 120)
+        m.esperar_serial("area de trabalho no ar", 120)
+        abrir_terminal(m)   # o Terminal agora abre pelo ícone (D039)
         time.sleep(2)
         antes = len(m.serial())
         m.clique(40, 12)

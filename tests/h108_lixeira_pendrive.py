@@ -16,7 +16,7 @@ import sys
 import time
 
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
-from qemu import Maquina, verificar, criar_pendrive, pendrive_qemu  # noqa: E402
+from qemu import Maquina, verificar, abrir_terminal, criar_pendrive, pendrive_qemu  # noqa: E402
 
 
 def main():
@@ -26,7 +26,8 @@ def main():
     })
     extras = ["-device", "usb-ehci,id=ehci"] + pendrive_qemu(pen)
     with Maquina("h108", "ide", extras=extras, memoria="768M") as m:
-        m.esperar_serial("sagui:/$", 120)
+        m.esperar_serial("area de trabalho no ar", 120)
+        abrir_terminal(m)   # o Terminal agora abre pelo ícone (D039)
         time.sleep(1)
         m.comando("montar usb0")
         m.esperar_serial("[GUI] lixeira abre /usb/.lixeira", 15)
@@ -37,7 +38,7 @@ def main():
         # (7 por coluna em 1024x768, como no h103).
         time.sleep(0.5)
         n = len(m.serial())
-        m.clique(20 + 110 + 30, 40 + 1 * 92 + 30, duplo=True)
+        m.clique(20 + 110 + 48, 40 + 6 * 92 + 44, duplo=True)   # Lixeira: 2ª coluna, 7ª linha
         m.esperar_serial("[GUI] icone Lixeira -> /bin/arquivos", 10)
         m.esperar_serial("arquivos: pasta /usb/.lixeira (1 itens)", 30)
         verificar(True, "o duplo clique no ícone abre a lixeira do pendrive, com o arquivo")

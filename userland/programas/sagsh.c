@@ -108,6 +108,7 @@ static const comando_t comandos[] = {
     { "bip", NULL, false, false, "toca um bip", "bip [Hz [ms]] | bip escala", "Toca uma nota no alto-falante do PC (padrão: 880 Hz por 200 ms)." },
     { "arquivos", NULL, false, true, "abre o Arquivos", "arquivos [pasta]", "Abre o Arquivos numa janela." },
     { "editor", NULL, false, true, "editor de texto", "editor [arquivo]", "Abre o Editor de texto numa janela." },
+    { "ide", NULL, false, true, "editor de código", "ide [arquivo]", "Abre a IDE para editar, compilar e executar Go, Lua, C e receitas .mk." },
     { "calculadora", NULL, false, true, "calculadora", "calculadora", "Abre a Calculadora numa janela." },
     { "visualizador", NULL, false, true, "mostra imagens", "visualizador [imagem]", "Abre imagens PNG, JPEG, GIF, WebP, BMP e SGI. +/- zoom, 0 ajusta, setas passam para a próxima da pasta." },
     { "banana", NULL, false, true, "jogo do sagui", "banana", "Abre o jogo Sagui Pega Banana." },
@@ -614,6 +615,21 @@ static bool executar_linha(char *linha)
     }
     if (et[qtd - 1].argc == 0) { dizer("sagsh: pipe sem comando"); return true; }
     for (int i = 0; i < qtd; i++) et[i].argv[et[i].argc] = NULL;
+
+    /* Arquivos de código (.go, .lua, .c, .h e .mk) abrem na IDE, não no
+     * editor de texto nem como binário. "ola.go" vira "ide ola.go". */
+    for (int i = 0; i < qtd; i++) {
+        if (et[i].argc == 0) continue;
+        const char *n = et[i].argv[0];
+        if (!n || !eh_codigo_fonte(n)) continue;
+        if (et[i].argc >= MAX_PALAVRAS - 1) {
+            dizer("sagsh: linha longa demais para abrir no IDE");
+            return true;
+        }
+        for (int k = et[i].argc; k >= 0; k--) et[i].argv[k + 1] = et[i].argv[k];
+        et[i].argv[0] = "ide";
+        et[i].argc++;
+    }
 
     const comando_t *c = achar_comando(et[0].argv[0]);
     if (c && c->interno) {

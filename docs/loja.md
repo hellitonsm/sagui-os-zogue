@@ -42,7 +42,7 @@ formato=SAGUI-LOJA
 versao=1
 nome=ola
 tipo=go
-fonte=/go/ola.go
+fonte=/exemplos/go/ola.go
 tamanho_elf=<bytes>
 ---ELF---
 <bytes ELF>

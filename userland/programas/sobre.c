@@ -10,11 +10,10 @@ int principal(int argc, char **argv)
     info_sistema(INFO_MEMORIA, &m, sizeof m);
     info_versao_t iv;
     if (info_sistema(INFO_VERSAO, &iv, sizeof iv) < 0) copia_texto(iv.versao, "?", sizeof iv.versao);
-    imprimir("SaguiOS %s: um sistema operacional escrito do zero por IA.\n", iv.versao);
-    imprimir("Kernel de 32 bits com paginação, processos no anel 3, multitarefa\n");
-    imprimir("preemptiva, chamadas de sistema, arquivos na RAM e pipes.\n");
-    imprimir("Escrito por Claude (Anthropic) para o projeto do Eli Rigobeli, sem código de\n");
-    imprimir("outros sistemas no núcleo. Contribuições da comunidade: veja CONTRIBUIDORES.md.\n");
+    imprimir("Zogue OS %s: sistema operacional baseado no SaguiOS.\n", iv.versao);
+    imprimir("Baseado no SaguiOS, criado por Eli Rigobeli com Claude (Anthropic),\n");
+    imprimir("sem código de outros sistemas no núcleo. Zogue OS é um projeto separado\n");
+    imprimir("que mantém créditos completos ao SaguiOS e seus contribuidores.\n");
     imprimir("Agora: %d processos, %u MB livres de memória.\n", procs, m.livre_kb / 1024);
     imprimir("Leia /sobre.txt e /historia/saguios.txt. O mascote está em /arte/sagui.txt.\n");
     return 0;

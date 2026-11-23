@@ -18,7 +18,7 @@ import sys
 import time
 
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
-from qemu import Maquina, FalhaTeste, verificar, criar_pendrive, pendrive_qemu  # noqa: E402
+from qemu import Maquina, FalhaTeste, verificar, abrir_terminal, criar_pendrive, pendrive_qemu  # noqa: E402
 
 X = 1024 - 20 - 96 + 48        # o meio da coluna da direita
 Y0 = 40 + 32                   # o meio do primeiro ícone
@@ -37,7 +37,8 @@ def main():
     pen = criar_pendrive("h111-pen", 64, "FOTOS", arquivos={"oi.txt": b"oi\n"})
     extras = ["-device", "usb-ehci,id=ehci"] + pendrive_qemu(pen)
     with Maquina("h111", "ide", extras=extras, memoria="768M") as m:
-        m.esperar_serial("sagui:/$", 120)
+        m.esperar_serial("area de trabalho no ar", 120)
+        abrir_terminal(m)   # o Terminal agora abre pelo ícone (D039)
         esperar(m, "coluna da direita: instalador sim, 1 unidades", 20)
         verificar(True, "o instalador e o pendrive aparecem na coluna da direita")
         time.sleep(1)

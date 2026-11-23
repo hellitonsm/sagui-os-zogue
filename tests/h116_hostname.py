@@ -10,7 +10,7 @@ import sys
 
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 from h91_utilitarios import rodar as rodar_util  # noqa: E402
-from qemu import Maquina, verificar, criar_pendrive, pendrive_qemu, RAIZ  # noqa: E402
+from qemu import Maquina, verificar, abrir_terminal, criar_pendrive, pendrive_qemu, RAIZ  # noqa: E402
 
 
 def rodar(m, comando):
@@ -28,7 +28,8 @@ def main():
     pen = criar_pendrive("h116-pen", rotulo="TEXTOS")
     extras = ["-device", "usb-ehci,id=ehci"] + pendrive_qemu(pen)
     with Maquina("h116", "ide", extras=extras) as m:
-        m.esperar_serial("sagui:/$", 120)
+        m.esperar_serial("area de trabalho no ar", 120)
+        abrir_terminal(m)   # o Terminal agora abre pelo ícone (D039)
 
         # Sem argumento: mostra o padrão.
         out = rodar(m, "nome-maquina")

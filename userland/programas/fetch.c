@@ -90,10 +90,10 @@ int principal(int argc, char **argv)
     int nproc = info_sistema(INFO_PROCESSOS, procs, 64);
     int nesp = info_sistema(INFO_DISCOS_ESPACO, esp, 2);
 
-    item(NULL, VERDE "SaguiOS" NORMAL);
+    item(NULL, VERDE "Zogue OS" NORMAL);
     item(NULL, "-------");
-    item("Sistema", "SaguiOS %s", tem_v ? v.versao : "?");
-    item("Núcleo", "SaguiOS i686 (32 bits, escrito do zero)");
+    item("Sistema", "Zogue OS %s (base SaguiOS)", tem_v ? v.versao : "?");
+    item("Núcleo", "Base SaguiOS (escrito do zero)");
     if (tem_v) {
         unsigned s = v.segundos_ligado;
         if (s >= 3600) item("Ligado há", "%u h %u min", s / 3600, s / 60 % 60);

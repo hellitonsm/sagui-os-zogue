@@ -1,8 +1,9 @@
 /* arquivos [pasta] - o gerenciador de arquivos do SaguiOS (H23).
  *
  * Mostra uma pasta como lista com ícones (pastas primeiro). Duplo clique:
- * pasta entra, arquivo de texto abre no Editor, programa executa. Botões
- * para voltar, criar pasta e apagar (com confirmação).
+ * pasta entra, arquivo de texto abre no Editor, código (.go/.lua/.c/.h/.mk)
+ * abre no IDE, programa executa. Botões para voltar, criar pasta e apagar
+ * (com confirmação).
  *
  * Lixeira (issue #25, parte 5): "Apagar" move para a lixeira em vez de apagar
  * de vez. Cada disco tem a sua, porque mover entre a memória e o pendrive não
@@ -318,6 +319,9 @@ static void abrir_item(int i)
             pid = executar("/bin/terminal", t);
         }
         registrar("arquivos: executando %s (pid %d)", c, pid);
+    } else if (eh_codigo_fonte(nomes[i])) {
+        abrir_com(i, "/bin/ide");
+        return;
     } else {
         abrir_com(i, programa_para(nomes[i]));
         return;

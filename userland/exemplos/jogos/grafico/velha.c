@@ -1,7 +1,7 @@
 /* velha.c - Jogo da Velha (tic-tac-toe) grafico do SaguiOS.
  *
  * Compilado dentro do proprio sistema pelo tinycc:
- *   make /jogos/grafico/velha.mk
+ *   make /exemplos/jogos/grafico/velha.mk
  *   ./velha
  *
  * Voce joga de X contra a CPU (O). Clique numa casa ou use as setas e

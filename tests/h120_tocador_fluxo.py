@@ -19,7 +19,7 @@ import sys
 import time
 
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
-from qemu import Maquina, FalhaTeste, verificar, janela, SAIDA, criar_pendrive, pendrive_qemu  # noqa: E402
+from qemu import Maquina, FalhaTeste, verificar, abrir_terminal, janela, SAIDA, criar_pendrive, pendrive_qemu  # noqa: E402
 from h40_som import som_qemu, ler_wav  # noqa: E402
 from h41_mistura import energia  # noqa: E402
 
@@ -73,7 +73,8 @@ def main():
                                    "musicas/c-seno440.mp3": mp3 * 30})              # ~500 KB
     with Maquina("h120", "ide", memoria="768M",
                  extras=som_qemu(wav) + ["-device", "usb-ehci,id=ehci"] + pendrive_qemu(pen)) as m:
-        m.esperar_serial("sagui:/$", 120)
+        m.esperar_serial("area de trabalho no ar", 120)
+        abrir_terminal(m)   # o Terminal agora abre pelo ícone (D039)
         time.sleep(1)
         m.comando("montar")
         antes = len(m.serial())

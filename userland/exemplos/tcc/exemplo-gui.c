@@ -2,7 +2,7 @@
  * tinycc: uma janela de verdade, com relogio de uptime correndo, caixa de
  * texto que o proprio programa digita e botao que conta os proprios cliques.
  *
- *   tinycc /tcc/exemplo-gui.c -lsaguigui   # gera ./exemplo-gui (sem -o)
+ *   tinycc /exemplos/tcc/exemplo-gui.c -lsaguigui   # gera ./exemplo-gui (sem -o)
  *   ./exemplo-gui                # roda a demonstracao na tela (sozinha)
  *   ./exemplo-gui --interativo   # app para voce brincar (X fecha)
  *
