@@ -22,7 +22,7 @@ def main():
         # As letras vão do "saida=" até o fim do teste; no meio pode cair a
         # mensagem de término da tarefa que acabou primeiro, que é descartada.
         trecho = s.split("[TESTE] saida=")[1].split("[TESTE]")[0]
-        trecho = re.sub(r"\[SAGUI\][^\n]*\n", "", trecho)
+        trecho = re.sub(r"\[(?:SAGUI|ZOGUE)\][^\n]*\n", "", trecho)
         saida = "".join(c for c in trecho if c in "AB")
         verificar(saida.count("A") == 60 and saida.count("B") == 60, "cada tarefa escreveu suas 60 letras")
         trechos = re.findall(r"A+|B+", saida)

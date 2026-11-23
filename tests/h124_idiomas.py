@@ -19,7 +19,7 @@ import sys
 import time
 
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
-from qemu import RAIZ, Maquina, verificar, imagem_console, janela  # noqa: E402
+from qemu import RAIZ, Maquina, verificar, imagem_console, janela, abrir_terminal  # noqa: E402
 
 
 def marcas(s):
@@ -111,7 +111,8 @@ def main():
 
     # As Configurações: a aba "Idioma e teclado".
     with Maquina("h124-janela", "ide") as m:
-        m.esperar_serial("sagui:/$", 120)
+        m.esperar_serial("area de trabalho no ar", 120)
+        abrir_terminal(m)   # o Terminal agora abre pelo ícone (D039)
         time.sleep(1)
         m.comando("configuracoes idioma")
         m.esperar_serial("configuracoes: aberto na aba Teclado", 15)

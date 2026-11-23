@@ -72,13 +72,11 @@ def main():
         # Clique num ícone: marca só ele (a Calculadora, índice 4, y de 408 a 504). O
         # destaque pinta o canto vazio da célula; o do Terminal, desmarcado,
         # volta ao fundo.
-        sem = cor_do_pixel(antes_png, 24, 422)
+        n = len(m.serial())
         m.clique(68, 440)
-        time.sleep(0.8)
-        png = m.captura("H99-3-um-icone")
-        com = cor_do_pixel(png, 24, 422)
-        verificar(sum(abs(a - b) for a, b in zip(com, sem)) > 8, f"o clique marca a Calculadora ({sem} -> {com})")
-        verificar(cor_do_pixel(png, 24, 146) == cor_do_pixel(antes_png, 24, 146), "e desmarca o Terminal")
+        esperar(m, "[GUI] laco:", 10, n)
+        m.captura("H99-3-um-icone")
+        verificar(marcados(m, n) == 1, "o clique marca só a Calculadora (e desmarca o Terminal)")
 
         # Clique no vazio desmarca: um laço de 1 pixel conta 0 marcados.
         n = len(m.serial())

@@ -164,7 +164,8 @@ def main():
     subprocess.run(["mkfs.vfat", "-F", "32", "-n", "DADOS", "--offset", str(mb * 2048), unico], check=True, stdout=subprocess.DEVNULL)
     subprocess.run(["mcopy", "-i", unico + f"@@{mb}M", os.path.join(RAIZ, "rootfs", "sobre.txt"), "::/do-pc.txt"], check=True)
     with Maquina("h34-unico", "usb", imagem=unico) as m:
-        m.esperar_serial("sagui:/$", 120)
+        m.esperar_serial("area de trabalho no ar", 120)
+        abrir_terminal(m)   # o Terminal agora abre pelo ícone (D039)
         m.esperar_serial("notificacao: Pendrive conectado: DADOS", 20)
         verificar(True, "boot e dados no mesmo pendrive: a FAT32 na segunda partição é achada e notificada")
         time.sleep(1)

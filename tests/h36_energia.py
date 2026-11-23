@@ -50,14 +50,16 @@ def main():
     os.remove(part)
 
     with Maquina("h36r", "ide", reiniciar=True) as m:
-        m.esperar_serial("sagui:/$", 120)
+        m.esperar_serial("area de trabalho no ar", 120)
+        abrir_terminal(m)   # o Terminal agora abre pelo ícone (D039)
         time.sleep(1)
         m.digitar("reiniciar")
         m.tecla("ret")
-        for _ in range(600):
-            if m.serial().count("sagui:/$") >= 2 and m.serial().count("[ZOGUE] reiniciando") >= 1:
-                break
+        fim = time.time() + 120
+        while time.time() < fim and "[ZOGUE] reiniciando" not in m.serial():
             time.sleep(0.2)
+        verificar("[ZOGUE] reiniciando" in m.serial(), "o kernel registrou o reinício")
+        abrir_terminal(m)   # segundo boot: o Terminal não abre sozinho (D039)
         s = m.serial()
         verificar("[ZOGUE] reiniciando" in s and s.count("sagui:/$") >= 2, "reiniciar volta ao boot e ao shell")
     return 0

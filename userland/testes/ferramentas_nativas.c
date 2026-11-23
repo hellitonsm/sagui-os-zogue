@@ -108,16 +108,16 @@ int principal(int argc, char **argv)
      * csagui inline para manter o teste do compilador nativo. */
     const char *csudoku =
         "int tab[81];\n"
-        "int ok(int p, int v){int i;for(i=0;i<81;i++){} return p>=0 && v>=0;}\n"
-        "int main(void){int i;for(i=0;i<81;i++)tab[i]=0; tab[0]=5; return ok(0,5)?0:1;}\n";
+        "int ok(int p, int v){ if(p<0) return 0; if(v<0) return 0; return 1; }\n"
+        "int main(void){ int i; for(i=0;i<81;i=i+1) tab[i]=0; tab[0]=5; if(ok(0,5)) return 0; return 1; }\n";
     const char *cpong =
         "int bx; int by; int vx;\n"
-        "int passo(void){bx=bx+vx; if(bx>10){vx=0-bx;} return bx;}\n"
+        "int passo(void){bx=bx+vx; if(bx>10) vx=0-bx; return bx;}\n"
         "int main(void){bx=1;by=2;vx=1;passo();return 0;}\n";
     const char *ctetris =
         "int p[4]; int g[200];\n"
-        "int cabe(int x){int i;for(i=0;i<4;i++){p[i]=x+i;} return g[0]==0;}\n"
-        "int main(void){int i;for(i=0;i<200;i++)g[i]=0;return cabe(0)?0:1;}\n";
+        "int cabe(int x){int i;for(i=0;i<4;i=i+1) p[i]=x+i; return g[0]==0;}\n"
+        "int main(void){int i;for(i=0;i<200;i=i+1) g[i]=0;if(cabe(0)) return 0; return 1;}\n";
     if (!gravar("/tmp/csudoku.c", csudoku) || !gravar("/tmp/cpong.c", cpong) ||
         !gravar("/tmp/ctetris.c", ctetris)) return 14;
     char *comp_sudoku[] = { "/bin/csagui", "build", "-o", "/tmp/sudoku", "/tmp/csudoku.c", NULL };

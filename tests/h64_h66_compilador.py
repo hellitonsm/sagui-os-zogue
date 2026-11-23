@@ -194,7 +194,7 @@ def conferir_gcc():
 
 def saida_do_programa(texto):
     """Do que saiu na serial durante um comando: (saída do programa, código)."""
-    m = re.search(r"-> processo (\d+)\n(.*)\[SAGUI\] processo \1 \([^)]*\) terminou com codigo (-?\d+)", texto, re.S)
+    m = re.search(r"-> processo (\d+)\n(.*)\[(?:SAGUI|ZOGUE)\] processo \1 \([^)]*\) terminou com codigo (-?\d+)", texto, re.S)
     if not m:
         return None, None
     return m.group(2), int(m.group(3))

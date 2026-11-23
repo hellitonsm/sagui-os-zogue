@@ -160,7 +160,8 @@ def main():
 
     # 2. A instalação, aberta pelo menu Iniciar.
     with Maquina("h110b", "ide", memoria="768M", extras=extras) as m:
-        m.esperar_serial("sagui:/$", 120)
+        m.esperar_serial("area de trabalho no ar", 120)
+        abrir_terminal(m)   # o Terminal agora abre pelo ícone (D039)
         time.sleep(1)
         n = len(m.serial())
         m.clique(40, 12)
@@ -216,7 +217,8 @@ def main():
 
     # 3. Ligar só pelo disco instalado; gravar um arquivo; reiniciar; ler.
     with Maquina("h110c", "ide", imagem=hd, memoria="768M", reiniciar=True) as m:
-        m.esperar_serial("sagui:/$", 120)
+        m.esperar_serial("area de trabalho no ar", 120)
+        abrir_terminal(m)   # o Terminal agora abre pelo ícone (D039)
         verificar("tem configuracoes do SaguiOS: montado sozinho" in m.serial(), "a partição dos arquivos monta sozinha no boot")
         verificar("coluna da direita: instalador nao, 1 unidades" in m.serial(),
                   "sem o instalador na área de trabalho, e o Disco na coluna da direita")
@@ -236,10 +238,11 @@ def main():
         time.sleep(1.5)
         m.digitar("reiniciar\n", 0.03)
         fim = time.time() + 180
-        while time.time() < fim and m.serial()[n:].count("sagui:/$") < 2:
+        while time.time() < fim and "[ZOGUE] reiniciando" not in m.serial()[n:]:
             time.sleep(0.3)
-        n2 = len(m.serial())
         verificar("[ZOGUE] reiniciando" in m.serial()[n:], "o sistema reiniciou")
+        abrir_terminal(m)   # segundo boot: o Terminal não abre sozinho (D039)
+        n2 = len(m.serial())
         m.digitar("cat /usb/nota.txt\n", 0.03)
         time.sleep(2)
         m.captura("H110-7-ligado-pelo-disco")

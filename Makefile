@@ -230,7 +230,8 @@ $(B)/userland/bin/upstream-teste: $(B)/userland/programas/upstream-teste.o $(UPS
 	@mkdir -p $(dir $@)
 	$(UPSTREAM_LD) $(ULDFLAGS) -T userland/programa-upstream.ld -o $@.elf $(UPSTREAM_CRT1) $< $(UPSTREAM_LIBC) $(TINYCC_LIBGCC)
 	$(UPSTREAM_OBJCOPY) --strip-all $@.elf $@
-endif
+endif  # LIBC=upstream
+endif  # FORK_TOOLCHAIN
 
 # ---------- tinycc: o compilador C dentro do SaguiOS ----------
 # TinyCC (.local/tinycc, ver tools/tinycc-sagui/setup.ps1) compilado como
@@ -239,6 +240,10 @@ endif
 # em C pode ser compilado DENTRO do SaguiOS e executado ali mesmo:
 #   tinycc -o /tmp/ola /exemplos/tcc/hello-tcc.c && /tmp/ola
 TINYCC_DIR    := .local/tinycc
+# O GCC do desenvolvimento (modo 32 bits) faz o papel da toolchain cruzada do
+# Windows para o tinycc e o sysroot (setup.sh, CI Linux).
+HOST_CC       := gcc
+HOST_AR       := ar
 TINYCC_CFLAGS := $(UCFLAGS) -mlong-double-64 -Wno-unused-function \
                  -Wno-unused-variable -I$(TINYCC_DIR)
 TINYCC_LIBTCC1_OBJS := libtcc1 stdatomic builtin dsohandle
@@ -249,7 +254,11 @@ TINYCC_CRT1         := $(B)/tinycc/crt1-sagui.o
 # Objetos da libc nativa do SaguiOS (shim POSIX + libsagui, sem fonte8x16 e sem
 # o kit grafico). Empacotados como libc.a no sysroot.
 SAGUI_LIBCORE_OBJ    := $(patsubst userland/libsagui/%.c,$(B)/userland/libsagui/%.o,$(filter-out userland/libsagui/gui.c,$(wildcard userland/libsagui/*.c)))
-SAGUI_LIBC_OBJ       := $(MLIBC_OBJ) \
+# O tinycc linka contra o shim POSIX (userland/mlibc) em vez do apoio_libc
+# (que é só para as ferramentas de compilação e duplica os mesmos símbolos).
+LIBSAGUI_SEM_APOIO   := $(filter-out $(B)/userland/programas/apoio_libc.o,$(LIBSAGUI_OBJ))
+SAGUI_LIBC_OBJ       := $(filter-out $(B)/userland/mlibc/string.o,$(MLIBC_OBJ)) \
+                        $(B)/tinycc/mlibc-string-sem-strlen.o \
                         $(SAGUI_LIBCORE_OBJ) \
                         $(patsubst userland/libsagui/%.asm,$(B)/userland/libsagui/%.asm.o,$(wildcard userland/libsagui/*.asm))
 # Biblioteca grafica do SaguiOS para programas C compilados com o tinycc:
@@ -259,7 +268,7 @@ SAGUI_GUI_OBJ        := $(B)/userland/libsagui/gui.o $(B)/userland/fonte8x16.o
 
 # Clona e configura o tinycc quando necessario (vendored em .local/tinycc).
 $(TINYCC_DIR)/tcc.c $(TINYCC_DIR)/config.h $(TINYCC_DIR)/lib/libtcc1.c:
-	powershell -NoProfile -ExecutionPolicy Bypass -File tools/tinycc-sagui/setup.ps1
+	bash tools/tinycc-sagui/setup.sh
 
 # O proprio tinycc: tudo vem de tcc.c (ONE_SOURCE) + o shim de entrada que
 # chama principal() (a convencao dos programas do SaguiOS).
@@ -272,9 +281,9 @@ $(B)/tinycc/dsohandle.o: $(TINYCC_DIR)/lib/dsohandle.c
 $(B)/tinycc/principal.o: tools/tinycc-sagui/principal.c
 	@mkdir -p $(dir $@)
 	$(CC) $(TINYCC_CFLAGS) -c -o $@ $<
-$(B)/userland/bin/tinycc: $(B)/tinycc/tcc.o $(B)/tinycc/dsohandle.o $(B)/tinycc/principal.o $(B)/tinycc/float_proibido.o $(LIBSAGUI_OBJ) $(B)/tinycc/libtcc1.a userland/programa.ld
+$(B)/userland/bin/tinycc: $(B)/tinycc/tcc.o $(B)/tinycc/dsohandle.o $(B)/tinycc/principal.o $(B)/tinycc/float_proibido.o $(LIBSAGUI_OBJ) $(TINYCC_LIBC_OBJ) $(B)/tinycc/libtcc1.a userland/programa.ld
 	@mkdir -p $(dir $@)
-	$(LD) $(ULDFLAGS) --gc-sections -T userland/programa.ld -o $@.elf $(B)/tinycc/tcc.o $(B)/tinycc/dsohandle.o $(B)/tinycc/principal.o $(B)/tinycc/float_proibido.o $(LIBSAGUI_OBJ) $(B)/tinycc/libtcc1.a
+	$(LD) $(ULDFLAGS) --gc-sections -o $@.elf $(B)/tinycc/tcc.o $(B)/tinycc/dsohandle.o $(B)/tinycc/principal.o $(B)/tinycc/float_proibido.o $(LIBSAGUI_SEM_APOIO) $(TINYCC_LIBC_OBJ) $(B)/tinycc/libtcc1.a
 	objcopy --strip-all $@.elf $@
 
 # Stub dos helpers de ponto flutuante (IEEE double): o SaguiOS desliga a
@@ -287,22 +296,27 @@ $(B)/tinycc/float_proibido.o: tools/tinycc-sagui/float_proibido.c
 # libtcc1.a: rotinas de 64 bits e atomicos que um programa compilado precisa.
 $(B)/tinycc/%.o: $(TINYCC_DIR)/lib/%.c
 	@mkdir -p $(dir $@)
-	$(UPSTREAM_CC) -m32 -march=i686 -std=gnu11 -O2 -ffreestanding -fno-builtin \
+	$(HOST_CC) -m32 -march=i686 -std=gnu11 -O2 -ffreestanding -fno-builtin \
 	    -fno-stack-protector -fno-asynchronous-unwind-tables -ffunction-sections -fdata-sections \
 	    -Wno-unused-function -Wno-unused-variable -I$(TINYCC_DIR) -c -o $@ $<
 $(B)/tinycc/%.o: $(TINYCC_DIR)/lib/%.S
 	@mkdir -p $(dir $@)
-	$(UPSTREAM_CC) -m32 -march=i686 -O2 -ffreestanding -fno-builtin \
+	$(HOST_CC) -m32 -march=i686 -O2 -ffreestanding -fno-builtin \
 	    -fno-stack-protector -fno-asynchronous-unwind-tables -I$(TINYCC_DIR) \
 	    -c -o $@ $<
 $(B)/tinycc/libtcc1.a: $(TINYCC_LIBTCC1_OBJ)
-	$(TOOLCHAIN)ar.exe rcs $@ $(TINYCC_LIBTCC1_OBJ)
+	$(HOST_AR) rcs $@ $(TINYCC_LIBTCC1_OBJ)
+# O string.o do mlibc duplica o strlen da libsagui (texto.c); o tinycc usa
+# a variante sem esse símbolo.
+$(B)/tinycc/mlibc-string-sem-strlen.o: $(B)/userland/mlibc/string.o
+	objcopy --strip-symbol=strlen $< $@
+TINYCC_LIBC_OBJ := $(filter-out $(B)/userland/mlibc/string.o,$(MLIBC_OBJ)) $(B)/tinycc/mlibc-string-sem-strlen.o
 $(B)/tinycc/crti.o: tools/tinycc-sagui/crti.S
 	@mkdir -p $(dir $@)
-	$(UPSTREAM_CC) -m32 -march=i686 -c -o $@ $<
+	$(HOST_CC) -m32 -march=i686 -c -o $@ $<
 $(B)/tinycc/crtn.o: tools/tinycc-sagui/crtn.S
 	@mkdir -p $(dir $@)
-	$(UPSTREAM_CC) -m32 -march=i686 -c -o $@ $<
+	$(HOST_CC) -m32 -march=i686 -c -o $@ $<
 $(B)/tinycc/crt1-sagui.o: tools/tinycc-sagui/crt1-sagui.asm
 	@mkdir -p $(dir $@)
 	$(AS) -f elf32 -o $@ $<
@@ -319,8 +333,8 @@ $(B)/sysroot: $(SAGUI_LIBC_OBJ) $(SAGUI_GUI_OBJ) $(TINYCC_CRT1) $(B)/tinycc/libt
 	cp $(TINYCC_CRT1) $(B)/sysroot/lib/crt1.o
 	cp $(B)/tinycc/crti.o $(B)/sysroot/lib/crti.o
 	cp $(B)/tinycc/crtn.o $(B)/sysroot/lib/crtn.o
-	$(TOOLCHAIN)ar.exe rcs $(B)/sysroot/lib/libc.a $(SAGUI_LIBC_OBJ)
-	$(TOOLCHAIN)ar.exe rcs $(B)/sysroot/lib/libsaguigui.a $(SAGUI_GUI_OBJ)
+	$(HOST_AR) rcs $(B)/sysroot/lib/libc.a $(SAGUI_LIBC_OBJ)
+	$(HOST_AR) rcs $(B)/sysroot/lib/libsaguigui.a $(SAGUI_GUI_OBJ)
 	cp $(B)/tinycc/libtcc1.a $(B)/sysroot/lib/tcc/libtcc1.a
 	# Headers do tcc que o SaguiOS nao tem; stdarg/stddef/stdbool ficam com os
 	# do SaguiOS (os builtins do tcc conflitam com eles).
@@ -329,8 +343,6 @@ $(B)/sysroot: $(SAGUI_LIBC_OBJ) $(SAGUI_GUI_OBJ) $(TINYCC_CRT1) $(B)/tinycc/libt
 	   $(TINYCC_DIR)/include/tgmath.h $(TINYCC_DIR)/include/varargs.h \
 	   $(TINYCC_DIR)/include/tccdefs.h $(B)/sysroot/lib/tcc/include/
 PROGRAMAS += $(B)/userland/bin/tinycc
-
-endif  # FORK_TOOLCHAIN
 
 .PHONY: all vazio vdi test rodar rodar-pcnet vbox run entrega limpar dashboard
 

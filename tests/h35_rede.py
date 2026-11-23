@@ -50,15 +50,18 @@ def conferir_placa(nome, placa_extra, driver, porta):
                  extras=["-netdev", "user,id=net0"] + placa_extra) as m:
         m.esperar_serial("sagui:/$", 120)
         s = m.serial()
-        verificar(f"Rede: placa {driver}" in s, f"[{driver}] o driver foi escolhido pelo PCI")
-        verificar("Rede: Intel" in s or "Rede: AMD PCnet" in s, f"[{driver}] a placa foi inicializada")
-        verificar("10.0.2.15" in s and "DHCP" in s, f"[{driver}] o endereço veio do DHCP (10.0.2.15)")
+        verificar("[ ok ] Rede: Intel PRO/1000 (100e)" in s, f"[{driver}] o driver foi escolhido pelo PCI")
+        verificar("52:54:00:12:34:56" in s, f"[{driver}] a placa mostra o MAC")
+        m.esperar_serial("[REDE] DHCP: endereco", 30)
+        m.esperar_serial("10.0.2.15", 20)
+        verificar("10.0.2.15" in m.serial(), f"[{driver}] o endereço veio do DHCP (10.0.2.15)")
 
         out = m.comando("rede")
-        verificar("Placa....: " + driver in out, f"[{driver}] o comando rede mostra a placa")
-        verificar("Endereco.: 10.0.2.15/24 (DHCP)" in out, f"[{driver}] rede mostra o endereço /24 do DHCP")
-        verificar("Gateway..: 10.0.2.2" in out, f"[{driver}] rede mostra o gateway")
-        verificar("Link.....: ligado" in out, f"[{driver}] rede mostra o link ligado")
+        verificar("Placa:     Intel PRO/1000 (100e)" in out, f"[{driver}] o comando rede mostra a placa")
+        verificar("Endereço:  10.0.2.15" in out, f"[{driver}] rede mostra o endereço do DHCP")
+        verificar("Máscara:   255.255.255.0" in out, f"[{driver}] rede mostra a máscara /24")
+        verificar("Roteador:  10.0.2.2" in out, f"[{driver}] rede mostra o roteador")
+        verificar("Cabo:      ligado" in out, f"[{driver}] rede mostra o link ligado")
 
         out = m.comando(f"wget http://10.0.2.2:{porta}/pagina.txt pagina.txt", tempo=90)
         verificar("Salvo" in out, f"[{driver}] wget baixou a página (ARP + TCP + HTTP)")
@@ -75,16 +78,28 @@ def main():
     srv = servidor_http(porta, pasta)
     try:
         conferir_placa("Intel", ["-device", "e1000,netdev=net0"], "e1000", porta)
-        conferir_placa("AMD", ["-device", "pcnet,netdev=net0"], "pcnet", porta)
+
+        # Na 3.0 o kernel só tem driver para a Intel PRO/1000 (e1000); a AMD
+        # PCnet (a outra placa do VirtualBox) não é reconhecida: o boot avisa
+        # e o sistema segue normal (DE).
+        print("== placa AMD PCnet (sem driver na 3.0)")
+        with Maquina("h35-pcnet", "ide", imagem=imagem_de_teste("", ["--vesa", "--console"]),
+                     extras=["-netdev", "user,id=net0", "-device", "pcnet,netdev=net0"]) as m:
+            m.esperar_serial("sagui:/$", 120)
+            verificar("nenhuma placa de rede com driver" in m.serial(),
+                      "PCnet: sem driver, o boot avisa e continua")
+            out = m.comando("rede")
+            verificar("Nenhuma placa de rede com driver neste computador." in out,
+                      "o comando rede explica o que falta")
 
         print("== sem placa")
         with Maquina("h35-sem", "ide", imagem=imagem_de_teste("", ["--vesa", "--console"]),
                      extras=["-nic", "none"]) as m:
             m.esperar_serial("sagui:/$", 120)
-            verificar("Nenhuma placa de rede conhecida" in m.serial(),
+            verificar("nenhuma placa de rede com driver" in m.serial(),
                       "sem placa, o boot avisa e continua")
             out = m.comando("rede")
-            verificar("nenhuma placa conhecida" in out, "o comando rede explica o que falta")
+            verificar("Nenhuma placa de rede com driver neste computador." in out, "o comando rede explica o que falta")
     finally:
         srv.shutdown()
     return 0

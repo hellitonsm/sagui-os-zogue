@@ -60,7 +60,8 @@ def main():
 
     # 2. Ligado, mas a placa não é Intel: nada muda.
     with Maquina("h84-sim", "ide", extras=com_config("h84-pen2", "video.nativo = sim\n")) as m:
-        m.esperar_serial("sagui:/$", 120)
+        m.esperar_serial("area de trabalho no ar", 120)
+        abrir_terminal(m)   # o Terminal agora abre pelo ícone (D039)
         time.sleep(2)
         s = m.serial()
         verificar("[VIDEO] nativo: nao agi: a placa de video nao e Intel" in s,
@@ -72,7 +73,8 @@ def main():
 
     # 3. Troca de resolução com o sistema ligado, para 1366x768.
     with Maquina("h84-1366", "ide", memoria="768M", extras=com_config("h84-pen3", "video.nativo = teste-qemu\n")) as m:
-        m.esperar_serial("sagui:/$", 120)
+        m.esperar_serial("area de trabalho no ar", 120)
+        abrir_terminal(m)   # o Terminal agora abre pelo ícone (D039)
         time.sleep(2)
         s = m.serial()
         verificar("[VIDEO] agora 1366x768" in s and "teste-qemu: tela trocada para 1366x768" in s,

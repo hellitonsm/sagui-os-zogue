@@ -16,7 +16,7 @@ import sys
 import time
 
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
-from qemu import Maquina, verificar, imagem_console, FalhaTeste, janela  # noqa: E402
+from qemu import Maquina, verificar, imagem_console, FalhaTeste, janela, abrir_terminal  # noqa: E402
 
 # (teclas do QEMU no layout espanhol, o que deve sair, descrição)
 ROTEIRO_ES = [
@@ -99,7 +99,8 @@ def main():
 
     # A aba Teclado das Configurações, na área de trabalho.
     with Maquina("h90-janela", "ide") as m:
-        m.esperar_serial("sagui:/$", 120)
+        m.esperar_serial("area de trabalho no ar", 120)
+        abrir_terminal(m)   # o Terminal agora abre pelo ícone (D039)
         time.sleep(1)
         m.comando("configuracoes teclado")
         m.esperar_serial("configuracoes: aberto na aba Teclado", 15)

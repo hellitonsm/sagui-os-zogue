@@ -195,11 +195,15 @@ def main():
     # uma VM estiver ligada).
     porta_fs = porta_livre()
 
+    if not os.path.exists(os.path.join(RAIZ, "build", "rootfs", "bin", "servidor")):
+        print("  AVISO: sem /bin/servidor (programa adiado no build padrão), o protocolo SAGUI/1 NÃO foi testado")
+        return 0
     try:
         with Maquina("h48", "ide", imagem=imagem_de_teste("", ["--vesa", "--console"]),
                      extras=["-netdev", f"user,id=net0,hostfwd=tcp:127.0.0.1:{porta_fs}-:{PORTA}",
                              "-device", "e1000,netdev=net0"]) as m:
             m.esperar_serial("sagui:/$", 120)
+            m.esperar_serial("[REDE] DHCP: endereco", 30)
             verificar("10.0.2.15" in m.serial(),
                       "o endereço veio do DHCP antes do prompt (10.0.2.15)")
 

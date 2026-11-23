@@ -97,7 +97,7 @@ def main():
         m.clique(t["x"] + t["l"] - 37, t["y"] - 12)       # botão de minimizar (o do meio, à esquerda do X)
         time.sleep(1.2)
         m.captura("H103-0-area-de-trabalho")
-        m.clique(460, 730)                                 # o Terminal na doca
+        m.clique(408, 730)                                 # o Terminal na doca (6 fixos: x0=322, 2º item)
         time.sleep(1)
         m.comando("mkdir /tmp/lx")
         m.comando("echo some > /tmp/lx/c.txt")

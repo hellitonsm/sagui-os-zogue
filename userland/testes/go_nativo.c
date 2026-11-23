@@ -37,6 +37,7 @@ static int capturar(char *const args[], char *buf, unsigned max, int *codigo)
 int principal(int argc, char **argv)
 {
     (void)argc; (void)argv;
+    criar_pasta("/go");   /* o compilador grava os executáveis aqui */
     if (compilar("/exemplos/go/ola.go", "/go/ola") != 0) return 1;
     if (compilar("/exemplos/go/biblioteca.go", "/go/biblioteca") != 0) return 2;
 
