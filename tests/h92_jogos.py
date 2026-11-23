@@ -50,7 +50,7 @@ def main():
         esperar(m, "menu aberto", 10, antes)
         time.sleep(0.5)
         m.captura("H92-1-menu-jogos")
-        m.clique(44 + 0 * 108 + 54, 134 + 1 * 92 + 30)   # menu Iniciar: célula 5 da grade 5 x 4
+        m.clique(44 + 1 * 108 + 54, 134 + 1 * 92 + 30)   # menu Iniciar: célula 6 da grade 5 x 4 (Jogos)
         s = esperar(m, "jogos: pronto", 20, antes)
         verificar("[GUI] menu: Jogos" in s, "a célula 5 do menu Iniciar é \"Jogos\"")
         verificar(f"jogos: pronto, {len(presentes)} jogos" in s, f"o lançador mostra os {len(presentes)} jogos de /bin")

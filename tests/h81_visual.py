@@ -90,7 +90,7 @@ def main():
         esperar(m, "minimizada", 10, antes)
         verificar(True, "menu da barra de título: Minimizar funciona")
         # Volta pela doca (o Terminal é o 2º fixo).
-        dx = (1024 - (5 * 52 + 16)) // 2
+        dx = (1024 - (6 * 52 + 16)) // 2
         m.clique(dx + 8 + 52 + 26, 768 - 6 - 56 + 24)
         time.sleep(1)
         # Menu próprio do Terminal: "Limpar a tela" (3º item) manda Ctrl+L ao shell.

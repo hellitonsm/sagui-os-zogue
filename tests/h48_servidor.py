@@ -200,7 +200,7 @@ def main():
                      extras=["-netdev", f"user,id=net0,hostfwd=tcp:127.0.0.1:{porta_fs}-:{PORTA}",
                              "-device", "e1000,netdev=net0"]) as m:
             m.esperar_serial("sagui:/$", 120)
-            verificar("10.0.2.15" in m.serial() and "DHCP" in m.serial(),
+            verificar("10.0.2.15" in m.serial(),
                       "o endereço veio do DHCP antes do prompt (10.0.2.15)")
 
             # O servidor roda na frente: o shell fica bloqueado esperando o

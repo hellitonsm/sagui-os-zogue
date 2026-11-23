@@ -69,14 +69,14 @@ def main():
         time.sleep(0.6)
         m.captura("H99-2-marcados")
 
-        # Clique num ícone: marca só ele (a Calculadora, y de 316 a 404). O
+        # Clique num ícone: marca só ele (a Calculadora, índice 4, y de 408 a 504). O
         # destaque pinta o canto vazio da célula; o do Terminal, desmarcado,
         # volta ao fundo.
-        sem = cor_do_pixel(antes_png, 24, 330)
-        m.clique(68, 350)
+        sem = cor_do_pixel(antes_png, 24, 422)
+        m.clique(68, 440)
         time.sleep(0.8)
         png = m.captura("H99-3-um-icone")
-        com = cor_do_pixel(png, 24, 330)
+        com = cor_do_pixel(png, 24, 422)
         verificar(sum(abs(a - b) for a, b in zip(com, sem)) > 8, f"o clique marca a Calculadora ({sem} -> {com})")
         verificar(cor_do_pixel(png, 24, 146) == cor_do_pixel(antes_png, 24, 146), "e desmarca o Terminal")
 

@@ -33,7 +33,7 @@ def main():
         m.esperar_serial("area de trabalho no ar", 120)
         abrir_terminal(m)   # o Terminal agora abre pelo ícone (D039)
         time.sleep(1)
-        m.clique(*icone(6), duplo=True)
+        m.clique(*icone(7), duplo=True)   # Configurações: índice 7 no desktop (IDE entrou no índice 3)
         m.esperar_serial("configuracoes: aberto na aba Relógio", 15)
         verificar(True, "o ícone Configurações abre o app")
         time.sleep(0.6)

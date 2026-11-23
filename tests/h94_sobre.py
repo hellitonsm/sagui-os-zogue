@@ -20,7 +20,7 @@ import time
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 from qemu import Maquina, verificar, abrir_terminal, janela, RAIZ, versao_esperada  # noqa: E402
 
-ICONES = ["Arquivos", "Terminal", "Editor", "Calculadora", "Banana", "Sagui 3D", "Configurações", "Sobre"]
+ICONES = ["Arquivos", "Terminal", "Editor", "IDE", "Calculadora", "Banana", "Sagui 3D", "Configurações", "Sobre", "Sudoku", "Pong", "Tetris", "Tabuada", "Lixeira"]
 POR_COLUNA = (768 - 40) // 92
 LICENCAS = os.path.join(RAIZ, "build", "rootfs", "sistema", "licencas")
 PREFIXOS = ("LICENSE", "LICENCE", "COPYING", "PATENTS", "NOTICE", "LICENCA")

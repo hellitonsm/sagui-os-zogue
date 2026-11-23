@@ -73,13 +73,13 @@ def main():
         png3 = m.captura("H75-1-minimizada")
         verificar(cor_do_pixel(png3, j2["x"] + 40, j2["y"] + 40) != cor_do_pixel(png2, j2["x"] + 40, j2["y"] + 40),
                   "minimizar esconde a janela")
-        # A doca fica embaixo, no meio; a Calculadora é o primeiro item depois dos 5 fixos.
+        # A doca fica embaixo, no meio; a Calculadora é o primeiro item depois dos 6 fixos.
         largura, altura = 1024, 768
-        itens = 6 + 0
+        itens = 7 + 0  # 6 fixos + Calculadora
         dl = itens * 52 + 16
         dx = (largura - dl) // 2
         antes = len(m.serial())
-        m.clique(dx + 8 + 5 * 52 + 26, altura - 6 - 56 + 24)
+        m.clique(dx + 8 + 6 * 52 + 26, altura - 6 - 56 + 24)
         s = esperar(m, "restaurada", 10, antes)
         verificar("doca: Calculadora" in s, "clicar na doca restaura a calculadora")
         time.sleep(1)
@@ -96,8 +96,8 @@ def main():
         time.sleep(2)
         # H76: temas.
         m.captura("H76-1-tema-escuro")
-        # Traz o Terminal pela doca (o segundo item fixo). Itens: os 5 fixos e a Calculadora.
-        dl = 6 * 52 + 16
+        # Traz o Terminal pela doca (o segundo item fixo). Itens: os 6 fixos e a Calculadora.
+        dl = 7 * 52 + 16
         x0, linha = (1024 - dl) // 2, 768 - 6 - 28
         antes = len(m.serial())
         m.clique(x0 + 8 + 52 + 26, linha)
