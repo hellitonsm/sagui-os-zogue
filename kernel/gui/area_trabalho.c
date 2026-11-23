@@ -459,6 +459,7 @@ static void desenhar_fundo(void)
     const char *tema = config_obter("aparencia.fundo");
     bool pronto = false;
     if (tema && txt_compara(tema, "mata-atlantica") == 0) pronto = fundo_imagem("/arte/mata-atlantica.sgi");
+    if (tema && txt_compara(tema, "zogue") == 0) pronto = fundo_imagem("/arte/zogue.sgi");
     if (!pronto && tema && (txt_compara(tema, "sol") == 0 || txt_compara(tema, "mata-atlantica") == 0)) {
         fundo_brasil_com_sol();   /* (também a reserva, se a imagem faltar) */
         pronto = true;
@@ -467,6 +468,9 @@ static void desenhar_fundo(void)
     else if (tema && txt_compara(tema, "ceu") == 0)   { c0 = 0x1E5AA8; c1 = 0x6FB3E8; c2 = 0xD8EEF8; }
     else if (tema && txt_compara(tema, "noite") == 0) { c0 = 0x0B1026; c1 = 0x2B1E5A; c2 = 0x060814; }
     else if (tema && txt_compara(tema, "terra") == 0) { c0 = 0x7A3E14; c1 = 0xD98A3A; c2 = 0x3A1E0C; }
+    else if (tema && txt_compara(tema, "zogue") == 0) { c0 = 0x7A3B2A; c1 = 0xC9A08B; c2 = 0x141210; }
+    /* O degradê genérico abaixo também é a reserva do Zogue: dorso
+     * avermelhado no alto, corpo cinza-rosado no meio e cauda preta embaixo. */
     for (int y = 0; y < alt && !pronto; y++) {
         uint32_t c = y < alt / 2 ? cor_mistura(c0, c1, y, alt / 2)
                                  : cor_mistura(c1, c2, y - alt / 2, alt - alt / 2);
@@ -604,9 +608,10 @@ void area_barra(superficie_t *s, bool vidro, bool claro, bool frase_visivel)
      * "sobre"), o nome e uma setinha. */
     desenho_t cabeca = { arte_icone_sobre.linhas + 2, 32, 16 };
     sup_desenho(s, 6, 4, &cabeca, 1);
-    sup_texto(s, 44, 4, "SaguiOS", nome);
-    for (int k = 0; k < 4; k++) sup_retangulo(s, 104 - 4 + k, 10 + k, 8 - 2 * k, 1, nome);
-    if (frase_visivel) sup_texto(s, 120, 4, "um sistema operacional escrito do zero por IA", frase);
+    sup_texto(s, 44, 4, "Zogue", nome);
+    for (int k = 0; k < 4; k++) sup_retangulo(s, 92 - 4 + k, 10 + k, 8 - 2 * k, 1, nome);
+    (void)frase;
+    (void)frase_visivel;
     (void)relogio;
     data_hora_t d;
     cmos_ler_data(&d);

@@ -836,7 +836,7 @@ gdt_descritor:
         dw gdt_fim - gdt - 1
         dd gdt
 
-msg_titulo:     db "SaguiOS - estagio 2 do carregador", 13, 10, 0
+msg_titulo:     db "Sagui-OS Zogue Version - estagio 2 do carregador", 13, 10, 0
 msg_a20:        db "[1/6] A20 ok", 13, 10, 0
 msg_mem:        db "[2/6] memoria ok: ", 0
 msg_mem2:       db " regioes, ", 0
@@ -850,7 +850,7 @@ msg_crlf:       db 13, 10, 0
 msg_pm:         db "[6/6] entrando no modo protegido", 13, 10, 0
 msg_longo:      db "[6/6] entrando no modo longo (64 bits)", 13, 10, 0
 msg_falha_64:   db "ERRO: este processador nao tem 64 bits (x86-64).", 13, 10
-                db "Esta imagem do SaguiOS precisa de um processador de 64 bits;", 13, 10
+                db "Esta imagem do Sagui-OS Zogue Version precisa de um processador de 64 bits;", 13, 10
                 db "use a imagem de 32 bits (make ARQ=32).", 13, 10
                 db "No VirtualBox, escolha a versao Other/Unknown (64-bit).", 0
 msg_falha_a20:  db "ERRO: nao consegui ligar a linha A20", 0
