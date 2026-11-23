@@ -267,18 +267,21 @@ SAGUI_LIBC_OBJ       := $(filter-out $(B)/userland/mlibc/string.o,$(MLIBC_OBJ)) 
 SAGUI_GUI_OBJ        := $(B)/userland/libsagui/gui.o $(B)/userland/fonte8x16.o
 
 # Clona e configura o tinycc quando necessario (vendored em .local/tinycc).
-$(TINYCC_DIR)/tcc.c $(TINYCC_DIR)/config.h $(TINYCC_DIR)/lib/libtcc1.c:
+# Usa um stamp file para evitar race condition no CI (múltiplos jobs).
+$(B)/tinycc/.setup-stamp:
+	@mkdir -p $(dir $@)
 	bash tools/tinycc-sagui/setup.sh
+	@touch $@
 
 # O proprio tinycc: tudo vem de tcc.c (ONE_SOURCE) + o shim de entrada que
 # chama principal() (a convencao dos programas do SaguiOS).
-$(B)/tinycc/tcc.o: $(TINYCC_DIR)/tcc.c $(TINYCC_DIR)/config.h $(USER_HDR)
+$(B)/tinycc/tcc.o: $(TINYCC_DIR)/tcc.c $(TINYCC_DIR)/config.h $(USER_HDR) $(B)/tinycc/.setup-stamp
 	@mkdir -p $(dir $@)
 	$(CC) $(TINYCC_CFLAGS) -c -o $@ $<
-$(B)/tinycc/dsohandle.o: $(TINYCC_DIR)/lib/dsohandle.c
+$(B)/tinycc/dsohandle.o: $(TINYCC_DIR)/lib/dsohandle.c $(B)/tinycc/.setup-stamp
 	@mkdir -p $(dir $@)
 	$(CC) $(TINYCC_CFLAGS) -c -o $@ $<
-$(B)/tinycc/principal.o: tools/tinycc-sagui/principal.c
+$(B)/tinycc/principal.o: tools/tinycc-sagui/principal.c $(B)/tinycc/.setup-stamp
 	@mkdir -p $(dir $@)
 	$(CC) $(TINYCC_CFLAGS) -c -o $@ $<
 $(B)/userland/bin/tinycc: $(B)/tinycc/tcc.o $(B)/tinycc/dsohandle.o $(B)/tinycc/principal.o $(B)/tinycc/float_proibido.o $(LIBSAGUI_OBJ) $(TINYCC_LIBC_OBJ) $(B)/tinycc/libtcc1.a userland/programa.ld
@@ -289,35 +292,35 @@ $(B)/userland/bin/tinycc: $(B)/tinycc/tcc.o $(B)/tinycc/dsohandle.o $(B)/tinycc/
 # Stub dos helpers de ponto flutuante (IEEE double): o SaguiOS desliga a
 # FPU em CR0.EM e nao tem soft-float; o tinycc os referencia por dentro,
 # entao aqui eles existem so para abortar com erro.
-$(B)/tinycc/float_proibido.o: tools/tinycc-sagui/float_proibido.c
+$(B)/tinycc/float_proibido.o: tools/tinycc-sagui/float_proibido.c $(B)/tinycc/.setup-stamp
 	@mkdir -p $(dir $@)
 	$(CC) $(TINYCC_CFLAGS) -c -o $@ $<
 
 # libtcc1.a: rotinas de 64 bits e atomicos que um programa compilado precisa.
-$(B)/tinycc/%.o: $(TINYCC_DIR)/lib/%.c
+$(B)/tinycc/%.o: $(TINYCC_DIR)/lib/%.c $(B)/tinycc/.setup-stamp
 	@mkdir -p $(dir $@)
 	$(HOST_CC) -m32 -march=i686 -std=gnu11 -O2 -ffreestanding -fno-builtin \
 	    -fno-stack-protector -fno-asynchronous-unwind-tables -ffunction-sections -fdata-sections \
 	    -Wno-unused-function -Wno-unused-variable -I$(TINYCC_DIR) -c -o $@ $<
-$(B)/tinycc/%.o: $(TINYCC_DIR)/lib/%.S
+$(B)/tinycc/%.o: $(TINYCC_DIR)/lib/%.S $(B)/tinycc/.setup-stamp
 	@mkdir -p $(dir $@)
 	$(HOST_CC) -m32 -march=i686 -O2 -ffreestanding -fno-builtin \
 	    -fno-stack-protector -fno-asynchronous-unwind-tables -I$(TINYCC_DIR) \
 	    -c -o $@ $<
-$(B)/tinycc/libtcc1.a: $(TINYCC_LIBTCC1_OBJ)
+$(B)/tinycc/libtcc1.a: $(TINYCC_LIBTCC1_OBJ) $(B)/tinycc/.setup-stamp
 	$(HOST_AR) rcs $@ $(TINYCC_LIBTCC1_OBJ)
 # O string.o do mlibc duplica o strlen da libsagui (texto.c); o tinycc usa
 # a variante sem esse símbolo.
 $(B)/tinycc/mlibc-string-sem-strlen.o: $(B)/userland/mlibc/string.o
 	objcopy --strip-symbol=strlen $< $@
 TINYCC_LIBC_OBJ := $(filter-out $(B)/userland/mlibc/string.o,$(MLIBC_OBJ)) $(B)/tinycc/mlibc-string-sem-strlen.o
-$(B)/tinycc/crti.o: tools/tinycc-sagui/crti.S
+$(B)/tinycc/crti.o: tools/tinycc-sagui/crti.S $(B)/tinycc/.setup-stamp
 	@mkdir -p $(dir $@)
 	$(HOST_CC) -m32 -march=i686 -c -o $@ $<
-$(B)/tinycc/crtn.o: tools/tinycc-sagui/crtn.S
+$(B)/tinycc/crtn.o: tools/tinycc-sagui/crtn.S $(B)/tinycc/.setup-stamp
 	@mkdir -p $(dir $@)
 	$(HOST_CC) -m32 -march=i686 -c -o $@ $<
-$(B)/tinycc/crt1-sagui.o: tools/tinycc-sagui/crt1-sagui.asm
+$(B)/tinycc/crt1-sagui.o: tools/tinycc-sagui/crt1-sagui.asm $(B)/tinycc/.setup-stamp
 	@mkdir -p $(dir $@)
 	$(AS) -f elf32 -o $@ $<
 # Sysroot: headers da libc Sagui (shim + libsagui + gui.h), crt1.o/crti.o/crtn.o,

@@ -11,6 +11,7 @@
 #
 # Este script reimplementa o tools/tinycc-sagui/setup.ps1 em bash, para o
 # build rodar no Linux (CI) sem a toolchain do Windows.
+# Uso de flock para evitar race condition no CI (múltiplos jobs).
 set -euo pipefail
 
 AQUI="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
@@ -20,13 +21,35 @@ TINYCC_DIR="$REPO_ROOT/.local/tinycc"
 TINYCC_COMMIT='70adbb129760b77e3bdfec447c1f986def763f2c'
 TINYCC_URL='https://github.com/tinycc/tinycc.git'
 
+# Lock para evitar clones simultâneos no CI
+exec 9>"$REPO_ROOT/.local/tinycc-setup.lock"
+flock -x 9
+
 if [ ! -f "$TINYCC_DIR/tcc.c" ]; then
     echo "== [setup] clonando tinycc em $TINYCC_DIR ..."
     rm -rf "$TINYCC_DIR"
-    git clone "$TINYCC_URL" "$TINYCC_DIR"
-    git -C "$TINYCC_DIR" checkout "$TINYCC_COMMIT"
+    # Clone com tentativas para lidar com falhas de rede transitórias
+    for i in 1 2 3; do
+        if git clone --depth 1 --branch "$TINYCC_COMMIT" "$TINYCC_URL" "$TINYCC_DIR" 2>/dev/null; then
+            break
+        fi
+        echo "== [setup] tentativa $i falhou, aguardando..."
+        sleep 5
+    done
+    # Se clone com branch falhou, tenta clone completo + checkout
+    if [ ! -f "$TINYCC_DIR/tcc.c" ]; then
+        rm -rf "$TINYCC_DIR"
+        git clone "$TINYCC_URL" "$TINYCC_DIR"
+        git -C "$TINYCC_DIR" checkout "$TINYCC_COMMIT"
+    fi
 else
     echo "== [setup] tinycc ja presente em $TINYCC_DIR"
+fi
+
+# Verifica se o checkout está no commit correto
+if ! git -C "$TINYCC_DIR" merge-base --is-ancestor "$TINYCC_COMMIT" HEAD 2>/dev/null; then
+    echo "== [setup] commit incorreto, fazendo checkout de $TINYCC_COMMIT"
+    git -C "$TINYCC_DIR" checkout "$TINYCC_COMMIT" 2>/dev/null || true
 fi
 
 # O SaguiOS carrega programas em 0x40000000; o padrao do tinycc para Linux
@@ -78,3 +101,6 @@ cat > "$TINYCC_DIR/config.h" <<'EOF'
 #define TCC_VERSION "0.9.28rc"
 EOF
 echo "== [setup] config.h pronto"
+
+# Libera o lock
+flock -u 9
