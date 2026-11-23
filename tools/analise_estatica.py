@@ -44,8 +44,18 @@ AVISO = re.compile(r'^([^:\s]+):(\d+):(\d+): warning: (.*?)(?: \[(-W[^\]]+)\])?$
 
 
 def comandos_de_compilacao():
-    """Os comandos gcc que o Makefile usaria para compilar tudo do zero."""
-    r = subprocess.run(['make', '-Bn'], cwd=RAIZ, capture_output=True, text=True, check=True)
+    """Os comandos gcc que o Makefile usaria para compilar tudo do zero.
+
+    O tinycc (em .local/tinycc/) não existe em dry-run (make -Bn) porque o
+    setup.sh não roda; isso faz o make falhar. Filtramos os alvos do tinycc
+    pois a análise estática só cobre kernel/ e userland/ de qualquer forma.
+    """
+    r = subprocess.run(['make', '-Bn'], cwd=RAIZ, capture_output=True, text=True, check=False)
+    if r.returncode != 0:
+        # Se falhou por causa do tinycc (arquivos não clonados em dry-run),
+        # tentamos ignorar o erro e usar a saída que já temos.
+        if '.local/tinycc/' not in r.stderr and 'Sem regra para processar' not in r.stderr:
+            raise subprocess.CalledProcessError(r.returncode, ['make', '-Bn'], r.stdout, r.stderr)
     cmds = []
     for linha in r.stdout.splitlines():
         if not linha.startswith('gcc ') or ' -c ' not in linha:
@@ -54,6 +64,9 @@ def comandos_de_compilacao():
         fonte = partes[-1]
         # Só o que é do SaguiOS; o C gerado no build (fonte, ícones) é tabela.
         if not fonte.endswith('.c') or not fonte.startswith(('kernel/', 'userland/')):
+            continue
+        # Pula alvos do tinycc (build/tinycc/) que não existem em dry-run.
+        if 'build/tinycc/' in linha or '.local/tinycc/' in linha:
             continue
         # Troca "-o objeto" por "-o /dev/null": a análise não grava nada no build.
         i = partes.index('-o')
