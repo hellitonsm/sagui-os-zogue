@@ -55,7 +55,7 @@ static const char *nome_tipo_e820(uint32_t t)
 static void parar_com_erro(const char *msg)
 {
     console_cor(COR_BRANCO, COR_VERMELHO);
-    kprintf("\n SaguiOS: %s \n", msg);
+    kprintf("\n Sagui-OS Zogue Version: %s \n", msg);
     for (;;)
         __asm__ volatile("cli; hlt");
 }
@@ -142,14 +142,14 @@ void inicio_kernel(uint32_t magico, info_boot_t *bi)
 {
     serial_iniciar();
     console_iniciar();
-    klog("\n[SAGUI] kernel iniciado\n");
+    klog("\n[ZOGUE] kernel iniciado\n");
 #ifdef __x86_64__
     /* 3.0 (H127): o estágio 2 já entrou no modo longo antes de chegar aqui. */
-    klog("[SAGUI] modo longo (64 bits)\n");
+    klog("[ZOGUE] modo longo (64 bits)\n");
 #endif
 
     if (magico != BOOT_MAGICO || bi->assinatura != BOOTINFO_ASSIN)
-        parar_com_erro("nao fui carregado pelo estagio 2 do SaguiOS");
+        parar_com_erro("nao fui carregado pelo estagio 2 do Sagui-OS Zogue Version");
 
     /* A boot_info e o mapa estão na memória baixa, que mais tarde vira área
      * livre. Copiamos para dentro do kernel antes de qualquer outra coisa. */
@@ -180,7 +180,7 @@ void inicio_kernel(uint32_t magico, info_boot_t *bi)
     int largura = console_colunas();
     console_cor(COR_AMARELO, COR_VERDE);
     kprintf("%*s", largura, "");
-    kprintf("  %-*s%20s  ", largura - 24, "Ola! Eu sou o SaguiOS.", "versão " SAGUI_VERSAO);
+    kprintf("  %-*s%20s  ", largura - 24, "Ola! Eu sou o Sagui-OS Zogue Version.", "versão " SAGUI_VERSAO);
     kprintf("%*s", largura, "");
     console_cor(COR_CINZA, COR_PRETO);
 
@@ -198,7 +198,7 @@ void inicio_kernel(uint32_t magico, info_boot_t *bi)
         kprintf("%ux%ux%u\n", info_boot.vesa_largura, info_boot.vesa_altura, info_boot.vesa_bpp);
     else
         kprintf("nenhum\n");
-    klog("[SAGUI] memoria_mb=%u usavel_mb=%u\n", (uint32_t)(livre >> 20), (uint32_t)(usavel >> 20));
+    klog("[ZOGUE] memoria_mb=%u usavel_mb=%u\n", (uint32_t)(livre >> 20), (uint32_t)(usavel >> 20));
 
 #ifdef __x86_64__
     /* Mesma quantidade de linhas da 2.x: a tela de 25 linhas não pode rolar (erro 1). */
@@ -226,7 +226,7 @@ void inicio_kernel(uint32_t magico, info_boot_t *bi)
         console_cor(COR_AMARELO, COR_PRETO);
         kprintf("[aviso] Modo gráfico indisponível: o sistema continua em modo texto.\n");
         console_cor(COR_CINZA, COR_PRETO);
-        klog("[SAGUI] sem modo grafico, modo texto\n");
+        klog("[ZOGUE] sem modo grafico, modo texto\n");
     }
 
     /* H11: a partir daqui o relógio troca de processo (round-robin). */
@@ -240,7 +240,7 @@ void inicio_kernel(uint32_t magico, info_boot_t *bi)
 
     /* H19: mouse / touchpad na porta auxiliar do mesmo controlador. */
     if (mouse_iniciar())
-        etapa("Mouse/touchpad PS/2: cursor desenhado pelo SaguiOS, IRQ 12");
+        etapa("Mouse/touchpad PS/2: cursor desenhado pelo Zogue OS, IRQ 12");
     else {
         /* Os números ajudam a entender o hardware a partir de uma foto:
          * configuração do controlador e respostas do touchpad (FA = ok). */
@@ -311,7 +311,7 @@ void inicio_kernel(uint32_t magico, info_boot_t *bi)
         snformatar(linha, sizeof linha, "Vídeo: resolução nativa do painel, %ux%u", video_largura(), video_altura());
         etapa(linha);
     }
-    klog("[SAGUI] boot ok\n");
+    klog("[ZOGUE] boot ok\n");
 
     bool vai_ter_gui = grafico && !(info_boot.opcoes & 2);
     if (info_boot.teste[0] == '/' && !vai_ter_gui)
@@ -324,7 +324,7 @@ void inicio_kernel(uint32_t magico, info_boot_t *bi)
      * programas abrem pelos ícones (D039). */
     if (grafico && !(info_boot.opcoes & 2) && gui_iniciar()) {
         console_esconder(true);
-        klog("[SAGUI] area de trabalho no ar\n");
+        klog("[ZOGUE] area de trabalho no ar\n");
         misturador_som_sistema(SOM_INICIO);
         if (info_boot.teste[0] == '/')
             rodar_programa_de_teste(info_boot.teste);   /* testes da fase 5: programa gráfico */
@@ -344,9 +344,9 @@ void inicio_kernel(uint32_t magico, info_boot_t *bi)
             console_cor(COR_CINZA, COR_PRETO);
             for (;;) cpu_espera();
         }
-        klog("[SAGUI] shell iniciado: processo %d\n", pid);
+        klog("[ZOGUE] shell iniciado: processo %d\n", pid);
         while (processo_por_pid(pid))
             cpu_espera();
-        kprintf("\n[SaguiOS] O shell foi fechado. Abrindo um novo...\n");
+        kprintf("\n[Zogue OS] O shell foi fechado. Abrindo um novo...\n");
     }
 }
