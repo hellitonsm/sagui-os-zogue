@@ -83,7 +83,7 @@ def main():
 
         # ---- uname e fetch
         out = m.comando("uname")
-        verificar("SaguiOS" in out, "uname mostra SaguiOS")
+        verificar("Zogue OS" in out, "uname mostra Zogue OS")
         out = m.comando("uname -a")
         verificar(re.search(r"SaguiOS \S+ i686 \(ligado há \d+:\d\d:\d\d\)", out) is not None, "uname -a: versão, i686 e tempo ligado")
         out = limpo(m.comando("fetch"))

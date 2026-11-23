@@ -55,7 +55,7 @@ void memfisica_iniciar(void)
     marcar(info_boot.ramdisk_inicio, info_boot.ramdisk_inicio + info_boot.ramdisk_bytes, true);
     geridas = livres;
     dica = 0;
-    klog("[SAGUI] memoria fisica: %u paginas livres (%u KB)\n", livres, livres * 4);
+    klog("[ZOGUE] memoria fisica: %u paginas livres (%u KB)\n", livres, livres * 4);
 }
 
 uint32_t memfisica_alocar(void)
@@ -108,7 +108,7 @@ void memfisica_liberar_seguidas(uint32_t endereco, uint32_t n)
     for (uint32_t k = 0; k < n; k++) {
         uint32_t p = endereco / PAGINA + k;
         if (p >= TOTAL_PAGINAS || !ocupada(p)) {
-            klog("[SAGUI] AVISO: liberando pagina fisica invalida ou livre: %x\n", p * PAGINA);
+            klog("[ZOGUE] AVISO: liberando pagina fisica invalida ou livre: %x\n", p * PAGINA);
             continue;
         }
         desocupar(p);

@@ -36,7 +36,7 @@ SEM_RETORNO void excecao_fatal(quadro_t *q)
     int_desliga();
     console_esconder(false);   /* a tela de erro aparece mesmo com a área de trabalho no ar */
     uint32_t cr2 = (uint32_t)le_cr2();
-    klog("\n[SAGUI] EXCECAO %u (%s) erro=%x eip=%x\n", (uint32_t)q->vetor, nome_excecao(q->vetor), (uint32_t)q->erro, q->eip);
+    klog("\n[ZOGUE] EXCECAO %u (%s) erro=%x eip=%x\n", (uint32_t)q->vetor, nome_excecao(q->vetor), (uint32_t)q->erro, q->eip);
 
     console_cor(COR_BRANCO, COR_VERMELHO);
     console_limpar();

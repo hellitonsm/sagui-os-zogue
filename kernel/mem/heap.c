@@ -93,7 +93,7 @@ void kfree(void *p)
     cabeca_t *h = (cabeca_t *)p - 1;
     bool i = int_salva_desliga();
     if (h->assinatura != ASSIN_USADO) {
-        klog("[SAGUI] AVISO: kfree(%p) %s\n", p,
+        klog("[ZOGUE] AVISO: kfree(%p) %s\n", p,
              h->assinatura == ASSIN_LIVRE ? "liberado duas vezes" : "nao veio do kmalloc");
         int_restaura(i);
         return;

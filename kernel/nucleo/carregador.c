@@ -131,7 +131,7 @@ int processo_executar(const char *caminho, int argc, char *const argv[], process
     if (pai) txt_copia_n(p->pasta, pai->pasta, sizeof p->pasta);
     arquivos_herdar(p, pai);
     processo_preparar_usuario(p, entrada, montar_pilha(e, argc, argv));
-    klog("[SAGUI] executar %s -> processo %d\n", caminho, p->pid);
+    klog("[ZOGUE] executar %s -> processo %d\n", caminho, p->pid);
     return p->pid;
 }
 

@@ -67,7 +67,7 @@ def main():
     conferir_tabelas()
 
     with Maquina("h124", "ide", imagem=imagem_console()) as m:
-        m.esperar_serial("[SAGUI] shell iniciado: processo", 120)
+        m.esperar_serial("[ZOGUE] shell iniciado: processo", 120)
         m.esperar_serial("sagui:/$", 30)
 
         out = m.comando("ajuda")

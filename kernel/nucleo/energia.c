@@ -167,13 +167,13 @@ static void tela_pode_desligar(void)
     sup_retangulo(&s, vl / 2 - 20, va / 2 + 70, 40, 3, 0xE8BE30);
     sup_retangulo(&s, vl / 2 + 20, va / 2 + 70, 40, 3, 0x2A6FD8);
     video_mostrar_tudo();
-    klog("[SAGUI] tela: pode desligar\n");
+    klog("[ZOGUE] tela: pode desligar\n");
 }
 
 SEM_RETORNO void maquina_desligar(void)
 {
     guardar_discos();
-    klog("[SAGUI] desligando\n");
+    klog("[ZOGUE] desligando\n");
     if (acpi.ok && acpi.pm1a) {
         /* Liga o modo ACPI, se o firmware ainda não ligou (bit SCI_EN). */
         if (!(porta_le16(acpi.pm1a) & 1) && acpi.smi_cmd && acpi.ativar) {
@@ -188,14 +188,14 @@ SEM_RETORNO void maquina_desligar(void)
     /* Não desligou: avisa e para (o pendrive já foi gravado). */
     tela_pode_desligar();
     kprintf("\nO SaguiOS terminou. Pode desligar o computador.\n");
-    klog("[SAGUI] desligar pelo ACPI nao funcionou\n");
+    klog("[ZOGUE] desligar pelo ACPI nao funcionou\n");
     parar_maquina();
 }
 
 SEM_RETORNO void maquina_reiniciar(void)
 {
     guardar_discos();
-    klog("[SAGUI] reiniciando\n");
+    klog("[ZOGUE] reiniciando\n");
     int_desliga();
     if (acpi.tem_reset && acpi.reset_espaco == 1) {
         porta_escreve8((uint16_t)acpi.reset_end, acpi.reset_valor);

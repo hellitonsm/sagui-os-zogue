@@ -31,12 +31,12 @@ int principal(int argc, char **argv)
 
     if (tudo) {
         unsigned s = v.segundos_ligado;
-        imprimir("SaguiOS %s i686 (ligado há %u:%02u:%02u)\n", v.versao, s / 3600, s / 60 % 60, s % 60);
+        imprimir("Zogue OS %s i686 (ligado há %u:%02u:%02u)\n", v.versao, s / 3600, s / 60 % 60, s % 60);
     } else if (versao || arquitetura) {
         if (versao) imprimir("%s%s", v.versao, arquitetura ? " " : "\n");
         if (arquitetura) imprimir("i686\n");
     } else {
-        imprimir("SaguiOS\n");
+        imprimir("Zogue OS\n");
     }
     return 0;
 }

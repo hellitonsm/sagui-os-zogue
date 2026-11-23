@@ -57,7 +57,7 @@ def rodar(m, comando):
     """Roda um comando e devolve só o que ele escreveu (sem o eco da linha
     digitada e sem o prompt seguinte)."""
     out = limpo(m.comando(comando))
-    # O log do kernel ("[SAGUI] processo 7 ...") sai na mesma serial, entre
+    # O log do kernel ("[ZOGUE] processo 7 ...") sai na mesma serial, entre
     # o eco da linha digitada e a saída do programa.
     out = re.sub(r"\[[A-Z][A-Z0-9_]*\] [^\n]*\n", "", out)
     out = out.split("\n", 1)[1] if "\n" in out else ""

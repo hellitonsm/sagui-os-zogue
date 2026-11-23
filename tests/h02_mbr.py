@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """H02 - estágio 1 (MBR).
 
-Critério: no QEMU (IDE e USB) aparece `SaguiOS: carregando...`.
+Critério: no QEMU (IDE e USB) aparece `Sagui-OS Zogue Version: carregando...`.
 Também confere a estrutura do setor: 512 bytes, 0x55AA, partição ativa e
 área de BPB sem código. Para isolar o MBR, monta uma imagem de teste em que
 o estágio 2 só para a máquina (assim nada apaga a mensagem da tela).
@@ -39,8 +39,8 @@ def main():
     # mkimagem grava tamanho.txt ao lado da imagem; o da imagem real não é tocado.
     for modo in ("ide", "usb"):
         with Maquina("h02", modo, imagem=img) as m:
-            m.esperar_tela("SaguiOS: carregando...", 60)
-            verificar(True, f"[{modo}] mensagem 'SaguiOS: carregando...' na tela")
+            m.esperar_tela("Sagui-OS Zogue Version: carregando...", 60)
+            verificar(True, f"[{modo}] mensagem 'Sagui-OS Zogue Version: carregando...' na tela")
             m.captura(f"H02-mbr-{modo}")
     return 0
 

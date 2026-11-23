@@ -108,6 +108,6 @@ quadro_t *tratar_interrupcao(quadro_t *q)
             return excecao_usuario(q);   /* erro de um programa: só ele termina */
         excecao_fatal(q);                /* erro do kernel: não há como continuar */
     }
-    klog("[SAGUI] interrupcao %u sem manipulador\n", v);
+    klog("[ZOGUE] interrupcao %u sem manipulador\n", v);
     return q;
 }

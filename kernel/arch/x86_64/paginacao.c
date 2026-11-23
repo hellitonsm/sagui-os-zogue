@@ -93,7 +93,7 @@ void paginacao_iniciar(void)
      * qualquer instrução de ponto flutuante gerar exceção até o
      * processos_iniciar ligar a FPU de verdade (H80). */
     escreve_cr0(le_cr0() | 0x00010000u | 0x4u);
-    klog("[SAGUI] paginacao de 4 niveis: kernel 1:1 ate %u MB, programas de %u MB a %u MB\n",
+    klog("[ZOGUE] paginacao de 4 niveis: kernel 1:1 ate %u MB, programas de %u MB a %u MB\n",
          KERNEL_JANELAS >> 20, USUARIO_INICIO >> 20, USUARIO_FIM >> 20);
 }
 

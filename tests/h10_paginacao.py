@@ -24,7 +24,7 @@ def main():
         verificar("um espa" in "\n".join(m.tela_texto()), "etapa de paginação aparece na inicialização")
         m.captura("H10-dois-espacos")
     with Maquina("h10-pf", "ide", imagem=imagem_de_teste("falta_pagina")) as m:
-        m.esperar_serial("[SAGUI] EXCECAO", 60)
+        m.esperar_serial("[ZOGUE] EXCECAO", 60)
         verificar("EXCECAO 14" in m.serial(), "serial registra a exceção 14 (falta de página)")
         m.esperar_tela("Falta de p", 10)
         texto = "\n".join(m.tela_texto())

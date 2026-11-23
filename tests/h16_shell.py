@@ -22,7 +22,7 @@ PROGRAMAS = sorted(set([f[:-2] for f in os.listdir(os.path.join(RAIZ, "userland"
 
 def main():
     with Maquina("h16", "ide", imagem=imagem_console()) as m:
-        m.esperar_serial("[SAGUI] shell iniciado: processo", 120)
+        m.esperar_serial("[ZOGUE] shell iniciado: processo", 120)
         m.esperar_serial("sagui:/$", 30)
         s = m.serial()
         # As tarefas do kernel (USB, rede) também têm número de processo e nascem

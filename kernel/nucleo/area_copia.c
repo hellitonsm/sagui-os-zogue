@@ -28,7 +28,7 @@ int32_t sis_area_copia(uint32_t modo, uint32_t ptr, uint32_t n, uint32_t d, uint
         if (!texto) return ERRO_SEM_MEMORIA;
         memcpy(texto, (const void *)(uintptr_t)ptr, n);
         tamanho = n;
-        klog("[SAGUI] area de copia: %u bytes\n", n);
+        klog("[ZOGUE] area de copia: %u bytes\n", n);
         return (int32_t)n;
     }
     if (modo == 1) {

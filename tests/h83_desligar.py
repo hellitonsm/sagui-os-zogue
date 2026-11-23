@@ -22,7 +22,7 @@ def main():
         verificar("desligar" in out, "ajuda conhece o poweroff (apelido desligar)")
         m.digitar("poweroff", 0.04)
         m.tecla("ret")
-        m.esperar_serial("[SAGUI] tela: pode desligar", 30)
+        m.esperar_serial("[ZOGUE] tela: pode desligar", 30)
         time.sleep(0.5)
         png = m.captura("H83-1-pode-desligar")
         verificar("desligar pelo ACPI nao funcionou" in m.serial(), "sem ACPI, o desligar caiu na tela de aviso")

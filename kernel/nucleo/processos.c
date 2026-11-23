@@ -198,7 +198,7 @@ void processo_encerrar(processo_t *p, int codigo, const char *motivo)
         if (tabela[i].estado != P_LIVRE && tabela[i].pai == p->pid)
             tabela[i].pai = 0;
     acordar(processo_por_pid(p->pai));   /* o pai pode estar em "esperar" */
-    klog("[SAGUI] processo %u (%s) terminou com codigo %d%s%s\n", p->pid, p->nome, codigo,
+    klog("[ZOGUE] processo %u (%s) terminou com codigo %d%s%s\n", p->pid, p->nome, codigo,
          motivo ? ": " : "", motivo ? motivo : "");
 }
 

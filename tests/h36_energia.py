@@ -34,7 +34,7 @@ def main():
         m.captura("H36-energia")
         j = janela(m.serial(), "Energia")
         m.clique(j["x"] + 20 + 50, j["y"] + 110 + 15)          # Desligar
-        m.esperar_serial("[SAGUI] desligando", 15)
+        m.esperar_serial("[ZOGUE] desligando", 15)
         for _ in range(100):
             if m.proc.poll() is not None:
                 break

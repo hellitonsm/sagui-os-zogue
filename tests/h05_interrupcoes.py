@@ -15,7 +15,7 @@ from qemu import Maquina, verificar, imagem_de_teste  # noqa: E402
 def main():
     img = imagem_de_teste("divisao")
     with Maquina("h05-div", "ide", imagem=img) as m:
-        m.esperar_serial("[SAGUI] EXCECAO", 60)
+        m.esperar_serial("[ZOGUE] EXCECAO", 60)
         verificar("EXCECAO 0 (Divis" in m.serial(), "serial registra a exceção 0, divisão por zero")
         m.esperar_tela("O SaguiOS encontrou um erro", 10)
         texto = "\n".join(m.tela_texto())
