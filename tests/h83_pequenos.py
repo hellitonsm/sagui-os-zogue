@@ -85,7 +85,7 @@ def main():
         out = m.comando("uname")
         verificar("Zogue OS" in out, "uname mostra Zogue OS")
         out = m.comando("uname -a")
-        verificar(re.search(r"SaguiOS \S+ i686 \(ligado há \d+:\d\d:\d\d\)", out) is not None, "uname -a: versão, i686 e tempo ligado")
+        verificar(re.search(r"Zogue OS \S+ i686 \(ligado há \d+:\d\d:\d\d\)", out) is not None, "uname -a: versão, i686 e tempo ligado")
         out = limpo(m.comando("fetch"))
         for campo in ("Sistema:", "Processador:", "Memória:", "Tela:", "Shell: sagsh", "Processos:"):
             verificar(campo in out, f"fetch mostra {campo}")

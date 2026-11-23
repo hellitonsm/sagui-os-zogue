@@ -27,7 +27,7 @@ def main():
         s = m.serial()
         # As tarefas do kernel (USB, rede) também têm número de processo e nascem
         # antes; o sagsh tem que ser o primeiro programa do usuário a rodar.
-        execs = re.findall(r"\[SAGUI\] executar (\S+) -> processo", s)
+        execs = re.findall(r"\[ZOGUE\] executar (\S+) -> processo", s)
         verificar(execs and execs[0] == "/bin/sagsh", "o kernel inicia /bin/sagsh como primeiro programa (ring 3)")
         verificar("Terminal provis" not in s, "o terminal provisório do kernel foi removido")
 

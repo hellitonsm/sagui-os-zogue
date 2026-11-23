@@ -33,8 +33,8 @@ def teste_hospedeiro():
     subprocess.run(["gcc", "-Wall", "-Wextra", "-Werror", "-O2", "-DTESTE_HOSPEDEIRO", "-I", os.path.join(j, "chip8"),
                     "-I", os.path.join(j, "chip8asm"), "-o", exe, os.path.join(RAIZ, "tests", "jogos", "teste_chip8.c"),
                     os.path.join(j, "chip8", "nucleo.c"), os.path.join(j, "chip8asm", "montador.c")], check=True)
-    roms = sorted(os.path.join(RAIZ, "rootfs", "jogos", "chip8", f)
-                  for f in os.listdir(os.path.join(RAIZ, "rootfs", "jogos", "chip8")) if f.endswith(".asm"))
+    roms = sorted(os.path.join(RAIZ, "userland", "exemplos", "jogos", "chip8", f)
+                  for f in os.listdir(os.path.join(RAIZ, "userland", "exemplos", "jogos", "chip8")) if f.endswith(".asm"))
     r = subprocess.run([exe] + roms, capture_output=True, text=True)
     for linha in r.stdout.splitlines():
         print("  " + linha)

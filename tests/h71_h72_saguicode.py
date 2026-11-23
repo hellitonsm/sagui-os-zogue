@@ -39,7 +39,7 @@ def main():
     try:
         with Maquina("h71", "ide", extras=h69.REDE + ["-device", "usb-ehci,id=ehci"] + pendrive_qemu(pen), memoria="768M") as m:
             m.esperar_serial("area de trabalho no ar", 120)
-        abrir_terminal(m)   # o Terminal agora abre pelo ícone (D039)
+            abrir_terminal(m)   # o Terminal agora abre pelo ícone (D039)
             m.esperar_serial("[REDE] DHCP: endereco", 30)
             time.sleep(2)
             antes = len(m.serial())

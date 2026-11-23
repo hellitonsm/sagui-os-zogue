@@ -102,7 +102,7 @@ def main():
     try:
         with Maquina("h58", "ide", extras=REDE, memoria="768M") as m:
             m.esperar_serial("area de trabalho no ar", 120)
-        abrir_terminal(m)   # o Terminal agora abre pelo ícone (D039)
+            abrir_terminal(m)   # o Terminal agora abre pelo ícone (D039)
             m.esperar_serial("[REDE] DHCP: endereco", 30)
             time.sleep(1)
             # H57: a chave.

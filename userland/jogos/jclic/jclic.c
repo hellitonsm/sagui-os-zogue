@@ -440,7 +440,7 @@ static void mostrar_lista(void)
     lista.itens = nomes;
     lista.qtd = 0;
     lista.topo = 0;
-    listar_pasta("/jogos/jclic", "");
+    listar_pasta("/exemplos/jogos/jclic", "");
     listar_pasta("/usb/jclic", "  (pendrive)");
     listar_pasta("/usb", "  (pendrive)");
     lista.sel = lista.qtd ? 0 : -1;

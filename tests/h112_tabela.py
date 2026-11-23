@@ -179,7 +179,7 @@ def main():
             extras += ["-drive", f"format=raw,file={caminho},if=ide,index={i}"]
         with Maquina(f"h112-{g // 3}", "usb", memoria="512M", extras=extras) as m:
             m.esperar_serial("area de trabalho no ar", 120)
-        abrir_terminal(m)   # o Terminal agora abre pelo ícone (D039)
+            abrir_terminal(m)   # o Terminal agora abre pelo ícone (D039)
             time.sleep(1)
             for i, (caso, _) in enumerate(grupo):
                 nome, _, estado, conf, prob, fim, parts = caso

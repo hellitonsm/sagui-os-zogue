@@ -55,7 +55,7 @@ def main():
             verificar(not faltando, "cat mostra todas as linhas do linux.txt")
             m.comando("cd ../arte")
             out = m.comando("cat sagui.txt")
-            verificar("S A G U I O S" in out, "cd ../arte e cat sagui.txt (caminho relativo com ..)")
+            verificar("Z O G U E" in out, "cd ../arte e cat sagui.txt (caminho relativo com ..)")
             m.captura("H09-cat-sagui")
             out = m.comando("cat /bin")
             verificar("é uma pasta" in out, "cat numa pasta avisa")

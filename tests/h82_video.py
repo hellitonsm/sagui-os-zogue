@@ -48,7 +48,7 @@ def main():
     try:
         with Maquina("h82v", "ide", extras=REDE + som, memoria="768M") as m:
             m.esperar_serial("area de trabalho no ar", 120)
-        abrir_terminal(m)   # o Terminal agora abre pelo ícone (D039)
+            abrir_terminal(m)   # o Terminal agora abre pelo ícone (D039)
             m.digitar("video /nao/existe.mp4\n", 0.04)
             m.esperar_serial("video: nao abriu /nao/existe.mp4", 30)
             verificar(True, "o programa /bin/video existe, roda e recusa um arquivo que não existe")

@@ -146,7 +146,7 @@ static void montar_lista(void)
     lista.itens = nomes;
     lista.qtd = 0;
     lista.topo = 0;
-    listar_pasta("/jogos/chip8", "");
+    listar_pasta("/exemplos/jogos/chip8", "");
     listar_pasta("/usb", "  (pendrive)");
     listar_pasta("/usb/chip8", "  (pendrive)");
     lista.sel = lista.qtd ? 0 : -1;
