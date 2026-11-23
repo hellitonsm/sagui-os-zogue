@@ -267,14 +267,15 @@ SAGUI_LIBC_OBJ       := $(filter-out $(B)/userland/mlibc/string.o,$(MLIBC_OBJ)) 
 SAGUI_GUI_OBJ        := $(B)/userland/libsagui/gui.o $(B)/userland/fonte8x16.o
 
 # Clona e configura o tinycc quando necessario (vendored em .local/tinycc).
-# Usa um stamp file para evitar race condition no CI (múltiplos jobs).
-# Em dry-run (make -n), não executa o setup.sh (que falharia sem o repo).
+# Usa um stamp file para evitar race condition no CI (multiplos jobs).
+# Em dry-run (make -n), so cria o stamp file sem rodar setup.sh (que
+# falharia sem o repositorio clonado).
 $(B)/tinycc/.setup-stamp:
 	@mkdir -p $(dir $@)
 	@if [ "$(filter n,$(MAKEFLAGS))" = "" ]; then \
 	    bash tools/tinycc-sagui/setup.sh; \
-	    touch $@; \
 	fi
+	@touch $@
 
 # O proprio tinycc: tudo vem de tcc.c (ONE_SOURCE) + o shim de entrada que
 # chama principal() (a convencao dos programas do SaguiOS).
