@@ -318,13 +318,14 @@ class Maquina:
             return f.read().decode("latin-1")
 
     def esperar_serial(self, texto, tempo=TEMPO_MAX, desde=0):
-        """Espera um texto NOVO na serial ( depois de `desde`). Nos testes com
+        """Espera um texto NOVO na serial (depois de `desde`). Nos testes com
         `reiniciar=True` o arquivo da serial nao e truncado pelo reboot, entao
         mensagens do boot anterior continuam la e um texto antigo enganaria a
-        espera (D039)."""
+        espera (D039). `texto` pode ser uma tupla: basta aparecer um deles."""
+        textos = (texto,) if isinstance(texto, str) else tuple(texto)
         fim = time.time() + tempo
         while time.time() < fim:
-            if texto in self.serial()[desde:]:
+            if any(t in self.serial()[desde:] for t in textos):
                 return True
             if self.proc.poll() is not None:
                 raise FalhaTeste(f"QEMU terminou antes de aparecer {texto!r}")

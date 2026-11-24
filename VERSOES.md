@@ -58,7 +58,8 @@ versão é lançada, o que estava lá vira a seção dessa versão.
   objetos da mlibc (`make ARQ=32` serial volta a funcionar); a conta de
   programas do `/bin` inclui o `tinycc`; os testes que reiniciam o QEMU esperam
   o boot novo antes de abrir o Terminal (a serial antiga enganava a espera);
-  o laço de seleção voltou a ser conferido pela cor dos ícones.
+  o laço de seleção voltou a ser conferido pela cor dos ícones; a prova do
+  tocador aceita o aviso do tocador gráfico da 3.0.
 
 ## Versões lançadas
 
