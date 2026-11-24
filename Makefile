@@ -267,14 +267,17 @@ SAGUI_LIBC_OBJ       := $(filter-out $(B)/userland/mlibc/string.o,$(MLIBC_OBJ)) 
 SAGUI_GUI_OBJ        := $(B)/userland/libsagui/gui.o $(B)/userland/fonte8x16.o
 
 # Clona e configura o tinycc quando necessario (vendored em .local/tinycc).
-# Usa um stamp file para evitar race condition no CI (multiplos jobs).
-# Em dry-run (make -n), so cria o stamp file sem rodar setup.sh (que
-# falharia sem o repositorio clonado).
+# O setup roda no tempo de LEITURA do Makefile, antes de o Make resolver
+# qualquer pre-requisito. Sem isso, em checkout limpo o Make ve
+# ".local/tinycc/tcc.c" como alvo sem regra e falha ("No rule to make
+# target") antes de qualquer receita rodar -- pior ainda com make -j.
+# O setup.sh e idempotente e usa flock, entao e seguro com -j e -n.
+$(shell bash tools/tinycc-sagui/setup.sh >/dev/null 2>&1)
+
+# Stamp file so para marcar que o setup ja rodou (usado como pre-requisito
+# dos objetos do tinycc). Em dry-run (make -n), nao roda setup.sh de novo.
 $(B)/tinycc/.setup-stamp:
 	@mkdir -p $(dir $@)
-	@if [ "$(filter n,$(MAKEFLAGS))" = "" ]; then \
-	    bash tools/tinycc-sagui/setup.sh; \
-	fi
 	@touch $@
 
 # O proprio tinycc: tudo vem de tcc.c (ONE_SOURCE) + o shim de entrada que

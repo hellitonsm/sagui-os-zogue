@@ -50,6 +50,10 @@ versão é lançada, o que estava lá vira a seção dessa versão.
 - **Segurança (Cipó):** uma fonte WOFF2 malformada, vinda de uma página, podia
   fazer o navegador ler memória fora da fonte (os tamanhos das partes somavam
   mais de 4 GB e a conta "dava a volta"). Agora a fonte é recusada.
+- **Build no CI (Zogue):** o checkout limpo voltou a compilar. O setup do
+  tinycc roda antes de o Make resolver os pré-requisitos, cria o diretório
+  do lock e restaura os três fontes da libtcc1 que o commit vendorizado não
+  traz mais. Os seis pedaços da suíte voltam a chegar aos testes.
 
 ## Versões lançadas
 

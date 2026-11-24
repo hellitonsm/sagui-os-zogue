@@ -21,6 +21,10 @@ TINYCC_DIR="$REPO_ROOT/.local/tinycc"
 TINYCC_COMMIT='70adbb129760b77e3bdfec447c1f986def763f2c'
 TINYCC_URL='https://github.com/tinycc/tinycc.git'
 
+# Garante que .local/ exista em checkout limpo (o diretório é ignorado pelo
+# git, então ele não vem no clone e o flock abaixo falharia sem ele).
+mkdir -p "$REPO_ROOT/.local"
+
 # Lock para evitar clones simultâneos no CI
 exec 9>"$REPO_ROOT/.local/tinycc-setup.lock"
 flock -x 9
@@ -101,6 +105,17 @@ cat > "$TINYCC_DIR/config.h" <<'EOF'
 #define TCC_VERSION "0.9.28rc"
 EOF
 echo "== [setup] config.h pronto"
+
+# O commit vendorizado do tinycc nao traz mais libtcc1.c, builtin.c e
+# stdatomic.c (a libtcc1.a moderna e gerada de outra forma). O build do
+# SaguiOS usa esses tres fontes, entao copiamos as versoes compatíveis
+# guardadas em tools/tinycc-sagui/lib/ (GPL, mesmo upstream).
+for f in builtin.c libtcc1.c stdatomic.c; do
+    if [ ! -f "$TINYCC_DIR/lib/$f" ]; then
+        cp "$AQUI/lib/$f" "$TINYCC_DIR/lib/$f"
+        echo "== [setup] lib/$f restaurado do vendor"
+    fi
+done
 
 # Libera o lock
 flock -u 9
