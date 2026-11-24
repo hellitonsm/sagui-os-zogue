@@ -16,7 +16,7 @@ sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 from qemu import Maquina, verificar, RAIZ, imagem_console, versao_esperada  # noqa: E402
 
 PROGRAMAS = sorted(set([f[:-2] for f in os.listdir(os.path.join(RAIZ, "userland", "programas")) if f.endswith(".c")] + ["sagui3d", "navegador", "cipo", "video", "saguicode", "saguicode-janela", "cc", "visualizador", "tocador", "mp3info"]
-                       + os.listdir(os.path.join(RAIZ, "userland", "jogos")))   # programas de várias partes, em pastas próprias (cipo e video: H82; tocador e mp3info: H86/H87; saguicode-janela: H89; cada pasta de userland/jogos: H92)
+                       + os.listdir(os.path.join(RAIZ, "userland", "jogos")) + ["tinycc"])   # programas de várias partes, em pastas próprias (cipo e video: H82; tocador e mp3info: H86/H87; saguicode-janela: H89; cada pasta de userland/jogos: H92; tinycc: ferramenta nativa, .c vendored em .local/)
                 - {"apoio_libc", "servidor"})   # fora do build padrão: biblioteca de apoio e o servidor adiado (Makefile, FORK_ADIADOS)
 
 

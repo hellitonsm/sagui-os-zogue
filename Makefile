@@ -257,6 +257,12 @@ SAGUI_LIBCORE_OBJ    := $(patsubst userland/libsagui/%.c,$(B)/userland/libsagui/
 # O tinycc linka contra o shim POSIX (userland/mlibc) em vez do apoio_libc
 # (que é só para as ferramentas de compilação e duplica os mesmos símbolos).
 LIBSAGUI_SEM_APOIO   := $(filter-out $(B)/userland/programas/apoio_libc.o,$(LIBSAGUI_OBJ))
+# Definido antes da regra do tinycc (abaixo): os pré-requisitos de uma regra
+# sao expandidos na leitura do Makefile. Se esta linha ficasse depois da
+# regra, o link do tinycc nao esperaria pelos .o da mlibc e, num build
+# serial (make ARQ=32 no CI), o ld rodava antes deles existirem.
+TINYCC_LIBC_OBJ      := $(filter-out $(B)/userland/mlibc/string.o,$(MLIBC_OBJ)) \
+                        $(B)/tinycc/mlibc-string-sem-strlen.o
 SAGUI_LIBC_OBJ       := $(filter-out $(B)/userland/mlibc/string.o,$(MLIBC_OBJ)) \
                         $(B)/tinycc/mlibc-string-sem-strlen.o \
                         $(SAGUI_LIBCORE_OBJ) \
@@ -320,7 +326,6 @@ $(B)/tinycc/libtcc1.a: $(TINYCC_LIBTCC1_OBJ) $(B)/tinycc/.setup-stamp
 # a variante sem esse símbolo.
 $(B)/tinycc/mlibc-string-sem-strlen.o: $(B)/userland/mlibc/string.o
 	objcopy --strip-symbol=strlen $< $@
-TINYCC_LIBC_OBJ := $(filter-out $(B)/userland/mlibc/string.o,$(MLIBC_OBJ)) $(B)/tinycc/mlibc-string-sem-strlen.o
 $(B)/tinycc/crti.o: tools/tinycc-sagui/crti.S $(B)/tinycc/.setup-stamp
 	@mkdir -p $(dir $@)
 	$(HOST_CC) -m32 -march=i686 -c -o $@ $<

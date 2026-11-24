@@ -189,15 +189,19 @@ def imagem_console():
     return imagem_de_teste("", ["--vesa", "--console"])
 
 
-def abrir_terminal(m):
+def abrir_terminal(m, desde=0):
     """Abre o Terminal pelo ícone da área de trabalho (2º ícone da coluna da
     esquerda) e espera o prompt do sagsh. A área de trabalho não abre o
-    Terminal sozinho ao ligar (D039): quem quiser o shell, clica no ícone."""
+    Terminal sozinho ao ligar (D039): quem quiser o shell, clica no ícone.
+
+    `desde` é o tamanho da serial antes do clique. Depois de um reboot no mesmo
+    QEMU (`reiniciar=True`), o prompt antigo ainda esta no arquivo; sem esse
+    offset a espera acha o prompt velho e o Terminal nunca chega a abrir."""
     # Mesma grade de ícones de tests/h28_acabamento.py: Terminal é índice 1.
     por_coluna = (768 - 40) // 92
     i = 1
     m.clique(20 + (i // por_coluna) * 110 + 48, 40 + (i % por_coluna) * 92 + 32, duplo=True)
-    m.esperar_serial("sagui:/$", 30)
+    m.esperar_serial("sagui:/$", 30, desde)
 
 
 def acelerador():
@@ -313,10 +317,14 @@ class Maquina:
         with open(self.arq_serial, "rb") as f:
             return f.read().decode("latin-1")
 
-    def esperar_serial(self, texto, tempo=TEMPO_MAX):
+    def esperar_serial(self, texto, tempo=TEMPO_MAX, desde=0):
+        """Espera um texto NOVO na serial ( depois de `desde`). Nos testes com
+        `reiniciar=True` o arquivo da serial nao e truncado pelo reboot, entao
+        mensagens do boot anterior continuam la e um texto antigo enganaria a
+        espera (D039)."""
         fim = time.time() + tempo
         while time.time() < fim:
-            if texto in self.serial():
+            if texto in self.serial()[desde:]:
                 return True
             if self.proc.poll() is not None:
                 raise FalhaTeste(f"QEMU terminou antes de aparecer {texto!r}")

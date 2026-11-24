@@ -59,7 +59,11 @@ def main():
         while time.time() < fim and "[ZOGUE] reiniciando" not in m.serial():
             time.sleep(0.2)
         verificar("[ZOGUE] reiniciando" in m.serial(), "o kernel registrou o reinício")
-        abrir_terminal(m)   # segundo boot: o Terminal não abre sozinho (D039)
+        # A serial nao e truncada pelo reboot: so esperamos mensagens e o
+        # prompt do boot novo, para nao confundir com os do boot anterior.
+        n = len(m.serial())
+        m.esperar_serial("area de trabalho no ar", 120, n)
+        abrir_terminal(m, n)   # segundo boot: o Terminal não abre sozinho (D039)
         s = m.serial()
         verificar("[ZOGUE] reiniciando" in s and s.count("sagui:/$") >= 2, "reiniciar volta ao boot e ao shell")
     return 0

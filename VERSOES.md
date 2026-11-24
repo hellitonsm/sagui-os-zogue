@@ -54,6 +54,11 @@ versão é lançada, o que estava lá vira a seção dessa versão.
   tinycc roda antes de o Make resolver os pré-requisitos, cria o diretório
   do lock e restaura os três fontes da libtcc1 que o commit vendorizado não
   traz mais. Os seis pedaços da suíte voltam a chegar aos testes.
+- **Build 32 bits e testes do CI (Zogue):** o link do tinycc agora espera pelos
+  objetos da mlibc (`make ARQ=32` serial volta a funcionar); a conta de
+  programas do `/bin` inclui o `tinycc`; os testes que reiniciam o QEMU esperam
+  o boot novo antes de abrir o Terminal (a serial antiga enganava a espera);
+  o laço de seleção voltou a ser conferido pela cor dos ícones.
 
 ## Versões lançadas
 

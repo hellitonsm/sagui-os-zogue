@@ -241,7 +241,11 @@ def main():
         while time.time() < fim and "[ZOGUE] reiniciando" not in m.serial()[n:]:
             time.sleep(0.3)
         verificar("[ZOGUE] reiniciando" in m.serial()[n:], "o sistema reiniciou")
-        abrir_terminal(m)   # segundo boot: o Terminal não abre sozinho (D039)
+        # A serial nao zera no reboot: esperamos o boot novo antes de abrir o
+        # Terminal, senao o prompt antigo engana a espera (D039).
+        n2 = len(m.serial())
+        m.esperar_serial("area de trabalho no ar", 120, n2)
+        abrir_terminal(m, n2)   # segundo boot: o Terminal não abre sozinho (D039)
         n2 = len(m.serial())
         m.digitar("cat /usb/nota.txt\n", 0.03)
         time.sleep(2)

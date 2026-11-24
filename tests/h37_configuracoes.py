@@ -31,12 +31,17 @@ def main():
         m.captura("H37-config")
         m.digitar("reiniciar")
         m.tecla("ret")
-        for _ in range(600):
-            if m.serial().count("sagui:/$") >= 2:
-                break
+        # O QEMU reinicia no mesmo processo e a serial guarda o prompt antigo.
+        # Esperamos o aviso do kernel e so depois o boot novo (D039).
+        fim = time.time() + 180
+        while time.time() < fim and "[ZOGUE] reiniciando" not in m.serial():
             time.sleep(0.2)
-        m.esperar_serial("montado sozinho", 30)
+        verificar("[ZOGUE] reiniciando" in m.serial(), "o kernel registrou o reinício")
+        n = len(m.serial())
+        m.esperar_serial("area de trabalho no ar", 120, n)
+        m.esperar_serial("montado sozinho", 30, n)
         verificar(True, "depois de reiniciar, o pendrive com configurações é montado sozinho")
+        abrir_terminal(m, n)   # o Terminal nao abre sozinho no boot novo (D039)
         time.sleep(1)
         out = m.comando("config aparencia.fundo")
         verificar("aparencia.fundo = azul" in out, "a configuração continua igual depois de reiniciar")

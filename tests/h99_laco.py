@@ -43,6 +43,12 @@ def main():
         m.esperar_serial("area de trabalho no ar", 120)
         abrir_terminal(m)   # o Terminal agora abre pelo ícone (D039)
         time.sleep(1)
+        # O duplo clique no ícone deixa o Terminal marcado (D039). Limpamos a
+        # seleção antes da foto de referência: assim o pixel do Terminal na
+        # foto é o do fundo, e da para conferir que o clique num ícone o
+        # desmarca de volta.
+        m.clique(150, 600)
+        time.sleep(0.3)
         # O Terminal abre por cima do meio da tela. Os ícones ficam em duas
         # colunas (x de 20 a 116 e de 130 a 226; cada linha desce 92 pixels a
         # partir de y = 40); na segunda há o "Sobre" e, embaixo dele, a
@@ -71,18 +77,25 @@ def main():
 
         # Clique num ícone: marca só ele (a Calculadora, índice 4, y de 408 a 504). O
         # destaque pinta o canto vazio da célula; o do Terminal, desmarcado,
-        # volta ao fundo.
-        n = len(m.serial())
+        # volta ao fundo. O kernel so registra "[GUI] laco:" quando ha arraste;
+        # num clique simples a conferencia e pela cor do destaque.
+        sem = cor_do_pixel(antes_png, 24, 422)
         m.clique(68, 440)
-        esperar(m, "[GUI] laco:", 10, n)
-        m.captura("H99-3-um-icone")
-        verificar(marcados(m, n) == 1, "o clique marca só a Calculadora (e desmarca o Terminal)")
+        time.sleep(0.8)
+        png = m.captura("H99-3-um-icone")
+        com = cor_do_pixel(png, 24, 422)
+        verificar(sum(abs(a - b) for a, b in zip(com, sem)) > 8, f"o clique marca a Calculadora ({sem} -> {com})")
+        verificar(cor_do_pixel(png, 24, 146) == cor_do_pixel(antes_png, 24, 146), "e desmarca o Terminal")
 
-        # Clique no vazio desmarca: um laço de 1 pixel conta 0 marcados.
-        n = len(m.serial())
+        # Clique no vazio desmarca. Um clique simples na area de trabalho nao
+        # gera o log do laço (ele so e escrito quando ha arraste), entao a
+        # conferencia e pela cor: os tres icones voltam ao fundo da foto.
         m.clique(150, 600)
-        esperar(m, "[GUI] laco:", 10, n)
-        verificar(marcados(m, n) == 0, "clicar no vazio desmarca tudo")
+        time.sleep(0.8)
+        limpo_png = m.captura("H99-4-sem-selecao")
+        for x, y in ((24, 146), (24, 238), (24, 422)):
+            verificar(cor_do_pixel(limpo_png, x, y) == cor_do_pixel(antes_png, x, y),
+                      f"clicar no vazio desmarca tudo (pixel {x},{y})")
 
 
 if __name__ == "__main__":
